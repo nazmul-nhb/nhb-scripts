@@ -1,0 +1,58 @@
+{
+	"name": "nhb-scripts",
+	"version": "0.5.0",
+	"description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
+	"type": "module",
+	"bin": {
+		"nhb-build": "./bin/build.mjs",
+		"nhb-commit": "./bin/commit.mjs",
+		"nhb-lint": "./bin/lint.mjs",
+		"nhb-fix": "./bin/fix.mjs",
+		"nhb-count": "./bin/count.mjs"
+	},
+	"scripts": {
+		"format": "prettier --write .",
+		"lint": "nhb-lint",
+		"fix": "nhb-fix",
+		"commit": "nhb-commit"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"bin"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nazmul-nhb/nhb-scripts.git"
+	},
+	"keywords": [
+		"scripts"
+	],
+	"author": {
+		"name": "Nazmul Hassan",
+		"email": "nazmulnhb@gmail.com"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@types/node": "^22.10.7",
+		"chalk": "4.1.2",
+		"execa": "^9.5.2",
+		"globby": "^14.0.2",
+		"prettier": "^3.4.2",
+		"progress-estimator": "^0.3.1",
+		"rimraf": "^6.0.1",
+		"type-fest": "^4.41.0"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.18.0",
+		"@typescript-eslint/eslint-plugin": "^8.21.0",
+		"@typescript-eslint/parser": "^8.21.0",
+		"eslint": "^9.18.0",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-prettier": "^5.2.3",
+		"globals": "^15.14.0",
+		"typescript": "^5.8.3",
+		"typescript-eslint": "^8.21.0"
+	}
+}
