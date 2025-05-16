@@ -71,7 +71,7 @@ async function commitAndPush(commitMessage, version) {
 }
 
 /** * Runs prettier to format the codebase. */
-async function runFormatter() {
+export async function runFormatter() {
 	try {
 		console.info(chalk.magenta('🎨 Running Prettier to format code...'));
 
@@ -131,7 +131,7 @@ function isValidVersion(newVersion, oldVersion) {
 				newVersion = currentVersion ?? '';
 				console.info(
 					chalk.cyanBright(
-						`✅ Continuing with version ${chalk.yellow(newVersion)}`,
+						`❕Continuing with the previous version ${chalk.yellow(newVersion)}`,
 					),
 				);
 				break;
@@ -146,7 +146,7 @@ function isValidVersion(newVersion, oldVersion) {
 				continue;
 			}
 
-			if (!isValidVersion(newVersion, currentVersion ?? '')) {
+			if (!isValidVersion(newVersion, currentVersion ?? "")) {
 				console.info(
 					chalk.yellow(
 						'⚠ New version must be equal or greater than the current version!',
@@ -158,9 +158,19 @@ function isValidVersion(newVersion, oldVersion) {
 			break;
 		}
 
-		const commitMessage = await rl.question(
-			chalk.cyan('Enter commit message: '),
-		);
+		let commitMessage = '';
+
+		while (!commitMessage?.trim()) {
+			commitMessage = await rl.question(
+				chalk.cyan('Enter commit message (required): '),
+			);
+
+			if (!commitMessage?.trim()) {
+				console.info(
+					chalk.yellow('💀 Commit message cannot be empty!'),
+				);
+			}
+		}
 
 		rl.close();
 
@@ -174,7 +184,7 @@ function isValidVersion(newVersion, oldVersion) {
 			await updateVersion(newVersion);
 		}
 
-		await runFormatter();
+		// await runFormatter();
 		await commitAndPush(commitMessage, newVersion);
 	} catch (error) {
 		console.error(chalk.red('🛑 Unexpected Error:', error));
