@@ -1,7 +1,7 @@
 {
 	"name": "nhb-scripts",
-	"version": "0.5.0",
-	"description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
+	"version": "0.5.1",
+	"description": "A collection of custom Node.js scripts to use in TypeScript & JavaScript projects",
 	"type": "module",
 	"bin": {
 		"nhb-build": "./bin/build.mjs",
@@ -12,9 +12,9 @@
 	},
 	"scripts": {
 		"format": "prettier --write .",
-		"lint": "nhb-lint",
-		"fix": "nhb-fix",
-		"commit": "nhb-commit"
+		"lint": "node bin/lint.mjs",
+		"fix": "node bin/fix.mjs",
+		"commit": "node bin/commit.mjs"
 	},
 	"publishConfig": {
 		"access": "public"

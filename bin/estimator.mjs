@@ -5,7 +5,6 @@ import { existsSync } from 'fs';
 import progressEstimator from 'progress-estimator';
 import { cwd } from 'process';
 
-
 /**
  * * Walks up from the current directory to find the project root (containing `package.json`).
  *
@@ -28,7 +27,6 @@ function findProjectRoot(fromDir) {
 }
 
 const projectRoot = findProjectRoot(cwd());
-
 
 /**
  * * An instance of the progress-estimator used to log progress for long-running tasks.

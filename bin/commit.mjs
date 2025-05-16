@@ -128,7 +128,7 @@ function isValidVersion(newVersion, oldVersion) {
 			);
 
 			if (!newVersion?.trim()) {
-				newVersion = currentVersion ?? "";
+				newVersion = currentVersion ?? '';
 				console.info(
 					chalk.cyanBright(
 						`✅ Continuing with version ${chalk.yellow(newVersion)}`,
@@ -146,7 +146,7 @@ function isValidVersion(newVersion, oldVersion) {
 				continue;
 			}
 
-			if (!isValidVersion(newVersion, currentVersion ?? "")) {
+			if (!isValidVersion(newVersion, currentVersion ?? '')) {
 				console.info(
 					chalk.yellow(
 						'⚠ New version must be equal or greater than the current version!',

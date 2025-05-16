@@ -119,12 +119,12 @@ const updatePackageJson = (exports, validModules) => {
 
 	console.info(
 		'✅ ' +
-		chalk.yellow.bold('package.json ') +
-		chalk.green.bold('has been updated with ') +
-		chalk.yellowBright.bold('exports') +
-		chalk.green(' and ') +
-		chalk.yellowBright.bold('typesVersions') +
-		chalk.green(' fields!'),
+			chalk.yellow.bold('package.json ') +
+			chalk.green.bold('has been updated with ') +
+			chalk.yellowBright.bold('exports') +
+			chalk.green(' and ') +
+			chalk.yellowBright.bold('typesVersions') +
+			chalk.green(' fields!'),
 	);
 };
 
