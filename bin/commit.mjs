@@ -76,7 +76,7 @@ async function runFormatter() {
 		console.info(chalk.magenta('🎨 Running Prettier to format code...'));
 
 		await estimator(
-			execa('prettier', ['--write', '.'], { stdio: 'inherit' }),
+			execa('npx', ['prettier', '--write', '.'], { stdio: 'inherit' }),
 			chalk.magenta('Formatting in progress...'),
 		);
 
