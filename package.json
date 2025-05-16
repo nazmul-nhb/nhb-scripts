@@ -1,6 +1,6 @@
 {
 	"name": "nhb-scripts",
-	"version": "0.5.6",
+	"version": "0.5.7",
 	"description": "A collection of custom Node.js scripts to use in TypeScript & JavaScript projects",
 	"type": "module",
 	"bin": {
