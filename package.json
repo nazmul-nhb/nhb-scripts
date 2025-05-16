@@ -1,14 +1,14 @@
 {
 	"name": "nhb-scripts",
-	"version": "0.5.2",
+	"version": "0.5.3",
 	"description": "A collection of custom Node.js scripts to use in TypeScript & JavaScript projects",
 	"type": "module",
 	"bin": {
-		"nhb-build": "./bin/build.mjs",
-		"nhb-commit": "./bin/commit.mjs",
-		"nhb-lint": "./bin/lint.mjs",
-		"nhb-fix": "./bin/fix.mjs",
-		"nhb-count": "./bin/count.mjs"
+		"nhb-build": "bin/build.mjs",
+		"nhb-commit": "bin/commit.mjs",
+		"nhb-lint": "bin/lint.mjs",
+		"nhb-fix": "bin/fix.mjs",
+		"nhb-count": "bin/count.mjs"
 	},
 	"scripts": {
 		"format": "prettier --write .",
