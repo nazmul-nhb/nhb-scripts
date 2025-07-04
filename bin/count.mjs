@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-// count.mjs
-
 // @ts-check
 
 import chalk from 'chalk';
@@ -16,6 +13,7 @@ import tsModule from 'typescript';
  * @property {number} namedExportsTotal Total named export count.
  * @property {number} namedExportsDirect Original named export count.
  * @property {number} namedExportsAliased Aliased named export count.
+ * @property {number} namedTypeExports Total named type export count.
  */
 
 /**
@@ -31,11 +29,11 @@ async function getFilePath() {
 	const inputPath = await rl.question(
 		chalk.cyanBright(
 			`───────────────────────────────────────────────────────────────────────────────\n` +
-				`🎯 Please specify the path to a ${chalk.yellowBright.bold('"JavaScript/TypeScript/MJS"')} file or folder.\n` +
-				`   - Enter the full file path (with extension) to process a specific file.\n` +
-				`   - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n` +
-				`   - Leave it empty to scan the default file: ${chalk.bgYellowBright.bold.whiteBright(' src/index.ts ')}.\n` +
-				`───────────────────────────────────────────────────────────────────────────────\n`,
+			`🎯 Please specify the path to a ${chalk.yellowBright.bold('"JavaScript/TypeScript/MJS"')} file or folder.\n` +
+			`   - Enter the full file path (with extension) to process a specific file.\n` +
+			`   - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n` +
+			`   - Leave it empty to scan the default file: ${chalk.bgYellowBright.bold.whiteBright(' src/index.ts ')}.\n` +
+			`───────────────────────────────────────────────────────────────────────────────\n`,
 		),
 	);
 
@@ -64,6 +62,7 @@ async function countExports(filePath) {
 		let namedExportsTotal = 0;
 		let defaultExports = 0;
 		let aliasedExports = 0;
+		let namedTypeExports = 0;
 
 		/** @param {tsModule.Node} node */
 		const checkNode = (node) => {
@@ -95,9 +94,14 @@ async function countExports(filePath) {
 				}
 			} else if (
 				tsModule.isExportDeclaration(node) &&
-				node.exportClause
+				node.exportClause &&
+				tsModule.isNamedExports(node.exportClause)
 			) {
-				if (tsModule.isNamedExports(node.exportClause)) {
+				if (node.isTypeOnly) {
+					// Count type exports separately
+					namedTypeExports += node.exportClause.elements.length;
+				} else {
+					// Normal named exports
 					namedExportsTotal += node.exportClause.elements.length;
 					for (const el of node.exportClause.elements) {
 						if (
@@ -120,6 +124,7 @@ async function countExports(filePath) {
 			namedExportsTotal,
 			namedExportsDirect: namedExportsTotal - aliasedExports,
 			namedExportsAliased: aliasedExports,
+			namedTypeExports,
 		};
 	} catch (err) {
 		console.error(chalk.red('🛑 Failed to parse or read file:\n'), err);
@@ -192,6 +197,11 @@ async function getFilesFromFolder(folderPath) {
 			console.info(
 				chalk.yellow(
 					`   ┗ Aliased              : ${result.namedExportsAliased}`,
+				),
+			);
+			console.info(
+				chalk.yellow(
+					`🔺 Total Type Exports	  : ${result.namedTypeExports}`,
 				),
 			);
 		}
