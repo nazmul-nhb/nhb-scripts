@@ -1,7 +1,7 @@
 // @ts-check
 
 import { dirname, join } from 'path';
-import { existsSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, appendFileSync } from 'fs';
 import progressEstimator from 'progress-estimator';
 import { cwd } from 'process';
 
@@ -16,10 +16,7 @@ function findProjectRoot(fromDir) {
 
 	while (!existsSync(join(currentDir, 'package.json'))) {
 		const parentDir = dirname(currentDir);
-		if (parentDir === currentDir) {
-			// Reached filesystem root without finding package.json
-			break;
-		}
+		if (parentDir === currentDir) break;
 		currentDir = parentDir;
 	}
 
@@ -27,6 +24,24 @@ function findProjectRoot(fromDir) {
 }
 
 const projectRoot = findProjectRoot(cwd());
+const estimatorDir = join(projectRoot, '.estimator');
+
+// Ensure `.estimator` directory exists
+if (!existsSync(estimatorDir)) {
+	mkdirSync(estimatorDir, { recursive: true });
+}
+
+// Ensure `.gitignore` contains `.estimator`
+const gitignorePath = join(projectRoot, '.gitignore');
+
+if (!existsSync(gitignorePath)) {
+	writeFileSync(gitignorePath, `.estimator\n`);
+} else {
+	const contents = readFileSync(gitignorePath, 'utf8');
+	if (!contents.includes('.estimator')) {
+		appendFileSync(gitignorePath, `\n.estimator\n`);
+	}
+}
 
 /**
  * * An instance of the progress-estimator used to log progress for long-running tasks.
@@ -37,5 +52,5 @@ const projectRoot = findProjectRoot(cwd());
  * @type {progressEstimator.ProgressEstimator}
  */
 export const estimator = progressEstimator({
-	storagePath: join(projectRoot, '.estimator'),
+	storagePath: estimatorDir,
 });
