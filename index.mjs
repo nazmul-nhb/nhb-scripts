@@ -1,0 +1,1 @@
+export { defineModuleConfig } from "./lib/define-module-config.mjs";

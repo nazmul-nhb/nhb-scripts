@@ -9,7 +9,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import readline from 'readline/promises';
 import semver from 'semver';
-import { estimator } from './estimator.mjs';
+import { estimator } from '../lib/estimator.mjs';
 
 /** @typedef {import('type-fest').PackageJson} PackageJson */
 
