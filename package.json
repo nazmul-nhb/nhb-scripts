@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "0.5.14-rc",
+  "version": "0.6.0-rc",
   "description": "A collection of custom Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/define-module-config.d.ts",
   "main": "index.mjs",
@@ -43,8 +43,10 @@
     "chalk": "4.1.2",
     "execa": "^9.5.2",
     "globby": "^14.0.2",
+    "minimist": "^1.2.8",
     "nhb-toolbox": "^4.12.67",
     "progress-estimator": "^0.3.1",
+    "prompts": "^2.4.2",
     "rimraf": "^6.0.1",
     "semver": "^7.7.2",
     "type-fest": "^4.41.0"
