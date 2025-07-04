@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+// count.mjs
+
 // @ts-check
 
 import chalk from 'chalk';

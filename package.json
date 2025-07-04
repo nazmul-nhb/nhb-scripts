@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A collection of custom Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/define-module-config.d.ts",
   "main": "index.mjs",
@@ -58,12 +58,12 @@
     "prompts": "^2.4.2",
     "rimraf": "^6.0.1",
     "semver": "^7.7.2",
-    "type-fest": "^4.41.0"
+    "type-fest": "^4.41.0",
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
     "@types/node": "^24.0.10",
-    "@types/semver": "^7.7.0",
-    "typescript": "^5.8.3"
+    "@types/semver": "^7.7.0"
   },
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
 }
