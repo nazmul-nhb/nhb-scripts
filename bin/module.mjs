@@ -5,10 +5,10 @@
 
 import chalk from 'chalk';
 import { existsSync } from 'fs';
+import { writeFile } from 'fs/promises';
 import minimist from 'minimist';
 import path from 'path';
 import prompts from 'prompts';
-import readline from 'readline/promises';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 
@@ -17,12 +17,13 @@ import { generateModule } from '../lib/module-generator.mjs';
  */
 
 const argv = minimist(process.argv.slice(2), {
-	string: ['template', 'name'],
+	string: ['template', 'name', 'destination'],
 	boolean: ['force'],
 	alias: {
 		t: 'template',
 		n: 'name',
 		f: 'force',
+		d: 'destination'
 	},
 	default: {
 		force: false,
@@ -39,6 +40,83 @@ const getModuleNameFromPrompt = async () => {
 			validate: (value) => (value ? true : 'Module name is required!'),
 		})
 	).value;
+}
+
+/**
+ * Get source path for the module
+ * @param {string} defaultPath 
+ *  @return {Promise<string>} 
+ */
+const getSourcePath = async (defaultPath) => {
+	return (
+		await prompts({
+			type: 'text',
+			name: 'value',
+			message: chalk.cyan(`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`),
+		})
+	).value || defaultPath;
+}
+
+/** * Ensure config file exists or scaffold it if missing */
+async function ensureUserConfigFile() {
+	const root = process.cwd();
+	const candidates = ['nhb.module.config.mjs', 'nhb.module.config.js'];
+
+	const found = candidates.find(name => existsSync(path.join(root, name)));
+
+	if (found) return;
+
+	const { value: shouldCreate } = await prompts({
+		type: 'confirm',
+		name: 'value',
+		message: chalk.yellow(`⚙️	No configuration file detected! Want to create one?`),
+		initial: false,
+	});
+
+	if (!shouldCreate) {
+		console.log(chalk.gray('⚙️	Continuing without custom configuration!'));
+		return;
+	}
+
+	const filePath = path.join(root, 'nhb.module.config.mjs');
+
+	const boilerplate = `// @ts-check
+
+import { defineModuleConfig } from 'nhb-scripts';
+
+export default defineModuleConfig({
+	destination: 'src/app/modules', // optional, default: "src/app/modules"
+	template: 'my-template1', // or omit, it's not necessary as cli will prompt to choose
+	force: false, // true if you want to override the existing module
+	customTemplates: {
+		'my-template1': {
+			destination: 'src/app', // optional, will prioritize inputs from cli
+			files: [
+				{ name: 'index.ts', content: '// index' },
+				{ name: 'server.ts', content: '// server' }]
+		},
+		'my-template2': {
+			destination: 'src/features', // optional, will prioritize inputs from cli
+			files: [
+				{ name: 'index.ts', content: '// content' },
+				{ name: 'dummy.js', content: '// dummy' }
+			]
+		},
+	},
+	// Optional hooks to inspect or execute something at the beginning or after the module generation
+	hooks: {
+		onGenerate(name) {
+			console.log('Generating', name);
+		},
+		onComplete(name) {
+			console.log('Complete:', name);
+		}
+	}
+});
+`;
+
+	await writeFile(filePath, boilerplate, 'utf-8');
+	console.log(`📝 Created ${path.relative(root, filePath)} for you.`);
 }
 
 /**
@@ -59,11 +137,7 @@ const getTemplateFromPrompt = async (choices) => {
 
 /** Create a module */
 async function createModule() {
-	const rl = readline.createInterface({
-		input: process.stdin,
-		output: process.stdout,
-	});
-
+	await ensureUserConfigFile();
 	const config = await loadUserConfig();
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
@@ -88,9 +162,21 @@ async function createModule() {
 	}
 
 	/** @type {ModuleName} */
-	const template = argv.template ?? await getTemplateFromPrompt([...builtInTemplates, ...customTemplates,]);
+	const template = argv.template || await getTemplateFromPrompt([...builtInTemplates, ...customTemplates,]);
 
-	const destination = config.destination ?? 'src/app/modules';
+	/** @returns {string}*/
+	const dest = template
+		? (config.customTemplates?.[template]?.destination ?? config?.destination ?? 'src/app/modules')
+		: 'src/app/modules'
+
+
+	/** @type {string} */
+	const destination = argv.destination ?? await getSourcePath(dest)
+
+	console.log(destination);
+
+	config.destination = destination
+
 	const modulePath = path.resolve(destination, moduleName);
 
 	/** Check if exists, and prompt force */
@@ -118,11 +204,11 @@ async function createModule() {
 		config.template = template;
 	}
 
+
+
 	await generateModule(moduleName, config);
 
 	config.hooks?.onComplete?.(moduleName);
-
-	rl.close();
 }
 
 createModule();

@@ -14,14 +14,20 @@ export interface ModuleHooks {
 	onComplete?: (moduleName: string) => void;
 }
 
+/** Custom template definition */
+export interface CustomTemplate {
+	destination?: string;
+	files: FileEntry[];
+}
+
 /** User configuration for the NHB Module Generator. */
 export interface ModuleConfig {
 	/** Name of built-in template (e.g., "express-mongoose-zod") */
 	template?: LooseLiteral<'express-mongoose-zod'>;
-	/** Directory where modules should be generated (default: "src/app/modules") */
+	/** Directory where modules should be generated (default: `"src/app/modules"`) */
 	destination?: string;
 	/**  Optional list of custom file definitions */
-	customTemplates?: Record<string, FileEntry[]>;
+	customTemplates?: Record<string, CustomTemplate>;
 	/** Optional lifecycle hook functions */
 	hooks?: ModuleHooks;
 	/** Forcefully create a module even if it already exists */
