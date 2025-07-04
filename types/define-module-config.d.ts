@@ -1,5 +1,3 @@
-import type { LooseLiteral } from 'nhb-toolbox/utils/types';
-
 /**  A single file to generate inside a module. */
 export interface FileEntry {
 	name: string;
@@ -17,7 +15,7 @@ export interface ModuleHooks {
 /** User configuration for the NHB Module Generator. */
 export interface ModuleConfig {
 	/** Name of built-in template (e.g., "express-mongoose-zod") */
-	template?: LooseLiteral<'express-mongoose-zod'>;
+	template?: 'express-mongoose-zod';
 	/** Directory where modules should be generated (default: "src/app/modules") */
 	destination?: string;
 	/**  Optional list of custom file definitions */
