@@ -4,7 +4,7 @@
 
 ## nhb-scripts
 
-A **developer-first toolkit** to automate common dev tasks in JavaScript / TypeScript monorepos or backend-focused apps. Built to reduce repetitive boilerplate and improve developer velocity — no magic, just clean logic.
+A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScript projects. Built to reduce repetitive boilerplate and improve developer velocity — no magic, just clean logic.
 
 ---
 
@@ -12,11 +12,13 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript / TypeS
 
 | Script       | Description                                                                 |
 | ------------ | --------------------------------------------------------------------------- |
-| `nhb-module` | Scaffold a backend module (e.g., Express + Mongoose + Zod) with templates.  |
-| `nhb-commit` | Generate a conventional commit message interactively with validation.       |
-| `nhb-count`  | Count export declarations (default, named, aliased) in JS/TS files/folders. |
+| [nhb-module](#-nhb-module--module-generator) | Scaffold module (folder with files) (e.g., Express + Mongoose + Zod by default) with templates.  |
+| [nhb-commit](#-nhb-commit--commit-version-updates-with-semver--custom-message) | Generate a conventional commit message interactively with validation.       |
+| [nhb-count](#-nhb-count--export-counter-cli) | Count export declarations (default, named, aliased) in JS/TS files/folders. |
 
-> ✅ All scripts are available via **`pnpm` scripts** or as **binaries** (if installed globally).
+> More Scripts Coming Soon...
+
+<!-- > ✅ All scripts are available via **`pnpm` scripts** or as **binaries** (if installed globally). -->
 
 ---
 
@@ -25,12 +27,20 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript / TypeS
 Add to your `devDependencies`:
 
 ```bash
+yarn add -D nhb-scripts
+```
+
+```bash
 pnpm add -D nhb-scripts
+```
+
+```bash
+npm i -D nhb-scripts
 ```
 
 Then in your `package.json`:
 
-```jsonc
+```json
 {
   "scripts": {
     "module": "nhb-module",
@@ -43,10 +53,12 @@ Then in your `package.json`:
 Now run any script like:
 
 ```bash
-pnpm module
-pnpm commit
-pnpm count
+pnpm run module      # 🧩 Generate a new module
+pnpm run commit      # ✅ Bump version & commit changes
+pnpm run count       # 📦 Count exports in files
 ```
+
+> Replace `pnpm` with `npm` or `yarn` if you're using those instead.
 
 ---
 
@@ -74,6 +86,14 @@ Use via:
 pnpm module
 ```
 
+```bash
+yarn module
+```
+
+```bash
+npm run module
+```
+
 ---
 
 ### 🛠️ What It Does
@@ -82,6 +102,7 @@ pnpm module
 * Uses a **default template** (`express-mongoose-zod`) or your **custom templates** via a config file.
 * Prevents overwriting by default unless `--force` is passed or set in config.
 * Allows lifecycle hooks: `onGenerate`, `onComplete`.
+* Auto creates (if it is not created before) custom configuration file for template injection: `nhb.module.config.mjs`.
 
 ---
 
@@ -135,9 +156,24 @@ export default defineModuleConfig({
 
 The script will prompt you to create this config file automatically if missing.
 
+#### 🗂️ Template Files (files array)
+
+Each custom template defines its own set of files like this:
+
+```bash
+files: [
+  { name: 'index.ts', content: '// your code here' },
+  { name: 'route.ts', content: 'export const route = "auth";' }
+]
+```
+
+> 💡 **Note:** You can and should write actual code inside the `content` field using template strings — works with any language!
+
 ---
 
 ### 💡 CLI Flags
+
+You can also generate modules non-interactively using CLI flags to streamline automation or scripting:
 
 | Flag            | Alias | Description                                        |
 | --------------- | ----- | -------------------------------------------------- |
@@ -149,19 +185,29 @@ The script will prompt you to create this config file automatically if missing.
 Example:
 
 ```bash
-pnpm module --name=user --template=my-template1 --destination=src/features
+# Using full flags
+pnpm module --name=user --template=my-template1 --destination=src/features --force
+
+# Using full flags but without equal sign
+pnpm module --name user --template my-template1 --destination src/features --force
+
+# Using aliases
+pnpm module -n auth -t express-mongoose-zod -d src/app/modules
+
+# Force overwrite if module exists
+pnpm module -n blog -t express-mongoose-zod -d src/app/modules -f
 ```
 
 ---
 
-### 🤖 Behavior Breakdown
+### 🤖 What Happens Behind the Scenes
 
-1. **Check config file**: If none is found, offer to scaffold one.
-2. **Prompt for module name**, template (custom or built-in), and destination.
-3. **Load and merge config** (file + CLI).
-4. **Check for existence** and prompt overwrite unless `--force` is passed.
-5. **Generate files** based on selected template.
-6. **Trigger lifecycle hooks** if defined.
+1. 🔍 Looks for a config file (offers to create one if missing).
+2. 🧱 Asks for module name, template, and destination (or use flags).
+3. ⚙️ Merges CLI flags with config values.
+4. 🚧 Warns if module exists — prompts overwrite unless `--force`.
+5. 🏗️ Generates module files from the selected template.
+6. 🔁 Runs `onGenerate` and `onComplete` hooks if configured.
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "0.8.0-rc",
+  "version": "1.0.0",
   "description": "A collection of custom Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/define-module-config.d.ts",
   "main": "index.mjs",
