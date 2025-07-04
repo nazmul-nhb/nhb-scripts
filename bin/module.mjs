@@ -69,12 +69,12 @@ async function ensureUserConfigFile() {
 	const { value: shouldCreate } = await prompts({
 		type: 'confirm',
 		name: 'value',
-		message: chalk.yellow(`⚙️	No configuration file detected! Want to create one?`),
+		message: chalk.yellow(`⚙️  No configuration file detected! Want to create one?`),
 		initial: false,
 	});
 
 	if (!shouldCreate) {
-		console.log(chalk.gray('⚙️	Continuing without custom configuration!'));
+		console.log(chalk.gray('  ⛔ Proceeding with default settings without custom configuration file!'));
 		return;
 	}
 
