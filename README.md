@@ -20,6 +20,8 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
 
 <!-- > ✅ All scripts are available via **`pnpm` scripts** or as **binaries** (if installed globally). -->
 
+> Most of the examples here are shown using `pnpm` as package manager, you can use other package managers like `npm` or `yarn` or others. choice
+
 ---
 
 ## 🔧 How to Use in Your Project
@@ -337,6 +339,7 @@ refactor(db): improve mongoose connection handling
 
 | Type       | Description                   |
 | ---------- | ----------------------------- |
+| `update`   | General update (default)      |
 | `feat`     | New feature                   |
 | `fix`      | Bug fix                       |
 | `chore`    | Maintenance task (e.g., deps) |
@@ -348,7 +351,7 @@ refactor(db): improve mongoose connection handling
 | `ci`       | CI-related changes            |
 | `build`    | Build system changes          |
 | `revert`   | Revert a previous commit      |
-| `update`   | General update (default)      |
+| `Custom`   | ✍️ Manually enter your own    |
 
 ---
 
@@ -357,11 +360,12 @@ refactor(db): improve mongoose connection handling
 ```bash
 ? Current version: 1.3.4
 ? Enter new version (or press Enter to keep): 1.4.0
-? Select commit type: feat
-? Enter commit scope (optional): api
-? Enter commit message (required): add login endpoint
+? Select commit type: Custom
+? Enter custom commit type: infra
+? Enter commit scope (optional): devops
+? Enter commit message (required): configure docker build
 
-✔ Commit message → feat(api): add login endpoint
+✔ Commit message → infra(devops): configure docker build
 ✔ Version updated to 1.4.0
 ✔ Committed and pushed!
 ```
@@ -372,19 +376,22 @@ refactor(db): improve mongoose connection handling
 
 * Prevents invalid semver input
 * Ensures new version is **equal to or greater** than current
-* Allows skipping version bump by pressing Enter
+* Allows skipping version bump by pressing `Enter`
 
 ---
 
 ### 🔧 Behavior Summary
 
-| Step             | Behavior                                                              |
-| ---------------- | --------------------------------------------------------------------- |
-| `version` prompt | Accepts semver (e.g., `1.2.3`, `2.0.0-beta.1`) or press Enter to skip |
-| `type` prompt    | Choose from predefined types or default (`update`)                    |
-| `scope` prompt   | Optional. If blank, excluded from final commit message                |
-| `message` prompt | Required. Validates non-empty                                         |
-| `git` operations | Adds all changes, commits, pushes with composed message               |
+> **Note:** Git must be installed, and your repository must be initialized with a remote named `origin`.
+This is required because the script **automatically commits and pushes** version changes to your Git remote.
+
+| Step             | Behavior                                                                |
+| ---------------- | ----------------------------------------------------------------------- |
+| `version` prompt | Accepts semver (e.g., `1.2.3`, `2.0.0-beta.1`) or press `Enter` to skip |
+| `type` prompt    | Choose from predefined types or default (`update`)                      |
+| `scope` prompt   | Optional. If blank, excluded from final commit message                  |
+| `message` prompt | Required. Validates non-empty                                           |
+| `git` operations | Adds all changes, commits, pushes with composed message                 |
 
 ---
 
@@ -396,12 +403,14 @@ You can abort at any time using `Ctrl+C` or `Esc`.
 
 ## 📊 `nhb-count` — Export Counter CLI
 
-Analyze the structure of JavaScript / TypeScript modules to detect and count:
+Analyze the structure of JavaScript/TypeScript modules to detect and count:
 
 * Default exports
 * Named exports
 * Aliased named exports
 * Type-only named exports (`export type { ... }`)
+
+> ⚠ Only supports files that use **ES-style exports** (`export`, `export default`). *CommonJS-style* (`module.exports`, `exports.foo`) is not currently counted.
 
 ---
 

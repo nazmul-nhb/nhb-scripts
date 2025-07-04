@@ -158,7 +158,7 @@ async function createModule() {
 
 	if (!moduleName) {
 		console.error(chalk.red('🛑 Module name is required!'));
-		process.exit(1);
+		process.exit(0);
 	}
 
 	/** @type {ModuleName} */

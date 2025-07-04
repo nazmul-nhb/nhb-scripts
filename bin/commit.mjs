@@ -57,7 +57,7 @@ function isValidVersion(newVersion, currentVersion) {
 }
 
 /** * * Prompt for version, type, scope, and commit message */
-async function main() {
+async function finalPush() {
 	const packageJsonPath = './package.json';
 	const raw = await fs.readFile(packageJsonPath, 'utf-8');
 	/** @type {PackageJson} */
@@ -107,7 +107,7 @@ async function main() {
 		{ title: '🔁 revert', value: 'revert' },
 		{ title: '🧱 build', value: 'build' },
 		{ title: '🚀 ci', value: 'ci' },
-		{ title: '✍  custom...', value: '__custom__' },
+		{ title: '✍  Custom...', value: '__custom__' },
 	];
 
 	let type = '';
@@ -172,7 +172,7 @@ async function main() {
 	await commitAndPush(formattedMessage, version);
 }
 
-main().catch((err) => {
+finalPush().catch((err) => {
 	console.error(chalk.red('🛑 Unexpected Error:'), err);
 	process.exit(1);
 });
