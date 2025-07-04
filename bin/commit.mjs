@@ -6,7 +6,9 @@
 import chalk from 'chalk';
 import { execa } from 'execa';
 import fs from 'fs/promises';
+import path from 'path';
 import readline from 'readline/promises';
+import semver from 'semver';
 import { estimator } from './estimator.mjs';
 
 /** @typedef {import('type-fest').PackageJson} PackageJson */
@@ -46,7 +48,7 @@ async function updateVersion(newVersion) {
  * @param {string} commitMessage - The commit message for version update.
  * @param {string} version - The updated version number.
  */
-async function commitAndPush(commitMessage, version) {
+export async function commitAndPush(commitMessage, version) {
 	try {
 		console.info(chalk.blue('📤 Committing and pushing changes...'));
 
@@ -70,13 +72,61 @@ async function commitAndPush(commitMessage, version) {
 	}
 }
 
+export async function getChangedFiles() {
+	const { stdout } = await execa('git', [
+		'status',
+		'--porcelain',
+		'--untracked-files=normal',
+	]);
+
+	return stdout
+		.split('\n')
+		.map((line) => line.trim())
+		.filter(Boolean)
+		.filter((line) => {
+			const status = line.slice(0, 2);
+			return ['M ', 'A ', '??'].some((prefix) =>
+				status.startsWith(prefix),
+			);
+		})
+		.map((line) => line.slice(2).trim()) // get file path
+		.map((filePath) => path.resolve(process.cwd(), filePath));
+}
+
+/** * Runs Prettier only on untracked files. */
+export async function formatUntrackedFiles() {
+	try {
+		console.info(chalk.magenta('🔍 Checking untracked files...'));
+
+		const files = await getChangedFiles();
+
+		if (!files.length) {
+			console.info(chalk.greenBright('✅ No untracked files to format.'));
+			return;
+		}
+
+		console.info(
+			chalk.cyan(`📝 Formatting ${files.length} untracked files...`),
+		);
+		await estimator(
+			execa('prettier', ['--write', ...files], { stdio: 'inherit' }),
+			chalk.magenta('Formatting untracked files...'),
+		);
+
+		console.info(chalk.green('✅ Untracked files formatted!'));
+	} catch (error) {
+		console.error(chalk.red('🛑 Failed to format untracked files:'), error);
+		throw error;
+	}
+}
+
 /** * Runs prettier to format the codebase. */
 export async function runFormatter() {
 	try {
 		console.info(chalk.magenta('🎨 Running Prettier to format code...'));
 
 		await estimator(
-			execa('npx', ['prettier', '--write', '.'], { stdio: 'inherit' }),
+			execa('prettier', ['--write', '.'], { stdio: 'inherit' }),
 			chalk.magenta('Formatting in progress...'),
 		);
 
@@ -93,7 +143,7 @@ export async function runFormatter() {
  * @param {string} oldVersion - The current version.
  * @returns {boolean} True if newVersion is equal or greater, otherwise false.
  */
-function isValidVersion(newVersion, oldVersion) {
+export function isValidVersion(newVersion, oldVersion) {
 	if (newVersion === oldVersion) return true;
 
 	const [major1, minor1, patch1] = newVersion.split('.').map(Number);
@@ -114,21 +164,20 @@ function isValidVersion(newVersion, oldVersion) {
 
 		/** @type {PackageJson} */
 		const packageJson = JSON.parse(packageData);
+		const oldVersion = packageJson.version;
 
-		const currentVersion = packageJson.version;
-
-		/** @type {string} - New Version */
+		/** @type {string | undefined} - New Version */
 		let newVersion;
 
 		while (true) {
 			newVersion = await rl.question(
 				chalk.cyan(
-					`Current version: ${chalk.yellow(currentVersion)}\nEnter new version: `,
+					`Current version: ${chalk.yellow(oldVersion)}\nEnter new version: `,
 				),
 			);
 
 			if (!newVersion?.trim()) {
-				newVersion = currentVersion ?? '';
+				newVersion = oldVersion;
 				console.info(
 					chalk.cyanBright(
 						`❕Continuing with the previous version ${chalk.yellow(newVersion)}`,
@@ -137,16 +186,25 @@ function isValidVersion(newVersion, oldVersion) {
 				break;
 			}
 
-			if (!/^\d+\.\d+\.\d+$/.test(newVersion)) {
+			if (!semver.valid(newVersion)) {
 				console.info(
 					chalk.yellow(
-						'⚠ Invalid version format! Use semver (e.g., 1.2.3).',
+						'⚠ Invalid semver format! Use formats like 1.2.3, 1.2.3-beta.1, etc.',
 					),
 				);
 				continue;
 			}
 
-			if (!isValidVersion(newVersion, currentVersion ?? "")) {
+			// if (!/^\d+\.\d+\.\d+$/.test(newVersion)) {
+			// 	console.info(
+			// 		chalk.yellow(
+			// 			'⚠ Invalid version format! Use semver (e.g., 1.2.3).',
+			// 		),
+			// 	);
+			// 	continue;
+			// }
+
+			if (!semver.gte(newVersion, String(oldVersion))) {
 				console.info(
 					chalk.yellow(
 						'⚠ New version must be equal or greater than the current version!',
@@ -174,18 +232,19 @@ function isValidVersion(newVersion, oldVersion) {
 
 		rl.close();
 
-		if (newVersion === currentVersion) {
+		if (newVersion === oldVersion) {
 			console.info(
 				chalk.yellowBright(
 					`✅ No version change detected. Current version: ${newVersion}`,
 				),
 			);
 		} else {
-			await updateVersion(newVersion);
+			await updateVersion(String(newVersion));
 		}
 
 		// await runFormatter();
-		await commitAndPush(commitMessage, newVersion);
+		// await formatUntrackedFiles();
+		await commitAndPush(commitMessage, String(newVersion));
 	} catch (error) {
 		console.error(chalk.red('🛑 Unexpected Error:', error));
 		process.exit(1);

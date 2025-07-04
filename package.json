@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "0.5.10",
+  "version": "0.5.11-beta",
   "description": "A collection of custom Node.js scripts to use in TypeScript & JavaScript projects",
   "type": "module",
   "bin": {
@@ -35,17 +35,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^22.10.7",
     "chalk": "4.1.2",
     "execa": "^9.5.2",
     "globby": "^14.0.2",
     "prettier": "^3.4.2",
     "progress-estimator": "^0.3.1",
     "rimraf": "^6.0.1",
+    "semver": "^7.7.2",
     "type-fest": "^4.41.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
+    "@types/node": "^24.0.10",
+    "@types/semver": "^7.7.0",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "eslint": "^9.18.0",
