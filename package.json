@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "0.5.11-beta",
+  "version": "0.5.11-beta2",
   "description": "A collection of custom Node.js scripts to use in TypeScript & JavaScript projects",
   "type": "module",
   "bin": {
@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "lint": "node bin/lint.mjs",
     "fix": "node bin/fix.mjs",
-    "commit": "node bin/commit.mjs"
+    "commit": "node bin/commit.mjs",
+    "count": "node bin/count.mjs"
   },
   "publishConfig": {
     "access": "public"
