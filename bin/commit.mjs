@@ -44,9 +44,7 @@ async function commitAndPush(message, version) {
 		chalk.blue('Committing & pushing...'),
 	);
 
-	console.info(
-		chalk.green(`✅ Version ${version} pushed with message: "${message}"`),
-	);
+	console.info(chalk.green(`✅ Version ${version} pushed with message: "${message}"`));
 }
 
 /**
@@ -92,9 +90,7 @@ async function finalPush() {
 
 		if (!isValidVersion(version, oldVersion)) {
 			console.log(
-				chalk.red(
-					'⚠ Invalid or older version. Use valid semver like 1.2.3',
-				),
+				chalk.red('⚠ Invalid or older version. Use valid semver like 1.2.3'),
 			);
 			continue;
 		}
@@ -142,11 +138,7 @@ async function finalPush() {
 		}
 
 		if (!type?.trim()) {
-			console.log(
-				chalk.yellow(
-					'⚠ Commit type cannot be empty! Please try again.',
-				),
-			);
+			console.log(chalk.yellow('⚠ Commit type cannot be empty! Please try again.'));
 			process.exit(0);
 		}
 	}

@@ -86,8 +86,7 @@ async function countExports(filePath) {
 				) {
 					if (
 						node.modifiers.some(
-							(m) =>
-								m.kind === tsModule.SyntaxKind.DefaultKeyword,
+							(m) => m.kind === tsModule.SyntaxKind.DefaultKeyword,
 						)
 					) {
 						defaultExports += 1;
@@ -107,10 +106,7 @@ async function countExports(filePath) {
 					// Normal named exports
 					namedExportsTotal += node.exportClause.elements.length;
 					for (const el of node.exportClause.elements) {
-						if (
-							el.propertyName &&
-							el.propertyName.text !== el.name.text
-						) {
+						if (el.propertyName && el.propertyName.text !== el.name.text) {
 							aliasedExports += 1;
 						}
 					}
@@ -170,9 +166,7 @@ async function getFilesFromFolder(folderPath) {
 			// If it's a directory, scan for .js/.ts/.mjs files inside
 			filesToProcess = await getFilesFromFolder(filePath);
 			if (filesToProcess.length === 0) {
-				throw new Error(
-					'No `.js`, `.mjs` or `.ts` files found in the folder.',
-				);
+				throw new Error('No `.js`, `.mjs` or `.ts` files found in the folder.');
 			}
 		} else {
 			// If it's a file, just process that file
@@ -184,28 +178,18 @@ async function getFilesFromFolder(folderPath) {
 			const result = await countExports(file);
 
 			console.info(chalk.green(`\n📦 Export Summary for "${file}":`));
+			console.info(chalk.yellow(`🔸 Default Exports        : ${result.default}`));
 			console.info(
-				chalk.yellow(`🔸 Default Exports        : ${result.default}`),
+				chalk.yellow(`🔹 Named Exports (Total)  : ${result.namedExportsTotal}`),
 			);
 			console.info(
-				chalk.yellow(
-					`🔹 Named Exports (Total)  : ${result.namedExportsTotal}`,
-				),
+				chalk.yellow(`   ┣ Direct               : ${result.namedExportsDirect}`),
 			);
 			console.info(
-				chalk.yellow(
-					`   ┣ Direct               : ${result.namedExportsDirect}`,
-				),
+				chalk.yellow(`   ┗ Aliased              : ${result.namedExportsAliased}`),
 			);
 			console.info(
-				chalk.yellow(
-					`   ┗ Aliased              : ${result.namedExportsAliased}`,
-				),
-			);
-			console.info(
-				chalk.yellow(
-					`🔺 Total Type Exports	  : ${result.namedTypeExports}`,
-				),
+				chalk.yellow(`🔺 Total Type Exports	  : ${result.namedTypeExports}`),
 			);
 		}
 	} catch (error) {

@@ -11,6 +11,7 @@ import path from 'path';
 import prompts from 'prompts';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
+import { moduleConfigBoilerplate } from '../templates/module-boilerplate.mjs';
 
 /**
  * @typedef {import('../types/define-configs').ModuleConfig} ModuleConfig
@@ -81,9 +82,7 @@ async function ensureUserConfigFile() {
 	const { value: shouldCreate } = await prompts({
 		type: 'confirm',
 		name: 'value',
-		message: chalk.yellow(
-			`⚙️  No configuration file detected! Want to create one?`,
-		),
+		message: chalk.yellow(`⚙️  No configuration file detected! Want to create one?`),
 		initial: false,
 	});
 
@@ -98,42 +97,7 @@ async function ensureUserConfigFile() {
 
 	const filePath = path.join(root, 'nhb.module.config.mjs');
 
-	const boilerplate = `// @ts-check
-
-import { defineModuleConfig } from 'nhb-scripts';
-
-export default defineModuleConfig({
-	destination: 'src/app/modules', // optional, default: "src/app/modules"
-	template: 'my-template1', // or omit, it's not necessary as cli will prompt to choose
-	force: false, // true if you want to override the existing module
-	customTemplates: {
-		'my-template1': {
-			destination: 'src/app', // optional, will prioritize inputs from cli
-			files: [
-				{ name: 'index.ts', content: '// index' },
-				{ name: 'server.ts', content: '// server' }]
-		},
-		'my-template2': {
-			destination: 'src/features', // optional, will prioritize inputs from cli
-			files: [
-				{ name: 'index.ts', content: '// content' },
-				{ name: 'dummy.js', content: '// dummy' }
-			]
-		},
-	},
-	// Optional hooks to inspect or execute something at the beginning or after the module generation
-	hooks: {
-		onGenerate(name) {
-			console.log('✅ Generating:', name);
-		},
-		onComplete(name) {
-			console.log('✅ Complete:', name);
-		}
-	}
-});
-`;
-
-	await writeFile(filePath, boilerplate, 'utf-8');
+	await writeFile(filePath, moduleConfigBoilerplate, 'utf-8');
 	console.log(`📝 Created ${path.relative(root, filePath)} for you.`);
 }
 
@@ -157,17 +121,13 @@ const getTemplateFromPrompt = async (choices) => {
 async function createModule() {
 	await ensureUserConfigFile();
 
-	const config = await /** @type {Promise<ModuleConfig>} */ (
-		loadUserConfig(candidates)
-	);
+	const config = await /** @type {Promise<ModuleConfig>} */ (loadUserConfig(candidates));
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
-	const customTemplates = Object.keys(config?.customTemplates ?? {}).map(
-		(key) => ({
-			title: `🧩 Custom: ${key}`,
-			value: key /** @type {ModuleName} */,
-		}),
-	);
+	const customTemplates = Object.keys(config?.customTemplates ?? {}).map((key) => ({
+		title: `🧩 Custom: ${key}`,
+		value: key /** @type {ModuleName} */,
+	}));
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
 	const builtInTemplates = [
@@ -187,10 +147,7 @@ async function createModule() {
 	/** @type {ModuleName} */
 	const template =
 		argv.template ||
-		(await getTemplateFromPrompt([
-			...builtInTemplates,
-			...customTemplates,
-		]));
+		(await getTemplateFromPrompt([...builtInTemplates, ...customTemplates]));
 
 	/** @returns {string}*/
 	const dest =
@@ -214,9 +171,7 @@ async function createModule() {
 		const { value: shouldOverwrite } = await prompts({
 			type: 'confirm',
 			name: 'value',
-			message: chalk.yellow(
-				`Module "${moduleName}" already exists. Overwrite?`,
-			),
+			message: chalk.yellow(`Module "${moduleName}" already exists. Overwrite?`),
 			initial: false,
 		});
 
