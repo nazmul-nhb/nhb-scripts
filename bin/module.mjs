@@ -13,8 +13,16 @@ import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 
 /**
- * @typedef {import('../types/define-module-config.d.ts').ModuleConfig['template']} ModuleName
+ * @typedef {import('../types/define-module-config.d.ts').ModuleConfig} ModuleConfig
  */
+
+/**
+ * @typedef {ModuleConfig['template']} ModuleName
+ */
+
+const candidates = /* @__PURE__ */ Object.freeze(
+	['nhb.module.config.mjs', 'nhb.module.config.js']
+);
 
 const argv = minimist(process.argv.slice(2), {
 	string: ['template', 'name', 'destination'],
@@ -60,7 +68,6 @@ const getSourcePath = async (defaultPath) => {
 /** * Ensure config file exists or scaffold it if missing */
 async function ensureUserConfigFile() {
 	const root = process.cwd();
-	const candidates = ['nhb.module.config.mjs', 'nhb.module.config.js'];
 
 	const found = candidates.find(name => existsSync(path.join(root, name)));
 
@@ -138,7 +145,8 @@ const getTemplateFromPrompt = async (choices) => {
 /** Create a module */
 async function createModule() {
 	await ensureUserConfigFile();
-	const config = await loadUserConfig();
+
+	const config = await /** @type {Promise<ModuleConfig>} */ (loadUserConfig(candidates));
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
 	const customTemplates = Object.keys(config?.customTemplates ?? {}).map((key) => ({

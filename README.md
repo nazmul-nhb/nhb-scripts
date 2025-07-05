@@ -20,7 +20,7 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
 
 <!-- > ✅ All scripts are available via **`pnpm` scripts** or as **binaries** (if installed globally). -->
 
-> Most of the examples here are shown using `pnpm` as package manager, you can use other package managers like `npm` or `yarn` or others. choice
+> Most of the examples here are shown using `pnpm` as package manager, you can use other package managers like `npm` or `yarn` or others.
 
 ---
 
@@ -126,12 +126,11 @@ import { defineModuleConfig } from 'nhb-scripts';
 
 export default defineModuleConfig({
   destination: 'src/app/modules',  // default location
-  template: 'my-template1',        // optional default
+  template: 'basic-app',           // optional default, it's not necessary as cli will prompt to choose template
   force: false,                    // global force setting
-
   customTemplates: {
-    'my-template1': {
-      destination: 'src/features',
+    'basic-app': {
+      destination: 'src/app',
       files: [
         { name: 'index.ts', content: '// index content' },
         { name: 'router.ts', content: '// Express router' },
@@ -170,7 +169,7 @@ files: [
 ```
 
 > 💡 **Note:** You can and should write actual code inside the `content` field using template strings — works with any language!
-
+> 💡 **File names** (`name`) can be with folders too like `{ name: 'app/route.ts' }`. The tool will auto generate the folder/directory if it does not exist.
 ---
 
 ### 💡 CLI Flags
@@ -188,10 +187,10 @@ Example:
 
 ```bash
 # Using full flags
-pnpm module --name=user --template=my-template1 --destination=src/features --force
+pnpm module --name=user --template=basic-app --destination=src/features --force
 
 # Using full flags but without equal sign
-pnpm module --name user --template my-template1 --destination src/features --force
+pnpm module --name user --template basic-app --destination src/features --force
 
 # Using aliases
 pnpm module -n auth -t express-mongoose-zod -d src/app/modules
@@ -220,7 +219,7 @@ Given:
 ```ts
 // config file
 {
-  "template": "my-template1",
+  "template": "basic-app",
   "destination": "src/features",
   "files": [
     { name: "index.ts", content: "// index" },
