@@ -2,6 +2,21 @@
 
 <!-- markdownlint-disable-file MD024 -->
 
+<p>
+  <a href="https://www.npmjs.com/package/nhb-scripts" aria-label="Downloads">
+    <img src="https://img.shields.io/npm/dm/nhb-scripts.svg?label=DOWNLOADS&style=flat&color=red&logo=npm" alt="Downloads" />
+  </a>
+  <a href="https://www.npmjs.com/package/nhb-scripts" aria-label="Version">
+    <img src="https://img.shields.io/npm/v/nhb-scripts.svg?label=NPM&style=flat&color=teal&logo=npm" alt="Latest Version" />
+  </a>
+  <a href="https://bundlephobia.com/result?p=nhb-scripts" aria-label="Bundle size">
+    <img src="https://img.shields.io/bundlephobia/minzip/nhb-scripts?style=flat&color=purple&label=SIZE&logo=nodedotjs" alt="Bundle Size" />
+  </a>
+  <a href="https://www.npmjs.com/package/nhb-scripts" aria-label="License">
+    <img src="https://img.shields.io/npm/l/nhb-scripts.svg?label=LICENSE&style=flat&color=orange&logo=open-source-initiative" alt="License" />
+  </a>
+</p>
+
 ## nhb-scripts
 
 A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScript projects. Built to reduce repetitive boilerplate and improve developer velocity — no magic, just clean logic.
