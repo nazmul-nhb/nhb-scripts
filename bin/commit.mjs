@@ -9,6 +9,8 @@ import fs from 'fs/promises';
 import prompts from 'prompts';
 import semver from 'semver';
 import { estimator } from '../lib/estimator.mjs';
+import { loadCommitConfig } from '../lib/load-commit-config.mjs';
+import { runFormatter } from '../lib/prettier-formatter.mjs';
 
 /** @typedef {import('type-fest').PackageJson} PackageJson */
 
@@ -36,14 +38,14 @@ async function commitAndPush(message, version) {
 	await estimator(
 		execa('git', ['add', '.']).then(() =>
 			execa('git', ['commit', '-m', message]).then(() =>
-				execa('git', ['push'], { stdio: 'inherit' })
-			)
+				execa('git', ['push'], { stdio: 'inherit' }),
+			),
 		),
-		chalk.blue('Committing & pushing...')
+		chalk.blue('Committing & pushing...'),
 	);
 
 	console.info(
-		chalk.green(`✅ Version ${version} pushed with message: "${message}"`)
+		chalk.green(`✅ Version ${version} pushed with message: "${message}"`),
 	);
 }
 
@@ -64,6 +66,8 @@ async function finalPush() {
 	const pkg = JSON.parse(raw);
 	const oldVersion = pkg.version || '0.0.0';
 
+	const config = await loadCommitConfig();
+
 	/** @type {string} */
 	let version = '';
 
@@ -79,14 +83,18 @@ async function finalPush() {
 		if (!version) {
 			version = oldVersion;
 			console.info(
-				chalk.cyanBright(`${chalk.red('⨉')} Using previous version: ${chalk.yellow(version)}`)
+				chalk.cyanBright(
+					`${chalk.red('⨉')} Using previous version: ${chalk.yellow(version)}`,
+				),
 			);
 			break;
 		}
 
 		if (!isValidVersion(version, oldVersion)) {
 			console.log(
-				chalk.red('⚠ Invalid or older version. Use valid semver like 1.2.3')
+				chalk.red(
+					'⚠ Invalid or older version. Use valid semver like 1.2.3',
+				),
 			);
 			continue;
 		}
@@ -126,7 +134,7 @@ async function finalPush() {
 				type: 'text',
 				name: 'value',
 				message: chalk.magenta('Enter custom commit type:'),
-				validate: (val) => val.trim() ? true : 'Type is required!',
+				validate: (val) => (val.trim() ? true : 'Type is required!'),
 			});
 			type = customType?.trim();
 		} else {
@@ -134,8 +142,12 @@ async function finalPush() {
 		}
 
 		if (!type?.trim()) {
-			console.log(chalk.yellow('⚠ Commit type cannot be empty! Please try again.'));
-			process.exit(0)
+			console.log(
+				chalk.yellow(
+					'⚠ Commit type cannot be empty! Please try again.',
+				),
+			);
+			process.exit(0);
 		}
 	}
 
@@ -161,12 +173,15 @@ async function finalPush() {
 		}
 	}
 
-	const formattedMessage = scope
-		? `${type}(${scope}): ${message}`
-		: `${type}: ${message}`;
+	const formattedMessage =
+		scope ? `${type}(${scope}): ${message}` : `${type}: ${message}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);
+	}
+
+	if (config.runFormatter) {
+		await runFormatter();
 	}
 
 	await commitAndPush(formattedMessage, version);

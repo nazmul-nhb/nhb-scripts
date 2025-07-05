@@ -40,3 +40,45 @@ export interface ModuleConfig {
  * @param config User configuration for the NHB Module Generator.
  */
 export declare function defineModuleConfig(config: ModuleConfig): ModuleConfig;
+
+/** User configuration for the NHB Format script. */
+export interface FormatConfig {
+	/**
+	 * Additional CLI arguments to pass to Prettier.
+	 * Example: `["--write"]`, `["--check"]`
+	 */
+	args?: string[];
+
+	/**
+	 * Files or directories to format.
+	 * Default is `["."]` (entire project).
+	 * Example: `["src", "scripts"]`
+	 */
+	files?: string[];
+
+	/**
+	 * Path to custom `.prettierignore` file.
+	 * If not provided, falls back to `.prettierignore` in the root directory.
+	 */
+	ignorePath?: string;
+}
+
+/**
+ * * Define prettier config for NHB Format script.
+ *
+ * @param config User configuration for the NHB Format script.
+ */
+export declare function defineFormatConfig(config: FormatConfig): FormatConfig;
+
+/** User configuration for the NHB Commit script. */
+export interface CommitConfig {
+	/** Run Prettier formatter before committing */
+	runFormatter?: boolean;
+}
+
+/**
+ * * Define commit config for NHB Commit script.
+ *
+ * @param config User configuration for the NHB Commit script.
+ */
+export declare function defineCommitConfig(config: CommitConfig): CommitConfig;

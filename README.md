@@ -120,7 +120,7 @@ npm run module
 
 Create a `nhb.module.config.mjs` file in the project root:
 
-```ts
+```js
 // @ts-check
 import { defineModuleConfig } from 'nhb-scripts';
 
@@ -216,7 +216,7 @@ pnpm module -n blog -t express-mongoose-zod -d src/app/modules -f
 
 Given:
 
-```ts
+```js
 // config file
 {
   "template": "basic-app",

@@ -13,16 +13,17 @@ import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 
 /**
- * @typedef {import('../types/define-module-config.d.ts').ModuleConfig} ModuleConfig
+ * @typedef {import('../types/define-configs').ModuleConfig} ModuleConfig
  */
 
 /**
  * @typedef {ModuleConfig['template']} ModuleName
  */
 
-const candidates = /* @__PURE__ */ Object.freeze(
-	['nhb.module.config.mjs', 'nhb.module.config.js']
-);
+const candidates = /* @__PURE__ */ Object.freeze([
+	'nhb.module.config.mjs',
+	'nhb.module.config.js',
+]);
 
 const argv = minimist(process.argv.slice(2), {
 	string: ['template', 'name', 'destination'],
@@ -31,7 +32,7 @@ const argv = minimist(process.argv.slice(2), {
 		t: 'template',
 		n: 'name',
 		f: 'force',
-		d: 'destination'
+		d: 'destination',
 	},
 	default: {
 		force: false,
@@ -48,40 +49,50 @@ const getModuleNameFromPrompt = async () => {
 			validate: (value) => (value ? true : 'Module name is required!'),
 		})
 	).value;
-}
+};
 
 /**
  * Get source path for the module
- * @param {string} defaultPath 
- *  @return {Promise<string>} 
+ * @param {string} defaultPath
+ *  @return {Promise<string>}
  */
 const getSourcePath = async (defaultPath) => {
 	return (
-		await prompts({
-			type: 'text',
-			name: 'value',
-			message: chalk.cyan(`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`),
-		})
-	).value || defaultPath;
-}
+		(
+			await prompts({
+				type: 'text',
+				name: 'value',
+				message: chalk.cyan(
+					`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`,
+				),
+			})
+		).value || defaultPath
+	);
+};
 
 /** * Ensure config file exists or scaffold it if missing */
 async function ensureUserConfigFile() {
 	const root = process.cwd();
 
-	const found = candidates.find(name => existsSync(path.join(root, name)));
+	const found = candidates.find((name) => existsSync(path.join(root, name)));
 
 	if (found) return;
 
 	const { value: shouldCreate } = await prompts({
 		type: 'confirm',
 		name: 'value',
-		message: chalk.yellow(`⚙️  No configuration file detected! Want to create one?`),
+		message: chalk.yellow(
+			`⚙️  No configuration file detected! Want to create one?`,
+		),
 		initial: false,
 	});
 
 	if (!shouldCreate) {
-		console.log(chalk.gray('  ⛔ Proceeding with default settings without custom configuration file!'));
+		console.log(
+			chalk.gray(
+				'  ⛔ Proceeding with default settings without custom configuration file!',
+			),
+		);
 		return;
 	}
 
@@ -127,8 +138,8 @@ export default defineModuleConfig({
 }
 
 /**
- * 
- * @param {Array<{title: string, value: ModuleName}>} choices 
+ *
+ * @param {Array<{title: string, value: ModuleName}>} choices
  * @return {Promise<ModuleName>}
  */
 const getTemplateFromPrompt = async (choices) => {
@@ -140,19 +151,23 @@ const getTemplateFromPrompt = async (choices) => {
 			choices: choices,
 		})
 	).value;
-}
+};
 
 /** Create a module */
 async function createModule() {
 	await ensureUserConfigFile();
 
-	const config = await /** @type {Promise<ModuleConfig>} */ (loadUserConfig(candidates));
+	const config = await /** @type {Promise<ModuleConfig>} */ (
+		loadUserConfig(candidates)
+	);
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
-	const customTemplates = Object.keys(config?.customTemplates ?? {}).map((key) => ({
-		title: `🧩 Custom: ${key}`,
-		value: key	/** @type {ModuleName} */,
-	}));
+	const customTemplates = Object.keys(config?.customTemplates ?? {}).map(
+		(key) => ({
+			title: `🧩 Custom: ${key}`,
+			value: key /** @type {ModuleName} */,
+		}),
+	);
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
 	const builtInTemplates = [
@@ -160,7 +175,7 @@ async function createModule() {
 	];
 
 	/** @type {string} */
-	const moduleName = argv.name || await getModuleNameFromPrompt()
+	const moduleName = argv.name || (await getModuleNameFromPrompt());
 
 	// await rl.question(chalk.cyan('Enter module name: '));
 
@@ -170,20 +185,27 @@ async function createModule() {
 	}
 
 	/** @type {ModuleName} */
-	const template = argv.template || await getTemplateFromPrompt([...builtInTemplates, ...customTemplates,]);
+	const template =
+		argv.template ||
+		(await getTemplateFromPrompt([
+			...builtInTemplates,
+			...customTemplates,
+		]));
 
 	/** @returns {string}*/
-	const dest = template
-		? (config.customTemplates?.[template]?.destination ?? config?.destination ?? 'src/app/modules')
-		: 'src/app/modules'
-
+	const dest =
+		template ?
+			(config.customTemplates?.[template]?.destination ??
+			config?.destination ??
+			'src/app/modules')
+		:	'src/app/modules';
 
 	/** @type {string} */
-	const destination = argv.destination ?? await getSourcePath(dest)
+	const destination = argv.destination ?? (await getSourcePath(dest));
 
 	console.log(destination);
 
-	config.destination = destination
+	config.destination = destination;
 
 	const modulePath = path.resolve(destination, moduleName);
 
@@ -192,7 +214,9 @@ async function createModule() {
 		const { value: shouldOverwrite } = await prompts({
 			type: 'confirm',
 			name: 'value',
-			message: chalk.yellow(`Module "${moduleName}" already exists. Overwrite?`),
+			message: chalk.yellow(
+				`Module "${moduleName}" already exists. Overwrite?`,
+			),
 			initial: false,
 		});
 
@@ -211,8 +235,6 @@ async function createModule() {
 	if (template) {
 		config.template = template;
 	}
-
-
 
 	await generateModule(moduleName, config);
 
