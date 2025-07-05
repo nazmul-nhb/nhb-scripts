@@ -5,6 +5,7 @@
   "types": "types/define-configs.d.ts",
   "main": "index.mjs",
   "type": "module",
+  "sideEffects": false,
   "bin": {
     "nhb-commit": "bin/commit.mjs",
     "nhb-module": "bin/module.mjs",

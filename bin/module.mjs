@@ -126,7 +126,7 @@ async function createModule() {
 	const config = await /** @type {Promise<ModuleConfig>} */ (loadUserConfig(candidates));
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
-	const customTemplates = Object.keys(config?.customTemplates ?? {}).map((key) => ({
+	const customTemplates = Object.keys(config?.customTemplates || {}).map((key) => ({
 		title: `🧩 Custom: ${key}`,
 		value: key /** @type {ModuleName} */,
 	}));
@@ -154,13 +154,13 @@ async function createModule() {
 	/** @returns {string}*/
 	const dest =
 		template ?
-			(config.customTemplates?.[template]?.destination ??
-			config?.destination ??
-			'src/app/modules')
+			config.customTemplates?.[template]?.destination ||
+			config?.destination ||
+			'src/app/modules'
 		:	'src/app/modules';
 
 	/** @type {string} */
-	const destination = argv.destination ?? (await getSourcePath(dest));
+	const destination = argv.destination || (await getSourcePath(dest));
 
 	console.log(destination);
 
@@ -184,7 +184,7 @@ async function createModule() {
 
 		config.force = true;
 	} else {
-		config.force = argv.force ?? false;
+		config.force = argv.force || false;
 	}
 
 	config.hooks?.onGenerate?.(moduleName);
