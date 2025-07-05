@@ -80,13 +80,13 @@ async function finalPush() {
 			],
 			{
 				onSubmit: (_, answer, __) => {
-					console.log(`✔ Selected version: ${answer}`);
+					console.log(`✔ Selected version: ${answer ?? oldVersion}`);
 				},
 				onCancel: () => process.exit(0),
 			},
 		);
 
-		version = input.value?.trim();
+		version = input?.value?.trim();
 
 		if (!version) {
 			version = oldVersion;

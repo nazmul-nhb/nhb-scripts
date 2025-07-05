@@ -217,21 +217,41 @@ pnpm module -n blog -t express-mongoose-zod -d src/app/modules -f
 
 ### 📁 Output Example
 
-Given:
+*Given:*
 
 ```js
-// config file
-{
-  "template": "basic-app",
-  "destination": "src/features",
-  "files": [
-    { name: "index.ts", content: "// index" },
-    { name: "router.ts", content: "// routes" }
-  ]
-}
+// nhb.module.config.mjs
+import { defineModuleConfig } from 'nhb-scripts';
+
+export default defineModuleConfig({
+  destination: 'src/features',
+  customTemplates: {
+    'basic-app': {
+      files: 
+      [
+        { name: 'index.ts', content: '// index' },
+        { name: 'router.ts', content: '// routes' },
+      ],
+    },
+  },
+});
 ```
 
-Result:
+run:
+
+```bash
+pnpm module
+```
+
+and follow the prompts
+
+or run this directly in cli:
+
+```bash
+pnpm module -n user -t basic-app -d src/features
+```
+
+*Result (if module name is `user`):*
 
 ``` bash
 src/features/user/
