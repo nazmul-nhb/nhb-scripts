@@ -11,7 +11,7 @@ import path from 'path';
 import prompts from 'prompts';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
-import { moduleConfigBoilerplate } from '../templates/module-boilerplate.mjs';
+import { moduleConfigBoilerplate } from '../templates/module-config-boilerplate.mjs';
 
 /**
  * @typedef {import('../types/define-configs').ModuleConfig} ModuleConfig
@@ -82,7 +82,9 @@ async function ensureUserConfigFile() {
 	const { value: shouldCreate } = await prompts({
 		type: 'confirm',
 		name: 'value',
-		message: chalk.yellow(`⚙️  No configuration file detected! Want to create one?`),
+		message: chalk.yellow(
+			`⚙️  No 'nhb.module.config.mjs' file detected! Want to create one?`,
+		),
 		initial: false,
 	});
 
