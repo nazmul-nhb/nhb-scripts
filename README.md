@@ -14,6 +14,7 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
 | ------------ | --------------------------------------------------------------------------- |
 | [nhb-module](#-nhb-module--module-generator) | Scaffold module (folder with files) (e.g., Express + Mongoose + Zod by default) with templates.  |
 | [nhb-commit](#-nhb-commit--commit-version-updates-with-semver--custom-message) | Generate a conventional commit message interactively with validation.       |
+| [nhb-format](#-nhb-format--code-formatter-prettier-runner) | Format code with `prettier`.       |
 | [nhb-count](#-nhb-count--export-counter-cli) | Count export declarations (default, named, aliased) in JS/TS files/folders. |
 
 > More Scripts Coming Soon...
@@ -47,6 +48,7 @@ Then in your `package.json`:
   "scripts": {
     "module": "nhb-module",
     "commit": "nhb-commit",
+    "format": "nhb-format",
     "count": "nhb-count"
   }
 }
@@ -55,9 +57,10 @@ Then in your `package.json`:
 Now run any script like:
 
 ```bash
-pnpm run module      # 🧩 Generate a new module
-pnpm run commit      # ✅ Bump version & commit changes
-pnpm run count       # 📦 Count exports in files
+pnpm module      # 🧩 Generate a new module
+pnpm commit      # ✅ Bump version & commit changes
+pnpm format      # 🎨 Format code with prettier
+pnpm count       # 📦 Count exports in files
 ```
 
 > Replace `pnpm` with `npm` or `yarn` if you're using those instead.
@@ -394,9 +397,165 @@ This is required because the script **automatically commits and pushes** version
 
 ---
 
+### ⚙️ `nhb.commit.config.mjs` — Optional Config File
+
+You can optionally add a config file at the root of your project to extend the behavior of `nhb-commit`.
+
+> Supported file names:
+>
+> * `nhb.commit.config.mjs`
+> * `nhb.commit.config.js`
+
+---
+
+#### 🛠️ Example Config
+
+```ts
+// nhb.commit.config.mjs
+
+// @ts-check
+
+import { defineCommitConfig } from 'nhb-scripts';
+
+export default defineCommitConfig({
+ runFormatter: true
+});
+```
+
+---
+
+#### 📌 Available Options
+
+| Option         | Type    | Default | Description                                                  |
+| -------------- | ------- | ------- | ------------------------------------------------------------ |
+| `runFormatter` | boolean | `false` | Whether to **automatically run Prettier** before committing. |
+
+---
+
+### ✨ Formatter Integration (Prettier)
+
+If `runFormatter: true` is enabled in the config:
+
+* It **ensures** `.prettierrc.json` and `.prettierignore` exist.
+* It runs `prettier --write .` or customized options from `nhb.format.config.mjs` (if present) **before** staging changes.
+
+> 💡 This ensures your code is always formatted before being committed!
+
+---
+
+### 📁 Optional Formatter Config File
+
+You can also define a custom formatter config file.
+
+Please refer to [nhb-format](#-nhb-format--code-formatter-prettier-runner) for details.
+
+---
+
+### 📦 Combined Flow
+
+If both configs are present and `runFormatter` is `true`, `nhb-commit` will:
+
+1. Load your `nhb.format.config.mjs` (if available).
+2. Run Prettier formatting.
+3. Proceed to version update and Git commit.
+
+---
+
 ### ❌ Cancel or Abort
 
 You can abort at any time using `Ctrl+C` or `Esc`.
+
+---
+
+## 🎨 `nhb-format` — Code Formatter (Prettier Runner)
+
+A utility script that ensures clean and consistent formatting using **Prettier**, with optional config and auto-scaffolding support.
+
+---
+
+### ⚙️ Setup in `package.json`
+
+```json
+{
+  "scripts": {
+    "format": "nhb-format"
+  }
+}
+```
+
+Run it via:
+
+```bash
+pnpm format
+```
+
+---
+
+### 📦 What It Does
+
+1. Ensures `.prettierrc.json` and `.prettierignore` exist in the project root (auto-generates if missing).
+2. Loads user config from:
+
+   * `nhb.format.config.mjs` or
+   * `nhb.format.config.js`
+3. Executes Prettier with the defined args/files.
+
+> 💡 If no config file exists, it runs Prettier with default args: `--write .`
+
+---
+
+### 🛠️ Example Config
+
+Create a `nhb.format.config.mjs` file:
+
+```js
+// @ts-check
+
+import { defineFormatConfig } from 'nhb-scripts';
+
+export default defineFormatConfig({
+ args: ['--write'],
+ files: ['src',],
+ ignorePath: '.prettierignore'
+});
+```
+
+---
+
+### 🔄 Automatic Integration with `nhb-commit`
+
+If `runFormatter: true` is set in your `nhb.commit.config.mjs`, the formatter will be triggered **before committing**.
+See [nhb-commit](#-nhb-commit--commit-version-updates-with-semver--custom-message) for more details.
+
+---
+
+### ⚠️ Requirements
+
+Make sure `prettier` is installed in your `dependencies` or `devDependencies`:
+
+```bash
+pnpm add -D prettier
+```
+
+If missing, the script will exit with a warning and suggest installation.
+
+---
+
+### 📁 Output Example
+
+```bash
+pnpm format
+
+🎨 Running Prettier...
+✅ Prettier formatting complete!
+```
+
+Or if config is invalid/missing:
+
+```bash
+❌ Prettier not found. Please install `prettier`.
+# install it using your favorite package manager. (npm/pnpm/yarn etc.)
+```
 
 ---
 
@@ -506,4 +665,4 @@ Output:
 
 ## 📄 License
 
-MIT © [Nazmul Hassan](mailto:nazmulnhb@gmail.com)
+[MIT](LICENSE) © [Nazmul Hassan](mailto:nazmulnhb@gmail.com)
