@@ -70,11 +70,21 @@ async function finalPush() {
 	let version = '';
 
 	while (true) {
-		const input = await prompts({
-			type: 'text',
-			name: 'value',
-			message: `Current version: ${chalk.yellow(oldVersion)}\n> Enter new version (press enter to skip):`,
-		});
+		const input = await prompts(
+			[
+				{
+					type: 'text',
+					name: 'value',
+					message: `Current version: ${chalk.yellow(oldVersion)}\n> Enter new version (press enter to skip):`,
+				},
+			],
+			{
+				onSubmit: (_, answer, __) => {
+					console.log(`✔ Selected version: ${answer}`);
+				},
+				onCancel: () => process.exit(0),
+			},
+		);
 
 		version = input.value?.trim();
 
@@ -114,59 +124,42 @@ async function finalPush() {
 		{ title: '✍  Custom...', value: '__custom__' },
 	];
 
-	let type = '';
-
-	while (!type?.trim()) {
-		const { value: selectedType } = await prompts({
-			type: 'select',
-			name: 'value',
-			message: chalk.cyan('Select commit type:'),
-			choices: typeChoices,
-			initial: 0,
-		});
-
-		if (selectedType === '__custom__') {
-			const { value: customType } = await prompts({
-				type: 'text',
-				name: 'value',
+	const { type, customType, scope, message } = await prompts(
+		[
+			{
+				type: 'select',
+				name: 'type',
+				message: chalk.cyan('Select commit type:'),
+				choices: typeChoices,
+				initial: 0,
+			},
+			{
+				type: (prev) => (prev === '__custom__' ? 'text' : null),
+				name: 'customType',
 				message: chalk.magenta('Enter custom commit type:'),
-				validate: (val) => (val.trim() ? true : 'Type is required!'),
-			});
-			type = customType?.trim();
-		} else {
-			type = selectedType;
-		}
+				validate: (val) => (val?.trim() ? true : 'Type is required!'),
+			},
+			{
+				type: 'text',
+				name: 'scope',
+				message: chalk.gray('Enter scope (optional):'),
+			},
+			{
+				type: 'text',
+				name: 'message',
+				message: chalk.cyan('Enter commit message (required):'),
+				validate: (val) => (val.trim() ? true : '⚠ Message cannot be empty!'),
+			},
+		],
+		{
+			onCancel: () => process.exit(0),
+		},
+	);
 
-		if (!type?.trim()) {
-			console.log(chalk.yellow('⚠ Commit type cannot be empty! Please try again.'));
-			process.exit(0);
-		}
-	}
-
-	const { scope } = await prompts({
-		type: 'text',
-		name: 'scope',
-		message: chalk.gray('Enter scope (optional):'),
-	});
-
-	let message = '';
-
-	while (!message?.trim()) {
-		const { value } = await prompts({
-			type: 'text',
-			name: 'value',
-			message: chalk.cyan('Enter commit message (required):'),
-		});
-
-		message = value;
-		if (!message?.trim()) {
-			console.log(chalk.yellow('⚠ Message cannot be empty!'));
-			process.exit(0);
-		}
-	}
+	const finalType = type === '__custom__' ? customType?.trim() : type;
 
 	const formattedMessage =
-		scope ? `${type}(${scope}): ${message}` : `${type}: ${message}`;
+		scope ? `${finalType}(${scope}): ${message}` : `${finalType}: ${message}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);
