@@ -1,3 +1,5 @@
+// @ts-check
+
 export const formatConfigBoilerplate = `// @ts-check
 
 import { defineFormatConfig } from 'nhb-scripts';

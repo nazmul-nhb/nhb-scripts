@@ -1,3 +1,5 @@
+// @ts-check
+
 export const commitConfigBoilerplate = `// @ts-check
 
 import { defineCommitConfig } from 'nhb-scripts';
