@@ -55,6 +55,13 @@ export interface CustomTemplate {
 	destination?: string;
 
 	/**
+	 * Whether to create a subfolder using the module name.
+	 * If `false`, files will be created directly inside the destination.
+	 * Defaults to `true`.
+	 */
+	createFolder?: boolean;
+
+	/**
 	 * List of files to generate for the module.
 	 *
 	 * This can be:
@@ -76,6 +83,12 @@ export interface ModuleConfig {
 	template?: LooseLiteral<'express-mongoose-zod'>;
 	/** Directory where modules should be generated (default: `"src/app/modules"`) */
 	destination?: string;
+	/**
+	 * Whether to create a subfolder using the module names.
+	 * If `false`, files will be created directly inside the destination.
+	 * Defaults to `true`.
+	 */
+	createFolder?: boolean;
 	/**  Optional list of custom file definitions */
 	customTemplates?: Record<string, CustomTemplate>;
 	/** Optional lifecycle hook functions */

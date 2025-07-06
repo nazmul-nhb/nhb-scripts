@@ -34,9 +34,11 @@ const argv = minimist(process.argv.slice(2), {
 		n: 'name',
 		f: 'force',
 		d: 'destination',
+		cf: 'create-folder',
 	},
 	default: {
 		force: false,
+		'create-folder': true,
 	},
 });
 
@@ -168,7 +170,8 @@ async function createModule() {
 	/** @type {Array<{title: string, value: ModuleName}>} */
 	const customTemplates = Object.keys(config?.customTemplates || {}).map((key) => ({
 		title: `🧩 Custom: ${key}`,
-		value: key /** @type {ModuleName} */,
+		/** @type {ModuleName} */
+		value: key,
 	}));
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
@@ -178,8 +181,6 @@ async function createModule() {
 
 	/** @type {string} */
 	const moduleName = argv.name || (await getModuleNameFromPrompt());
-
-	// await rl.question(chalk.cyan('Enter module name: '));
 
 	if (!moduleName) {
 		console.error(chalk.red('🛑 Module name is required!'));
@@ -204,7 +205,37 @@ async function createModule() {
 
 	config.destination = destination;
 
-	const modulePath = path.resolve(destination, moduleName);
+	const tpl = config.customTemplates?.[template ?? ''];
+
+	let shouldCreateFolder = true;
+
+	if (!tpl || tpl.createFolder === undefined) {
+		const { value: askCreateFolder } = await prompts(
+			{
+				type: 'confirm',
+				name: 'value',
+				message: chalk.blueBright(
+					`Do you want to generate files inside a folder named "${moduleName}"?`,
+				),
+				initial: true,
+			},
+			{
+				onCancel: () => {
+					console.log(chalk.gray('⛔ Process cancelled by user!'));
+					process.exit(0);
+				},
+			},
+		);
+
+		shouldCreateFolder = askCreateFolder;
+	}
+
+	config.createFolder = shouldCreateFolder;
+
+	const modulePath =
+		shouldCreateFolder ?
+			path.resolve(destination, moduleName)
+		:	path.resolve(destination);
 
 	/** Check if exists, and prompt force */
 	if (existsSync(modulePath) && !argv.force && !config.force) {
@@ -214,7 +245,7 @@ async function createModule() {
 					type: 'confirm',
 					name: 'value',
 					message: chalk.yellow(
-						`Module "${moduleName}" already exists. Overwrite?`,
+						`Files in "${modulePath}" already exists. Overwrite conflicting files/folders?`,
 					),
 					initial: false,
 				},
@@ -234,7 +265,7 @@ async function createModule() {
 
 		config.force = true;
 	} else {
-		config.force = argv.force || false;
+		config.force = argv.force || config.force || false;
 	}
 
 	config.hooks?.onGenerate?.(moduleName);
