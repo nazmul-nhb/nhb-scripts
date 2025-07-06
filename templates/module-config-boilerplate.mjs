@@ -13,8 +13,8 @@ export default defineModuleConfig({
             destination: 'src/app', // optional, will prioritize inputs from cli
             // Use dynamic moduleName in filenames and contents
             files: (moduleName) => [
-                { name: \`\${moduleName}.controllers.ts\`, content: // controllers for \`\${moduleName}\` },
-                { name: \`\${moduleName}.services.ts\`, content: // services for \`\${moduleName}\` }
+                { name: \`\${moduleName}.controllers.ts\`, content: \`// controllers for \${moduleName}\` },
+                { name: \`\${moduleName}.services.ts\`, content: \`// services for \${moduleName}\` }
             ]
         },
         'my-template2': {
