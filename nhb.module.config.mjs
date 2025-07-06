@@ -5,7 +5,7 @@ import { defineModuleConfig } from './index.mjs';
 export default defineModuleConfig({
 	destination: 'src/app/modules', // optional, default: "src/app/modules"
 	template: 'my-template1', // or omit, it's not necessary as cli will prompt to choose
-	force: false, // true if you want to override the existing module
+	// force: false, // true if you want to override the existing module
 	createFolder: false, // if `false` does not create folder with the module name from cli`
 	customTemplates: {
 		'my-template1': {

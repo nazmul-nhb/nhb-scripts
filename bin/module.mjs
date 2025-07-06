@@ -265,7 +265,7 @@ async function createModule() {
 
 		config.force = true;
 	} else {
-		config.force = argv.force || config.force || false;
+		config.force = argv.force || false;
 	}
 
 	config.hooks?.onGenerate?.(moduleName);
