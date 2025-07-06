@@ -1,7 +1,7 @@
 // @ts-check
 
-import { defineCommitConfig } from './lib/define-commit-config.mjs';
+import { defineCommitConfig } from './index.mjs';
 
 export default defineCommitConfig({
-	runFormatter: true,
+	runFormatter: true, // do not run formatter,  use `true` to format before committing 
 });

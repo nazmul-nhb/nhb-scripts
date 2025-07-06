@@ -82,7 +82,10 @@ async function finalPush() {
 				onSubmit: (_, answer, __) => {
 					console.log(`✔ Selected version: ${answer?.trim() || oldVersion}`);
 				},
-				onCancel: () => process.exit(0),
+				onCancel: () => {
+					console.log(chalk.gray('⛔ Process cancelled by user!'));
+					process.exit(0);
+				},
 			},
 		);
 
@@ -152,7 +155,10 @@ async function finalPush() {
 			},
 		],
 		{
-			onCancel: () => process.exit(0),
+			onCancel: () => {
+				console.log(chalk.gray('⛔ Process cancelled by user!'));
+				process.exit(0);
+			},
 		},
 	);
 

@@ -43,12 +43,22 @@ const argv = minimist(process.argv.slice(2), {
 /** @return {Promise<string>} */
 const getModuleNameFromPrompt = async () => {
 	return (
-		await prompts({
-			type: 'text',
-			name: 'value',
-			message: chalk.cyan('Enter module name:'),
-			validate: (value) => (value ? true : 'Module name is required!'),
-		})
+		await prompts(
+			[
+				{
+					type: 'text',
+					name: 'value',
+					message: chalk.cyan('Enter module name:'),
+					validate: (value) => (value ? true : 'Module name is required!'),
+				},
+			],
+			{
+				onCancel: () => {
+					console.log(chalk.gray('⛔ Process cancelled by user!'));
+					process.exit(0);
+				},
+			},
+		)
 	).value;
 };
 
@@ -60,13 +70,23 @@ const getModuleNameFromPrompt = async () => {
 const getSourcePath = async (defaultPath) => {
 	return (
 		(
-			await prompts({
-				type: 'text',
-				name: 'value',
-				message: chalk.cyan(
-					`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`,
-				),
-			})
+			await prompts(
+				[
+					{
+						type: 'text',
+						name: 'value',
+						message: chalk.cyan(
+							`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`,
+						),
+					},
+				],
+				{
+					onCancel: () => {
+						console.log(chalk.gray('⛔ Process cancelled by user!'));
+						process.exit(0);
+					},
+				},
+			)
 		).value || defaultPath
 	);
 };
@@ -79,14 +99,24 @@ async function ensureUserConfigFile() {
 
 	if (found) return;
 
-	const { value: shouldCreate } = await prompts({
-		type: 'confirm',
-		name: 'value',
-		message: chalk.yellow(
-			`⚙️  No 'nhb.module.config.mjs' file detected! Want to create one?`,
-		),
-		initial: false,
-	});
+	const { value: shouldCreate } = await prompts(
+		[
+			{
+				type: 'confirm',
+				name: 'value',
+				message: chalk.yellow(
+					`⚙️  No 'nhb.module.config.mjs' file detected! Want to create one?`,
+				),
+				initial: false,
+			},
+		],
+		{
+			onCancel: () => {
+				console.log(chalk.gray('⛔ Process cancelled by user!'));
+				process.exit(0);
+			},
+		},
+	);
 
 	if (!shouldCreate) {
 		console.log(
@@ -110,12 +140,22 @@ async function ensureUserConfigFile() {
  */
 const getTemplateFromPrompt = async (choices) => {
 	return (
-		await prompts({
-			type: 'select',
-			name: 'value',
-			message: chalk.magenta('Choose a module template'),
-			choices: choices,
-		})
+		await prompts(
+			[
+				{
+					type: 'select',
+					name: 'value',
+					message: chalk.magenta('Choose a module template'),
+					choices: choices,
+				},
+			],
+			{
+				onCancel: () => {
+					console.log(chalk.gray('⛔ Process cancelled by user!'));
+					process.exit(0);
+				},
+			},
+		)
 	).value;
 };
 
@@ -162,20 +202,30 @@ async function createModule() {
 	/** @type {string} */
 	const destination = argv.destination || (await getSourcePath(dest));
 
-	console.log(destination);
-
 	config.destination = destination;
 
 	const modulePath = path.resolve(destination, moduleName);
 
 	/** Check if exists, and prompt force */
 	if (existsSync(modulePath) && !argv.force && !config.force) {
-		const { value: shouldOverwrite } = await prompts({
-			type: 'confirm',
-			name: 'value',
-			message: chalk.yellow(`Module "${moduleName}" already exists. Overwrite?`),
-			initial: false,
-		});
+		const { value: shouldOverwrite } = await prompts(
+			[
+				{
+					type: 'confirm',
+					name: 'value',
+					message: chalk.yellow(
+						`Module "${moduleName}" already exists. Overwrite?`,
+					),
+					initial: false,
+				},
+			],
+			{
+				onCancel: () => {
+					console.log(chalk.gray('⛔ Module generation cancelled by user!'));
+					process.exit(0);
+				},
+			},
+		);
 
 		if (!shouldOverwrite) {
 			console.log(chalk.gray('⛔ Module generation cancelled by user!'));

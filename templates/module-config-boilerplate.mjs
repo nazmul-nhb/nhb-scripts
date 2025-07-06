@@ -5,16 +5,19 @@ import { defineModuleConfig } from 'nhb-scripts';
 export default defineModuleConfig({
     destination: 'src/app/modules', // optional, default: "src/app/modules"
     template: 'my-template1', // or omit, it's not necessary as cli will prompt to choose
-    force: false, // true if you want to override the existing module
+    force: false, // \`true\` if you want to override the existing module
     customTemplates: {
         'my-template1': {
             destination: 'src/app', // optional, will prioritize inputs from cli
-            files: [
-                { name: 'index.ts', content: '// index' },
-                { name: 'server.ts', content: '// server' }]
+            // Use dynamic moduleName in filenames and contents
+            files: (moduleName) => [
+                { name: \`\${moduleName}.controllers.ts\`, content: \`// controllers for ${moduleName}\` },
+                { name: \`\${moduleName}.services.ts\`, content: \`// services for ${moduleName}\` }
+            ]
         },
         'my-template2': {
             destination: 'src/features', // optional, will prioritize inputs from cli
+            // Use static file list with contents
             files: [
                 { name: 'index.ts', content: '// content' },
                 { name: 'dummy.js', content: '// dummy' }

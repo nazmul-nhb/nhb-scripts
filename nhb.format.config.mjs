@@ -1,6 +1,6 @@
 // @ts-check
 
-import { defineFormatConfig } from './lib/define-format-config.mjs';
+import { defineFormatConfig } from './index.mjs';
 
 export default defineFormatConfig({
     args: ['--write'],

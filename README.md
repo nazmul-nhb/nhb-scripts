@@ -21,6 +21,8 @@
 
 A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScript projects. Built to reduce repetitive boilerplate and improve developer velocity — no magic, just clean logic.
 
+> Most scripts display a progress bar for the current task and automatically create a `.estimator` folder, which is also added to `.gitignore`.
+
 ---
 
 ## 🧰 Included CLI Scripts
@@ -76,6 +78,15 @@ pnpm module      # 🧩 Generate a new module
 pnpm commit      # ✅ Bump version & commit changes
 pnpm format      # 🎨 Format code with prettier
 pnpm count       # 📦 Count exports in files
+```
+
+Or without `package.json` setup:
+
+```bash
+pnpm nhb-module      # 🧩 Generate a new module
+pnpm nhb-commit      # ✅ Bump version & commit changes
+pnpm nhb-format      # 🎨 Format code with prettier
+pnpm nhb-count       # 📦 Count exports in files
 ```
 
 > Replace `pnpm` with `npm` or `yarn` if you're using those instead.
@@ -143,23 +154,32 @@ Create a `nhb.module.config.mjs` file in the project root:
 import { defineModuleConfig } from 'nhb-scripts';
 
 export default defineModuleConfig({
-  destination: 'src/app/modules',  // default location
-  template: 'basic-app',           // optional default, it's not necessary as cli will prompt to choose template
-  force: false,                    // global force setting
+  destination: 'src/app/modules',  // default path if not overridden via CLI
+  template: 'basic-app',           // optional default, it's not necessary as cli will prompt to choose from existing templates
+  force: false,                    // disables overwrite unless true
   customTemplates: {
+    // 🔁 Function-style: dynamic filenames or content
     'basic-app': {
       destination: 'src/app',
-      files: [
-        { name: 'index.ts', content: '// index content' },
-        { name: 'router.ts', content: '// Express router' },
+      files: (moduleName) => [
+        {
+          name: `${moduleName}.controller.ts`,
+          content: `// controller for ${moduleName}`,
+        },
+        {
+          name: `${moduleName}.service.ts`,
+          content: `// service logic for ${moduleName}`,
+        },
       ],
     },
+
+    // 📦 Static-style: hardcoded files
     'admin-module': {
       files: [
-        { name: 'controller.ts', content: '// controller code' },
+        { name: 'controller.ts', content: '// controller' },
         { name: 'model.ts', content: '// mongoose model' },
       ],
-    }
+    },
   },
 
   hooks: {
@@ -173,21 +193,37 @@ export default defineModuleConfig({
 });
 ```
 
-The script will prompt you to create this config file automatically if missing.
+> The script will prompt you to create this config file automatically if missing.
 
-#### 🗂️ Template Files (files array)
+#### 🧠 Why dynamic `files()`?
 
-Each custom template defines its own set of files like this:
+> If your filenames or content need to reference the module name (e.g. `auth.controller.ts`), use the function form.
+> It provides full flexibility for templates that depend on runtime values.
 
-```bash
-files: [
-  { name: 'index.ts', content: '// your code here' },
-  { name: 'route.ts', content: 'export const route = "auth";' }
-]
-```
+#### 🗂️ Template Files (`files`)
+
+You can provide either of the following:
+
+1. **Static array of file entries**:
+
+   ```js
+   files: [
+     { name: 'index.ts', content: '// content' },
+     { name: 'routes.ts', content: 'export const route = "auth";' },
+   ]
+   ```
+
+2. **Dynamic function (recommended for reusable templates)**:
+
+   ```js
+   files: (moduleName) => [
+     { name: `${moduleName}.controller.ts`, content: `// controller for ${moduleName}` },
+     { name: `${moduleName}.service.ts`, content: `// service for ${moduleName}` },
+   ]
+   ```
 
 > 💡 **Note:** You can and should write actual code inside the `content` field using template strings — works with any language!
-> 💡 **File names** (`name`) can be with folders too like `{ name: 'app/route.ts' }`. The tool will auto generate the folder/directory if it does not exist.
+> 💡 **File names** (`name`) can include folders like `{ name: 'utils/helper.ts' }`. Folders will be auto-created if missing.
 ---
 
 ### 💡 CLI Flags
@@ -232,59 +268,51 @@ pnpm module -n blog -t express-mongoose-zod -d src/app/modules -f
 
 ### 📁 Output Example
 
-*Given:*
+Given:
 
 ```js
 // nhb.module.config.mjs
-import { defineModuleConfig } from 'nhb-scripts';
-
 export default defineModuleConfig({
   destination: 'src/features',
   customTemplates: {
     'basic-app': {
-      files: 
-      [
-        { name: 'index.ts', content: '// index' },
-        { name: 'router.ts', content: '// routes' },
-      ],
+      files: (name) => [
+        { name: `${name}.ts`, content: `// module: ${name}` },
+        { name: `${name}.routes.ts`, content: `// routes for ${name}` },
+      ]
     },
   },
 });
 ```
 
-run:
+Run:
 
 ```bash
-pnpm module
+pnpm module -n user -t basic-app
 ```
 
-and follow the prompts
+**Result:**
 
-or run this directly in cli:
-
-```bash
-pnpm module -n user -t basic-app -d src/features
-```
-
-*Result (if module name is `user`):*
-
-``` bash
+```text
 src/features/user/
-├── index.ts     → // index
-└── router.ts    → // routes
+├── user.ts           → // module: user
+└── user.routes.ts    → // routes for user
 ```
 
 ---
 
-### 🧩 Template Definition (Custom)
-
-Each custom template consists of:
+### 🧩 Template Shape
 
 ```ts
-{
+type FileEntry = {
+  name: string;       // file path relative to the module dir
+  content: string;    // file contents
+};
+
+type CustomTemplate = {
   destination?: string;
-  files: Array<{ name: string; content: string }>;
-}
+  files: FileEntry[] | ((moduleName: string) => FileEntry[]);
+};
 ```
 
 You can define multiple templates and dynamically select one at CLI prompt or via `--template`.
@@ -362,7 +390,7 @@ pnpm commit
 
 Examples:
 
-```bash
+```text
 feat(api): add user registration flow
 fix: resolve async deadlock issue
 refactor(db): improve mongoose connection handling
@@ -453,7 +481,7 @@ You can optionally add a config file at the root of your project to extend the b
 import { defineCommitConfig } from 'nhb-scripts';
 
 export default defineCommitConfig({
- runFormatter: true
+ runFormatter: false
 });
 ```
 

@@ -1,8 +1,27 @@
 import type { LooseLiteral } from 'nhb-toolbox/utils/types';
 
-/**  A single file to generate inside a module. */
+/**
+ * A single file definition to be generated as part of a module.
+ *
+ * Each `FileEntry` represents a file with a relative path and its content.
+ * The generator will automatically create directories if the `name` includes folder segments.
+ */
 export interface FileEntry {
+	/**
+	 * The relative file path (can include folders) where the file will be created.
+	 *
+	 * @example "index.ts"
+	 * @example "routes/user.route.ts"
+	 */
 	name: string;
+
+	/**
+	 * The full content of the file to be written.
+	 *
+	 * You can use template strings to insert dynamic values like module name.
+	 *
+	 * @example `// controller for user module`
+	 */
 	content: string;
 }
 
@@ -14,10 +33,41 @@ export interface ModuleHooks {
 	onComplete?: (moduleName: string) => void;
 }
 
-/** Custom template definition */
+/**
+ * A function that receives the module name and returns an array of FileEntry objects.
+ *
+ * @param moduleName - The name of the module being generated. Useful for dynamic filenames or contents.
+ * @returns A list of files to generate.
+ */
+export type FileGenerator = (
+	/** The name of the module being generated. Useful for dynamic filenames or contents. */
+	moduleName: string,
+) => FileEntry[];
+
+/** * Custom template definition for module scaffolding. */
 export interface CustomTemplate {
+	/**
+	 * Optional path where the module should be generated.
+	 *
+	 * If not provided, the global or default destination from the config will be used.
+	 * Can be absolute or relative (e.g., `src/app/modules`).
+	 */
 	destination?: string;
-	files: FileEntry[];
+
+	/**
+	 * List of files to generate for the module.
+	 *
+	 * This can be:
+	 * - A static array of `FileEntry` objects.
+	 * - A function that takes the `moduleName` and returns them dynamically.
+	 *
+	 * @example // Static file list:
+	 * files: [{ name: 'index.ts', content: '// static index' }]
+	 *
+	 * @example // Dynamic file generator:
+	 * files: (moduleName) => [{ name: `${moduleName}.ts`, content: `// dynamic for ${moduleName}` }]
+	 */
+	files: FileEntry[] | FileGenerator;
 }
 
 /** User configuration for the NHB Module Generator. */
