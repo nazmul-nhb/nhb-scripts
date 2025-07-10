@@ -23,6 +23,10 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
 
 > Most scripts display a progress bar for the current task and automatically create a `.estimator` folder, which is also added to `.gitignore`.
 
+## Known Issue(s)
+
+- There are some issues with config files, cli flickering and conflict resolution(s). These will be fixed soon using different method.
+
 ---
 
 ## 🧰 Included CLI Scripts
@@ -129,11 +133,11 @@ npm run module
 
 ### 🛠️ What It Does
 
-* Prompts for module name, destination, and template (unless passed as CLI flags).
-* Uses a **default template** (`express-mongoose-zod`) or your **custom templates** via a config file.
-* Prevents overwriting by default unless `--force` is passed or set in config.
-* Allows lifecycle hooks: `onGenerate`, `onComplete`.
-* Auto creates (if it is not created before) custom configuration file for template injection: `nhb.module.config.mjs`.
+- Prompts for module name, destination, and template (unless passed as CLI flags).
+- Uses a **default template** (`express-mongoose-zod`) or your **custom templates** via a config file.
+- Prevents overwriting by default unless `--force` is passed or set in config.
+- Allows lifecycle hooks: `onGenerate`, `onComplete`.
+- Auto creates (if it is not created before) custom configuration file for template injection: `nhb.module.config.mjs`.
 
 ---
 
@@ -330,8 +334,8 @@ You can define multiple templates and dynamically select one at CLI prompt or vi
 
 ### ❌ Cancel or Abort
 
-* If a module already exists and `--force` is not used, the CLI prompts confirmation.
-* You can abort at any step via keyboard interrupt (`Ctrl+C` or `Esc` on prompts).
+- If a module already exists and `--force` is not used, the CLI prompts confirmation.
+- You can abort at any step via keyboard interrupt (`Ctrl+C` or `Esc` on prompts).
 
 ---
 
@@ -339,9 +343,9 @@ You can define multiple templates and dynamically select one at CLI prompt or vi
 
 A simple, interactive CLI to:
 
-* Safely bump the package version (`package.json`)
-* Add a **typed Git commit message** (with optional scope)
-* Automatically commit and push
+- Safely bump the package version (`package.json`)
+- Add a **typed Git commit message** (with optional scope)
+- Automatically commit and push
 
 This ensures your version bumps and commit messages are semver-valid, consistent, and expressive.
 
@@ -439,9 +443,9 @@ refactor(db): improve mongoose connection handling
 
 ### 🧪 Semver Validations
 
-* Prevents invalid semver input
-* Ensures new version is **equal to or greater** than current
-* Allows skipping version bump by pressing `Enter`
+- Prevents invalid semver input
+- Ensures new version is **equal to or greater** than current
+- Allows skipping version bump by pressing `Enter`
 
 ---
 
@@ -466,8 +470,8 @@ You can optionally add a config file at the root of your project to extend the b
 
 > Supported file names:
 >
-> * `nhb.commit.config.mjs`
-> * `nhb.commit.config.js`
+> - `nhb.commit.config.mjs`
+> - `nhb.commit.config.js`
 
 ---
 
@@ -499,8 +503,8 @@ export default defineCommitConfig({
 
 If `runFormatter: true` is enabled in the config:
 
-* It **ensures** `.prettierrc.json` and `.prettierignore` exist.
-* It runs `prettier --write .` or customized options from `nhb.format.config.mjs` (if present) **before** staging changes.
+- It **ensures** `.prettierrc.json` and `.prettierignore` exist.
+- It runs `prettier --write .` or customized options from `nhb.format.config.mjs` (if present) **before** staging changes.
 
 > 💡 This ensures your code is always formatted before being committed!
 
@@ -559,8 +563,8 @@ pnpm format
 1. Ensures `.prettierrc.json` and `.prettierignore` exist in the project root (auto-generates if missing).
 2. Loads user config from:
 
-   * `nhb.format.config.mjs` or
-   * `nhb.format.config.js`
+   - `nhb.format.config.mjs` or
+   - `nhb.format.config.js`
 3. Executes Prettier with the defined args/files.
 
 > 💡 If no config file exists, it runs Prettier with default args: `--write .`
@@ -626,10 +630,10 @@ Or if config is invalid/missing:
 
 Analyze the structure of JavaScript/TypeScript modules to detect and count:
 
-* Default exports
-* Named exports
-* Aliased named exports
-* Type-only named exports (`export type { ... }`)
+- Default exports
+- Named exports
+- Aliased named exports
+- Type-only named exports (`export type { ... }`)
 
 > ⚠ Only supports files that use **ES-style exports** (`export`, `export default`). *CommonJS-style* (`module.exports`, `exports.foo`) is not currently counted.
 
@@ -669,9 +673,9 @@ When executed, the script will prompt you:
 
 ### 📂 Folder Scan Behavior
 
-* If a **folder** is entered, all `.ts`, `.js`, and `.mjs` files inside are scanned recursively.
-* If a **file** is entered, only that file is analyzed.
-* If **nothing is entered**, the script defaults to `src/index.ts`.
+- If a **folder** is entered, all `.ts`, `.js`, and `.mjs` files inside are scanned recursively.
+- If a **file** is entered, only that file is analyzed.
+- If **nothing is entered**, the script defaults to `src/index.ts`.
 
 ---
 

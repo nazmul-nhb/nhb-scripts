@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/define-configs.d.ts",
   "main": "index.mjs",
@@ -53,8 +53,10 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "5.4.1",
+    "enquirer": "^2.4.1",
     "execa": "^9.5.2",
     "globby": "^14.0.2",
+    "inquirer": "^12.7.0",
     "minimist": "^1.2.8",
     "nhb-toolbox": "^4.12.67",
     "progress-estimator": "^0.3.1",
