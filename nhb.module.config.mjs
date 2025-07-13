@@ -9,7 +9,7 @@ export default defineModuleConfig({
 	createFolder: false, // if `false` does not create folder with the module name from cli`
 	customTemplates: {
 		'my-template1': {
-			createFolder: false, // if `false` does not create folder with the module name from cli`
+			createFolder: true, // if `false` does not create folder with the module name from cli`
 			destination: 'src/app', // optional, will prioritize inputs from cli
 			// Use dynamic moduleName in filenames and contents
 			files: (moduleName) => [

@@ -6,25 +6,26 @@
 import chalk from 'chalk';
 import { execa } from 'execa';
 import fs from 'fs/promises';
-import prompts from 'prompts';
 import semver from 'semver';
+import Enquirer from 'enquirer';
 import { estimator } from '../lib/estimator.mjs';
 import { loadCommitConfig } from '../lib/load-commit-config.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
 
 /** @typedef {import('type-fest').PackageJson} PackageJson */
 
+const enquirer = new Enquirer();
+
 /**
  * * Updates the version field inside package.json
  * @param {string} newVersion
  */
 async function updateVersion(newVersion) {
-	const packageJsonPath = './package.json';
-	const raw = await fs.readFile(packageJsonPath, 'utf-8');
+	const raw = await fs.readFile('./package.json', 'utf-8');
 	/** @type {PackageJson} */
 	const pkg = JSON.parse(raw);
 	pkg.version = newVersion;
-	await fs.writeFile(packageJsonPath, JSON.stringify(pkg, null, 2) + '\n');
+	await fs.writeFile('./package.json', JSON.stringify(pkg, null, 2) + '\n');
 	console.info(chalk.green(`✅ Version updated to ${newVersion}`));
 }
 
@@ -43,7 +44,6 @@ async function commitAndPush(message, version) {
 		),
 		chalk.blue('Committing & pushing...'),
 	);
-
 	console.info(chalk.green(`✅ Version ${version} pushed with message: "${message}"`));
 }
 
@@ -56,10 +56,9 @@ function isValidVersion(newVersion, currentVersion) {
 	return semver.valid(newVersion) && semver.gte(newVersion, currentVersion);
 }
 
-/** * * Prompt for version, type, scope, and commit message */
+/** Prompt for version, type, scope, and commit message */
 async function finalPush() {
-	const packageJsonPath = './package.json';
-	const raw = await fs.readFile(packageJsonPath, 'utf-8');
+	const raw = await fs.readFile('./package.json', 'utf-8');
 	/** @type {PackageJson} */
 	const pkg = JSON.parse(raw);
 	const oldVersion = pkg.version || '0.0.0';
@@ -70,45 +69,40 @@ async function finalPush() {
 	let version = '';
 
 	while (true) {
-		const input = await prompts(
-			[
-				{
-					type: 'text',
+		try {
+			const result = /** @type {{ value: string }} */ (
+				await enquirer.prompt({
+					type: 'input',
 					name: 'value',
 					message: `Current version: ${chalk.yellow(oldVersion)}\n> Enter new version (press enter to skip):`,
-				},
-			],
-			{
-				onSubmit: (_, answer, __) => {
-					console.log(`✔ Selected version: ${answer?.trim() || oldVersion}`);
-				},
-				onCancel: () => {
-					console.log(chalk.gray('⛔ Process cancelled by user!'));
-					process.exit(0);
-				},
-			},
-		);
-
-		version = input?.value?.trim();
-
-		if (!version) {
-			version = oldVersion;
-			console.info(
-				chalk.cyanBright(
-					`${chalk.red('⨉')} Using previous version: ${chalk.yellow(version)}`,
-				),
+				})
 			);
+
+			version = result.value?.trim();
+
+			if (!version) {
+				version = oldVersion;
+				console.info(
+					chalk.cyanBright(
+						`${chalk.red('⨉')} Using previous version: ${chalk.yellow(version)}`,
+					),
+				);
+				break;
+			}
+
+			if (!isValidVersion(version, oldVersion)) {
+				console.log(
+					chalk.red('⚠ Invalid or older version. Use valid semver like 1.2.3'),
+				);
+				continue;
+			}
+
+			console.log(`✔ Selected version: ${version}`);
 			break;
+		} catch {
+			console.log(chalk.gray('⛔ Process cancelled by user!'));
+			process.exit(0);
 		}
-
-		if (!isValidVersion(version, oldVersion)) {
-			console.log(
-				chalk.red('⚠ Invalid or older version. Use valid semver like 1.2.3'),
-			);
-			continue;
-		}
-
-		break;
 	}
 
 	const typeChoices = [
@@ -127,55 +121,72 @@ async function finalPush() {
 		{ title: '✍  Custom...', value: '__custom__' },
 	];
 
-	const { type, customType, scope, message } = await prompts(
-		[
-			{
-				type: 'select',
-				name: 'type',
-				message: chalk.cyan('Select commit type:'),
-				choices: typeChoices,
-				initial: 0,
-			},
-			{
-				type: (prev) => (prev === '__custom__' ? 'text' : null),
-				name: 'customType',
-				message: chalk.magenta('Enter custom commit type:'),
-				validate: (val) => (val?.trim() ? true : 'Type is required!'),
-			},
-			{
-				type: 'text',
-				name: 'scope',
-				message: chalk.gray('Enter scope (optional):'),
-			},
-			{
-				type: 'text',
-				name: 'message',
-				message: chalk.cyan('Enter commit message (required):'),
-				validate: (val) => (val.trim() ? true : '⚠ Message cannot be empty!'),
-			},
-		],
-		{
-			onCancel: () => {
-				console.log(chalk.gray('⛔ Process cancelled by user!'));
-				process.exit(0);
-			},
-		},
-	);
+	/** @typedef {{
+	 *   type: string,
+	 *   customType: string,
+	 *   scope?: string,
+	 *   message: string
+	 * }} CommitPromptResponse
+	 */
 
-	const finalType = type === '__custom__' ? customType?.trim() : type;
+	try {
+		const promptResults = /** @type {CommitPromptResponse} */ (
+			await enquirer.prompt([
+				{
+					type: 'select',
+					name: 'type',
+					message: chalk.cyan('Select commit type:'),
+					choices: typeChoices.map((c) => ({
+						name: String(c.value),
+						message: c.title,
+					})),
+				},
+				{
+					// @ts-ignore – Enquirer accepts dynamic `type` functions
+					type: (prev) => (prev === '__custom__' ? 'input' : undefined),
+					name: 'customType',
+					message: chalk.magenta('Enter custom commit type:'),
+					validate: (val) => (val?.trim() ? true : 'Type is required!'),
+				},
+				{
+					type: 'input',
+					name: 'scope',
+					message: chalk.gray('Enter scope (optional):'),
+				},
+				{
+					type: 'input',
+					name: 'message',
+					message: chalk.cyan('Enter commit message (required):'),
+					validate: (val) => (val.trim() ? true : '⚠ Message cannot be empty!'),
+				},
+			])
+		);
 
-	const formattedMessage =
-		scope ? `${finalType}(${scope}): ${message}` : `${finalType}: ${message}`;
+		/** @type {string} */
+		const finalType =
+			promptResults.type === '__custom__' ?
+				promptResults?.customType?.trim()
+			:	promptResults.type;
 
-	if (version !== oldVersion) {
-		await updateVersion(version);
+		/** @type {string} */
+		const formattedMessage =
+			promptResults.scope?.trim() ?
+				`${finalType}(${promptResults.scope.trim()}): ${promptResults.message.trim()}`
+			:	`${finalType}: ${promptResults.message.trim()}`;
+
+		if (version !== oldVersion) {
+			await updateVersion(version);
+		}
+
+		if (config.runFormatter) {
+			await runFormatter();
+		}
+
+		await commitAndPush(formattedMessage, version);
+	} catch {
+		console.log(chalk.gray('⛔ Process cancelled by user!'));
+		process.exit(0);
 	}
-
-	if (config.runFormatter) {
-		await runFormatter();
-	}
-
-	await commitAndPush(formattedMessage, version);
 }
 
 finalPush().catch((err) => {

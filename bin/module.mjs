@@ -8,7 +8,7 @@ import { existsSync } from 'fs';
 import { writeFile } from 'fs/promises';
 import minimist from 'minimist';
 import path from 'path';
-import prompts from 'prompts';
+import Enquirer from 'enquirer';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 import { moduleConfigBoilerplate } from '../templates/module-config-boilerplate.mjs';
@@ -21,10 +21,9 @@ import { moduleConfigBoilerplate } from '../templates/module-config-boilerplate.
  * @typedef {ModuleConfig['template']} ModuleName
  */
 
-const candidates = /* @__PURE__ */ Object.freeze([
-	'nhb.module.config.mjs',
-	'nhb.module.config.js',
-]);
+const enquirer = new Enquirer();
+
+const candidates = /** @type {const} */ (['nhb.module.config.mjs', 'nhb.module.config.js']);
 
 const argv = minimist(process.argv.slice(2), {
 	string: ['template', 'name', 'destination'],
@@ -42,123 +41,159 @@ const argv = minimist(process.argv.slice(2), {
 	},
 });
 
-/** @return {Promise<string>} */
+/**
+ * Prompt user for module name
+ * @returns {Promise<string>}
+ */
 const getModuleNameFromPrompt = async () => {
-	return (
-		await prompts(
-			[
-				{
-					type: 'text',
-					name: 'value',
-					message: chalk.cyan('Enter module name:'),
-					validate: (value) => (value ? true : 'Module name is required!'),
-				},
-			],
-			{
-				onCancel: () => {
-					console.log(chalk.gray('⛔ Process cancelled by user!'));
-					process.exit(0);
-				},
-			},
-		)
-	).value;
+	try {
+		const result = /** @type {{ value: string }} */ (
+			await enquirer.prompt({
+				type: 'input',
+				name: 'value',
+				message: chalk.cyan('Enter module name:'),
+				validate: (val) => (val ? true : 'Module name is required!'),
+			})
+		);
+		return result.value;
+	} catch {
+		console.log(chalk.gray('⛔ Process cancelled by user!'));
+		process.exit(0);
+	}
 };
 
 /**
- * Get source path for the module
+ * Prompt user for source path
  * @param {string} defaultPath
- *  @return {Promise<string>}
+ * @returns {Promise<string>}
  */
 const getSourcePath = async (defaultPath) => {
-	return (
-		(
-			await prompts(
-				[
-					{
-						type: 'text',
-						name: 'value',
-						message: chalk.cyan(
-							`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`,
-						),
-					},
-				],
-				{
-					onCancel: () => {
-						console.log(chalk.gray('⛔ Process cancelled by user!'));
-						process.exit(0);
-					},
-				},
-			)
-		).value || defaultPath
-	);
+	try {
+		const result = /** @type {{ value: string }} */ (
+			await enquirer.prompt({
+				type: 'input',
+				name: 'value',
+				message: chalk.cyan(
+					`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`,
+				),
+			})
+		);
+		return result.value || defaultPath;
+	} catch {
+		console.log(chalk.gray('⛔ Process cancelled by user!'));
+		process.exit(0);
+	}
 };
 
-/** * Ensure config file exists or scaffold it if missing */
+/**
+ * Ensure nhb.module.config file exists, optionally generate one
+ */
 async function ensureUserConfigFile() {
 	const root = process.cwd();
-
 	const found = candidates.find((name) => existsSync(path.join(root, name)));
-
 	if (found) return;
 
-	const { value: shouldCreate } = await prompts(
-		[
-			{
+	try {
+		const result = /** @type {{ value: boolean }} */ (
+			await enquirer.prompt({
 				type: 'confirm',
 				name: 'value',
 				message: chalk.yellow(
 					`⚙️  No 'nhb.module.config.mjs' file detected! Want to create one?`,
 				),
 				initial: false,
-			},
-		],
-		{
-			onCancel: () => {
-				console.log(chalk.gray('⛔ Process cancelled by user!'));
-				process.exit(0);
-			},
-		},
-	);
-
-	if (!shouldCreate) {
-		console.log(
-			chalk.gray(
-				'  ⛔ Proceeding with default settings without custom configuration file!',
-			),
+			})
 		);
-		return;
+
+		if (!result.value) {
+			console.log(
+				chalk.gray(
+					'  ⛔ Proceeding with default settings without custom configuration file!',
+				),
+			);
+			return;
+		}
+
+		const filePath = path.join(root, 'nhb.module.config.mjs');
+		await writeFile(filePath, moduleConfigBoilerplate, 'utf-8');
+		console.log(`📝 Created ${path.relative(root, filePath)} for you.`);
+	} catch {
+		console.log(chalk.gray('⛔ Process cancelled by user!'));
+		process.exit(0);
 	}
-
-	const filePath = path.join(root, 'nhb.module.config.mjs');
-
-	await writeFile(filePath, moduleConfigBoilerplate, 'utf-8');
-	console.log(`📝 Created ${path.relative(root, filePath)} for you.`);
 }
 
 /**
- *
+ * Prompt to select a template
  * @param {Array<{title: string, value: ModuleName}>} choices
- * @return {Promise<ModuleName>}
+ * @returns {Promise<ModuleName>}
  */
 const getTemplateFromPrompt = async (choices) => {
-	return (
-		await prompts(
-			[
-				{
-					type: 'select',
-					name: 'value',
-					message: chalk.magenta('Choose a module template'),
-					choices: choices,
-				},
-			],
-			{
-				onCancel: () => {
-					console.log(chalk.gray('⛔ Process cancelled by user!'));
-					process.exit(0);
-				},
-			},
-		)
-	).value;
+	try {
+		const result = /** @type {{ value: ModuleName }} */ (
+			await enquirer.prompt({
+				type: 'select',
+				name: 'value',
+				message: chalk.magenta('Choose a module template'),
+				choices: choices.map((c) => ({
+					name: /** @type {string} */ (c.value),
+					message: c.title,
+				})),
+			})
+		);
+		return result.value;
+	} catch {
+		console.log(chalk.gray('⛔ Process cancelled by user!'));
+		process.exit(0);
+	}
+};
+
+/**
+ * Prompt to confirm folder creation
+ * @param {string} moduleName
+ * @returns {Promise<boolean>}
+ */
+const askCreateFolder = async (moduleName) => {
+	try {
+		const result = /** @type {{ value: boolean }} */ (
+			await enquirer.prompt({
+				type: 'confirm',
+				name: 'value',
+				message: chalk.blueBright(
+					`Do you want to generate files inside a folder named "${moduleName}"?`,
+				),
+				initial: true,
+			})
+		);
+		return result.value;
+	} catch {
+		console.log(chalk.gray('⛔ Process cancelled by user!'));
+		process.exit(0);
+	}
+};
+
+/**
+ * Prompt to confirm overwrite
+ * @param {string} modulePath
+ * @returns {Promise<boolean>}
+ */
+const askOverwrite = async (modulePath) => {
+	try {
+		const result = /** @type {{ value: boolean }} */ (
+			await enquirer.prompt({
+				type: 'confirm',
+				name: 'value',
+				message: chalk.yellow(
+					`Files in "${modulePath}" already exist. Overwrite conflicting files/folders?`,
+				),
+				initial: false,
+			})
+		);
+		return result.value;
+	} catch {
+		console.log(chalk.gray('⛔ Module generation cancelled by user!'));
+		process.exit(0);
+	}
 };
 
 /** Create a module */
@@ -179,7 +214,6 @@ async function createModule() {
 		{ title: 'Express + Mongoose + Zod', value: 'express-mongoose-zod' },
 	];
 
-	/** @type {string} */
 	const moduleName = argv.name || (await getModuleNameFromPrompt());
 
 	if (!moduleName) {
@@ -187,12 +221,10 @@ async function createModule() {
 		process.exit(0);
 	}
 
-	/** @type {ModuleName} */
 	const template =
 		argv.template ||
 		(await getTemplateFromPrompt([...builtInTemplates, ...customTemplates]));
 
-	/** @returns {string}*/
 	const dest =
 		template ?
 			config.customTemplates?.[template]?.destination ||
@@ -200,34 +232,14 @@ async function createModule() {
 			'src/app/modules'
 		:	'src/app/modules';
 
-	/** @type {string} */
 	const destination = argv.destination || (await getSourcePath(dest));
-
 	config.destination = destination;
 
 	const tpl = config.customTemplates?.[template ?? ''];
-
 	let shouldCreateFolder = true;
 
 	if (!tpl || tpl.createFolder === undefined) {
-		const { value: askCreateFolder } = await prompts(
-			{
-				type: 'confirm',
-				name: 'value',
-				message: chalk.blueBright(
-					`Do you want to generate files inside a folder named "${moduleName}"?`,
-				),
-				initial: true,
-			},
-			{
-				onCancel: () => {
-					console.log(chalk.gray('⛔ Process cancelled by user!'));
-					process.exit(0);
-				},
-			},
-		);
-
-		shouldCreateFolder = askCreateFolder;
+		shouldCreateFolder = await askCreateFolder(moduleName);
 	}
 
 	config.createFolder = shouldCreateFolder;
@@ -237,32 +249,12 @@ async function createModule() {
 			path.resolve(destination, moduleName)
 		:	path.resolve(destination);
 
-	/** Check if exists, and prompt force */
 	if (existsSync(modulePath) && !argv.force && !config.force) {
-		const { value: shouldOverwrite } = await prompts(
-			[
-				{
-					type: 'confirm',
-					name: 'value',
-					message: chalk.yellow(
-						`Files in "${modulePath}" already exists. Overwrite conflicting files/folders?`,
-					),
-					initial: false,
-				},
-			],
-			{
-				onCancel: () => {
-					console.log(chalk.gray('⛔ Module generation cancelled by user!'));
-					process.exit(0);
-				},
-			},
-		);
-
+		const shouldOverwrite = await askOverwrite(modulePath);
 		if (!shouldOverwrite) {
 			console.log(chalk.gray('⛔ Module generation cancelled by user!'));
 			process.exit(0);
 		}
-
 		config.force = true;
 	} else {
 		config.force = argv.force || false;
