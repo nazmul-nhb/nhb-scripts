@@ -42,7 +42,7 @@ async function commitAndPush(message, version) {
 		),
 		chalk.blue('Committing & pushing...'),
 	);
-	console.info(chalk.green(`✅ Version ${version} pushed with message: "${message}"`));
+	outro(chalk.green(`✅ Version ${version} pushed with message: "${message}"`));
 }
 
 /**
@@ -129,17 +129,17 @@ async function finalPush() {
 	if (typeResult === '__custom__') {
 		const customType = await text({
 			message: chalk.magenta('Enter custom commit type:'),
-			validate: (val) => (val?.trim() ? '' : 'Type is required!'),
+			validate: (val) => (val?.trim() ? '' : 'Commit type is required!'),
 		});
 		if (isCancel(customType)) {
 			console.log(chalk.gray('⛔ Process cancelled by user!'));
 			process.exit(0);
 		}
-		finalType = (customType || '').trim();
+		finalType = (customType || '')?.trim();
 	}
 
 	const scopeResult = await text({
-		message: chalk.gray('Enter scope (optional):'),
+		message: chalk.gray('Enter a scope (optional):'),
 	});
 	if (isCancel(scopeResult)) {
 		console.log(chalk.gray('⛔ Process cancelled by user!'));
@@ -157,8 +157,8 @@ async function finalPush() {
 
 	const formattedMessage =
 		scopeResult?.trim() ?
-			`${finalType}(${scopeResult.trim()}): ${messageResult.trim()}`
-		:	`${finalType}: ${messageResult.trim()}`;
+			`${finalType}(${scopeResult?.trim()}): ${messageResult?.trim()}`
+		:	`${finalType}: ${messageResult?.trim()}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);
@@ -169,8 +169,6 @@ async function finalPush() {
 	}
 
 	await commitAndPush(formattedMessage, version);
-
-	outro(chalk.green('✅ All done!'));
 }
 
 finalPush().catch((err) => {
