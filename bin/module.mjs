@@ -3,12 +3,12 @@
 
 // @ts-check
 
+import { confirm, intro, isCancel, outro, select, text } from '@clack/prompts';
 import chalk from 'chalk';
 import { existsSync } from 'fs';
 import { writeFile } from 'fs/promises';
 import minimist from 'minimist';
 import path from 'path';
-import Enquirer from 'enquirer';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 import { moduleConfigBoilerplate } from '../templates/module-config-boilerplate.mjs';
@@ -21,9 +21,10 @@ import { moduleConfigBoilerplate } from '../templates/module-config-boilerplate.
  * @typedef {ModuleConfig['template']} ModuleName
  */
 
-const enquirer = new Enquirer();
-
-const candidates = /** @type {const} */ (['nhb.module.config.mjs', 'nhb.module.config.js']);
+const candidates = /* @__PURE__ */ Object.freeze([
+	'nhb.module.config.mjs',
+	'nhb.module.config.js',
+]);
 
 const argv = minimist(process.argv.slice(2), {
 	string: ['template', 'name', 'destination'],
@@ -41,181 +42,140 @@ const argv = minimist(process.argv.slice(2), {
 	},
 });
 
-/**
- * Prompt user for module name
- * @returns {Promise<string>}
- */
-const getModuleNameFromPrompt = async () => {
-	try {
-		const result = /** @type {{ value: string }} */ (
-			await enquirer.prompt({
-				type: 'input',
-				name: 'value',
-				message: chalk.cyan('Enter module name:'),
-				validate: (val) => (val ? true : 'Module name is required!'),
-			})
-		);
-		return result.value;
-	} catch {
+/** @returns {Promise<string>} */
+async function getModuleNameFromPrompt() {
+	const result = await text({
+		message: chalk.cyan('Enter module name:'),
+		validate: (val) => (val.trim() ? undefined : 'Module name is required!'),
+	});
+	if (isCancel(result)) {
 		console.log(chalk.gray('⛔ Process cancelled by user!'));
 		process.exit(0);
 	}
-};
+	return result?.trim();
+}
 
 /**
- * Prompt user for source path
  * @param {string} defaultPath
  * @returns {Promise<string>}
  */
-const getSourcePath = async (defaultPath) => {
-	try {
-		const result = /** @type {{ value: string }} */ (
-			await enquirer.prompt({
-				type: 'input',
-				name: 'value',
-				message: chalk.cyan(
-					`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`,
-				),
-			})
-		);
-		return result.value || defaultPath;
-	} catch {
+async function getSourcePath(defaultPath) {
+	const result = await text({
+		message: chalk.cyan(
+			`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`,
+		),
+		placeholder: defaultPath,
+	});
+	if (isCancel(result)) {
 		console.log(chalk.gray('⛔ Process cancelled by user!'));
 		process.exit(0);
 	}
-};
+	return result?.trim() || defaultPath;
+}
 
-/**
- * Ensure nhb.module.config file exists, optionally generate one
- */
+/** * Ensure config file exists, optionally generate one */
 async function ensureUserConfigFile() {
 	const root = process.cwd();
 	const found = candidates.find((name) => existsSync(path.join(root, name)));
 	if (found) return;
 
-	try {
-		const result = /** @type {{ value: boolean }} */ (
-			await enquirer.prompt({
-				type: 'confirm',
-				name: 'value',
-				message: chalk.yellow(
-					`⚙️  No 'nhb.module.config.mjs' file detected! Want to create one?`,
-				),
-				initial: false,
-			})
-		);
-
-		if (!result.value) {
-			console.log(
-				chalk.gray(
-					'  ⛔ Proceeding with default settings without custom configuration file!',
-				),
-			);
-			return;
-		}
-
-		const filePath = path.join(root, 'nhb.module.config.mjs');
-		await writeFile(filePath, moduleConfigBoilerplate, 'utf-8');
-		console.log(`📝 Created ${path.relative(root, filePath)} for you.`);
-	} catch {
+	const result = await confirm({
+		message: chalk.yellow(
+			`⚙️  No 'nhb.module.config.mjs' file detected! Want to create one?`,
+		),
+		initialValue: false,
+	});
+	if (isCancel(result)) {
 		console.log(chalk.gray('⛔ Process cancelled by user!'));
 		process.exit(0);
 	}
+	if (!result) {
+		console.log(
+			chalk.gray(
+				'  ⛔ Proceeding with default settings without custom configuration file!',
+			),
+		);
+		return;
+	}
+	const filePath = path.join(root, 'nhb.module.config.mjs');
+	await writeFile(filePath, moduleConfigBoilerplate, 'utf-8');
+	outro(`📝 Created ${path.relative(root, filePath)} for you.`);
 }
 
 /**
- * Prompt to select a template
- * @param {Array<{title: string, value: ModuleName}>} choices
+ * @param {Array<{title:string,value:ModuleName}>} choices
  * @returns {Promise<ModuleName>}
  */
-const getTemplateFromPrompt = async (choices) => {
-	try {
-		const result = /** @type {{ value: ModuleName }} */ (
-			await enquirer.prompt({
-				type: 'select',
-				name: 'value',
-				message: chalk.magenta('Choose a module template'),
-				choices: choices.map((c) => ({
-					name: /** @type {string} */ (c.value),
-					message: c.title,
-				})),
-			})
-		);
-		return result.value;
-	} catch {
+async function getTemplateFromPrompt(choices) {
+	const options = Object.fromEntries(choices.map((c) => [c.value, c.title]));
+	const result = /** @type {ModuleName} */ (
+		await select({
+			message: chalk.magenta('Choose a module template'),
+			options,
+		})
+	);
+	if (isCancel(result)) {
 		console.log(chalk.gray('⛔ Process cancelled by user!'));
 		process.exit(0);
 	}
-};
+	return result;
+}
 
 /**
  * Prompt to confirm folder creation
  * @param {string} moduleName
  * @returns {Promise<boolean>}
  */
-const askCreateFolder = async (moduleName) => {
-	try {
-		const result = /** @type {{ value: boolean }} */ (
-			await enquirer.prompt({
-				type: 'confirm',
-				name: 'value',
-				message: chalk.blueBright(
-					`Do you want to generate files inside a folder named "${moduleName}"?`,
-				),
-				initial: true,
-			})
-		);
-		return result.value;
-	} catch {
+async function askCreateFolder(moduleName) {
+	const result = await confirm({
+		message: chalk.blueBright(
+			`Do you want to generate files inside a folder named "${moduleName}"?`,
+		),
+		initialValue: true,
+	});
+	if (isCancel(result)) {
 		console.log(chalk.gray('⛔ Process cancelled by user!'));
 		process.exit(0);
 	}
-};
+	return result;
+}
 
 /**
  * Prompt to confirm overwrite
  * @param {string} modulePath
  * @returns {Promise<boolean>}
  */
-const askOverwrite = async (modulePath) => {
-	try {
-		const result = /** @type {{ value: boolean }} */ (
-			await enquirer.prompt({
-				type: 'confirm',
-				name: 'value',
-				message: chalk.yellow(
-					`Files in "${modulePath}" already exist. Overwrite conflicting files/folders?`,
-				),
-				initial: false,
-			})
-		);
-		return result.value;
-	} catch {
+async function askOverwrite(modulePath) {
+	const result = await confirm({
+		message: chalk.yellow(
+			`Files in "${modulePath}" already exist. Overwrite conflicting files/folders?`,
+		),
+		initialValue: false,
+	});
+	if (isCancel(result)) {
 		console.log(chalk.gray('⛔ Module generation cancelled by user!'));
 		process.exit(0);
 	}
-};
+	return result;
+}
 
-/** Create a module */
 async function createModule() {
-	await ensureUserConfigFile();
+	intro(chalk.cyanBright('📦 NHB Module Generator'));
 
+	await ensureUserConfigFile();
 	const config = await /** @type {Promise<ModuleConfig>} */ (loadUserConfig(candidates));
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
 	const customTemplates = Object.keys(config?.customTemplates || {}).map((key) => ({
 		title: `🧩 Custom: ${key}`,
-		/** @type {ModuleName} */
 		value: key,
 	}));
 
-	/** @type {Array<{title: string, value: ModuleName}>} */
 	const builtInTemplates = [
 		{ title: 'Express + Mongoose + Zod', value: 'express-mongoose-zod' },
 	];
 
 	const moduleName = argv.name || (await getModuleNameFromPrompt());
-
 	if (!moduleName) {
 		console.error(chalk.red('🛑 Module name is required!'));
 		process.exit(0);
@@ -236,6 +196,7 @@ async function createModule() {
 	config.destination = destination;
 
 	const tpl = config.customTemplates?.[template ?? ''];
+
 	let shouldCreateFolder = true;
 
 	if (!tpl || tpl.createFolder === undefined) {
@@ -269,6 +230,7 @@ async function createModule() {
 	await generateModule(moduleName, config);
 
 	config.hooks?.onComplete?.(moduleName);
+	outro(chalk.green('✅ Module generated successfully!'));
 }
 
 createModule();

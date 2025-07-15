@@ -3,12 +3,11 @@
 
 // @ts-check
 
+import { intro, isCancel, outro, select, spinner, text } from '@clack/prompts';
 import chalk from 'chalk';
 import { execa } from 'execa';
 import fs from 'fs/promises';
 import semver from 'semver';
-import { intro, outro, text, select, isCancel } from '@clack/prompts';
-import { estimator } from '../lib/estimator.mjs';
 import { loadCommitConfig } from '../lib/load-commit-config.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
 
@@ -29,20 +28,27 @@ async function updateVersion(newVersion) {
 
 /**
  * Git commit and push with message
- * @param {string} message
- * @param {string} version
+ * @param {string} message Commit message
+ * @param {string} version Version string
  */
-async function commitAndPush(message, version) {
-	console.info(chalk.blue('📤 Committing and pushing changes...'));
-	await estimator(
-		execa('git', ['add', '.']).then(() =>
-			execa('git', ['commit', '-m', message]).then(() =>
-				execa('git', ['push'], { stdio: 'inherit' }),
-			),
-		),
-		chalk.blue('Committing & pushing...'),
-	);
-	outro(chalk.green(`✅ Version ${version} pushed with message: "${message}"`));
+export async function commitAndPush(message, version) {
+	const s = spinner();
+
+	s.start(chalk.blue('📤 Committing & pushing changes...'));
+
+	try {
+		await execa('git', ['add', '.']);
+		await execa('git', ['commit', '-m', message]);
+		await execa('git', ['push'], { stdio: 'inherit' });
+
+		// stop spinner on success
+		s.stop(chalk.green('✅ Changes committed and pushed!'));
+		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
+	} catch (err) {
+		s.stop(chalk.red('❌ Commit or push failed!'));
+		console.error(chalk.red(err));
+		process.exit(0);
+	}
 }
 
 /**
@@ -173,5 +179,5 @@ async function finalPush() {
 
 finalPush().catch((err) => {
 	console.error(chalk.red('🛑 Unexpected Error:'), err);
-	process.exit(1);
+	process.exit(0);
 });

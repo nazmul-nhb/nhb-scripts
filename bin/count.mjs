@@ -3,11 +3,11 @@
 
 // @ts-check
 
+import { intro, isCancel, outro, text } from '@clack/prompts';
 import chalk from 'chalk';
 import fs from 'fs/promises';
 import { extname, join, resolve } from 'path';
 import tsModule from 'typescript';
-import { intro, outro, text, isCancel } from '@clack/prompts';
 
 /**
  * @typedef {Object} Exports
@@ -124,7 +124,7 @@ async function countExports(filePath) {
 		};
 	} catch (err) {
 		console.error(chalk.red('🛑 Failed to parse or read file:\n'), err);
-		process.exit(1);
+		process.exit(0);
 	}
 }
 
@@ -189,6 +189,6 @@ async function getFilesFromFolder(folderPath) {
 		outro(chalk.green('✅ Scan completed!'));
 	} catch (error) {
 		console.error(chalk.red('🛑 Unexpected Error:\n'), error);
-		process.exit(1);
+		process.exit(0);
 	}
 })();
