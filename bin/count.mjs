@@ -6,12 +6,11 @@
 import chalk from 'chalk';
 import fs from 'fs/promises';
 import { extname, join, resolve } from 'path';
-import { createInterface } from 'readline/promises';
 import tsModule from 'typescript';
+import { intro, outro, text, isCancel } from '@clack/prompts';
 
 /**
- * @typedef {Object} Exports Object defining different export counts.
- *
+ * @typedef {Object} Exports
  * @property {number} default Default export count.
  * @property {number} namedExportsTotal Total named export count.
  * @property {number} namedExportsDirect Original named export count.
@@ -20,17 +19,14 @@ import tsModule from 'typescript';
  */
 
 /**
- * Prompts the user to enter a JS/TS/MJS (with extension) file path.
- * @returns {Promise<string>} The resolved file path with extension or directory path.
+ * Prompt the user to enter a JS/TS/MJS path (file or folder)
+ * @returns {Promise<string>} The resolved path
  */
 async function getFilePath() {
-	const rl = createInterface({
-		input: process.stdin,
-		output: process.stdout,
-	});
+	intro(chalk.cyan('📂 Export Counter'));
 
-	const inputPath = await rl.question(
-		chalk.cyanBright(
+	const inputPath = await text({
+		message: chalk.cyanBright(
 			`───────────────────────────────────────────────────────────────────────────────\n` +
 				`🎯 Please specify the path to a ${chalk.yellowBright.bold('"JavaScript/TypeScript/MJS"')} file or folder.\n` +
 				`   - Enter the full file path (with extension) to process a specific file.\n` +
@@ -38,18 +34,21 @@ async function getFilePath() {
 				`   - Leave it empty to scan the default file: ${chalk.bgYellowBright.bold.whiteBright(' src/index.ts ')}.\n` +
 				`───────────────────────────────────────────────────────────────────────────────\n`,
 		),
-	);
+		placeholder: 'src/index.ts',
+	});
 
-	rl.close();
+	if (isCancel(inputPath)) {
+		console.log(chalk.gray('⛔ Process cancelled by user!'));
+		process.exit(0);
+	}
 
-	const filePath = inputPath.trim() || 'src/index.ts';
-
+	const filePath = (inputPath || '').trim() || 'src/index.ts';
 	return resolve(filePath);
 }
 
 /**
- * * Counts the types of exports in a JS/TS file.
- * @param {string} filePath - Full path to the file.
+ * Count types of exports in a JS/TS file
+ * @param {string} filePath
  * @returns {Promise<Exports>}
  */
 async function countExports(filePath) {
@@ -67,7 +66,7 @@ async function countExports(filePath) {
 		let aliasedExports = 0;
 		let namedTypeExports = 0;
 
-		/** @param {tsModule.Node} node */
+		/** @param {import('typescript').Node} node */
 		const checkNode = (node) => {
 			if (tsModule.isExportAssignment(node)) {
 				if (!node.isExportEquals) defaultExports += 1;
@@ -100,10 +99,8 @@ async function countExports(filePath) {
 				tsModule.isNamedExports(node.exportClause)
 			) {
 				if (node.isTypeOnly) {
-					// Count type exports separately
 					namedTypeExports += node.exportClause.elements.length;
 				} else {
-					// Normal named exports
 					namedExportsTotal += node.exportClause.elements.length;
 					for (const el of node.exportClause.elements) {
 						if (el.propertyName && el.propertyName.text !== el.name.text) {
@@ -132,13 +129,12 @@ async function countExports(filePath) {
 }
 
 /**
- * Scans a folder recursively and returns an array of all .js, .ts, and .mjs files.
- * @param {string} folderPath - Folder to scan.
- * @returns {Promise<string[]>} List of file paths.
+ * Recursively scan a folder for .js/.ts/.mjs
+ * @param {string} folderPath
+ * @returns {Promise<string[]>}
  */
 async function getFilesFromFolder(folderPath) {
 	const files = await fs.readdir(folderPath, { withFileTypes: true });
-
 	/** @type {string[]} */
 	let filePaths = [];
 
@@ -154,26 +150,23 @@ async function getFilesFromFolder(folderPath) {
 	return filePaths;
 }
 
-/** * Main execution block. */
+// Main Execution
 (async () => {
 	try {
 		const filePath = await getFilePath();
-
-		let filesToProcess = [];
 		const stats = await fs.stat(filePath);
 
+		let filesToProcess = [];
+
 		if (stats.isDirectory()) {
-			// If it's a directory, scan for .js/.ts/.mjs files inside
 			filesToProcess = await getFilesFromFolder(filePath);
 			if (filesToProcess.length === 0) {
 				throw new Error('No `.js`, `.mjs` or `.ts` files found in the folder.');
 			}
 		} else {
-			// If it's a file, just process that file
 			filesToProcess = [filePath];
 		}
 
-		// Process each file in the list
 		for (const file of filesToProcess) {
 			const result = await countExports(file);
 
@@ -189,9 +182,11 @@ async function getFilesFromFolder(folderPath) {
 				chalk.yellow(`   ┗ Aliased              : ${result.namedExportsAliased}`),
 			);
 			console.info(
-				chalk.yellow(`🔺 Total Type Exports	  : ${result.namedTypeExports}`),
+				chalk.yellow(`🔺 Total Type Exports     : ${result.namedTypeExports}`),
 			);
 		}
+
+		outro(chalk.green('✅ Scan completed!'));
 	} catch (error) {
 		console.error(chalk.red('🛑 Unexpected Error:\n'), error);
 		process.exit(1);
