@@ -13,13 +13,8 @@ import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 import { moduleConfigBoilerplate } from '../templates/module-config-boilerplate.mjs';
 
-/**
- * @typedef {import('../types/define-configs').ModuleConfig} ModuleConfig
- */
-
-/**
- * @typedef {ModuleConfig['template']} ModuleName
- */
+/** @typedef {import('../types/define-configs').ModuleConfig} ModuleConfig */
+/** @typedef {ModuleConfig['template']} ModuleName */
 
 const candidates = /* @__PURE__ */ Object.freeze([
 	'nhb.module.config.mjs',
@@ -107,11 +102,13 @@ async function ensureUserConfigFile() {
  * @returns {Promise<ModuleName>}
  */
 async function getTemplateFromPrompt(choices) {
-	const options = Object.fromEntries(choices.map((c) => [c.value, c.title]));
 	const result = /** @type {ModuleName} */ (
 		await select({
 			message: chalk.magenta('Choose a module template'),
-			options,
+			options: choices.map((c) => ({
+				value: c.value,
+				label: c.title,
+			})),
 		})
 	);
 	if (isCancel(result)) {
@@ -230,7 +227,7 @@ async function createModule() {
 	await generateModule(moduleName, config);
 
 	config.hooks?.onComplete?.(moduleName);
-	outro(chalk.green('✅ Module generated successfully!'));
+	// outro(chalk.green('✅ Module generated successfully!'));
 }
 
 createModule();
