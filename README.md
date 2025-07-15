@@ -406,21 +406,25 @@ refactor(db): improve mongoose connection handling
 
 > Default type: **`update`**
 
-| Type       | Description                   |
-| ---------- | ----------------------------- |
-| `update`   | General update (default)      |
-| `feat`     | New feature                   |
-| `fix`      | Bug fix                       |
-| `chore`    | Maintenance task (e.g., deps) |
-| `refactor` | Internal logic change         |
-| `test`     | Adding/fixing tests           |
-| `docs`     | Documentation-only change     |
-| `style`    | Code formatting, whitespace   |
-| `perf`     | Performance improvement       |
-| `ci`       | CI-related changes            |
-| `build`    | Build system changes          |
-| `revert`   | Revert a previous commit      |
-| `Custom`   | ✍️ Manually enter your own    |
+| Type       |     Description                   |
+| ---------- | --------------------------------- |
+| `update`   | 🔧  General update (default)      |
+| `feat`     | ✨  New feature                   |
+| `fix`      | 🐛  Bug fix                       |
+| `chore`    | 🛠️  Maintenance task (e.g., deps) |
+| `refactor` | 🧼  Internal logic change         |
+| `test`     | 🧪  Adding/fixing tests           |
+| `docs`     | 📚  Documentation-only change     |
+| `style`    | 💅  Code formatting, styling etc. |
+| `perf`     | ⚡  Performance improvement       |
+| `ci`       | 🚀  CI-related changes            |
+| `build`    | 🧱  Build system changes          |
+| `revert`   | 🔁  Revert a previous commit      |
+| `release`  | 🔖  Version bump or release       |
+| `deps`     | 📦  Dependency updates            |
+| `cleanup`  | 🧹  Minor cleanup tasks           |
+| `merge`    | 🧭  Merge-related commits         |
+| `Custom`   | ✍️  Manually enter your own       |
 
 ---
 

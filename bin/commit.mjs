@@ -14,7 +14,7 @@ import { runFormatter } from '../lib/prettier-formatter.mjs';
 /** @typedef {import('type-fest').PackageJson} PackageJson */
 
 /**
- * Updates version in package.json
+ * * Updates version in package.json
  * @param {string} newVersion
  */
 async function updateVersion(newVersion) {
@@ -27,7 +27,7 @@ async function updateVersion(newVersion) {
 }
 
 /**
- * Git commit and push with message
+ * * Git commit and push with message
  * @param {string} message Commit message
  * @param {string} version Version string
  */
@@ -41,7 +41,6 @@ export async function commitAndPush(message, version) {
 		await execa('git', ['commit', '-m', message]);
 		await execa('git', ['push'], { stdio: 'inherit' });
 
-		// stop spinner on success
 		s.stop(chalk.green('✅ Changes committed and pushed!'));
 		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
 	} catch (err) {
@@ -106,7 +105,7 @@ async function finalPush() {
 	}
 
 	const typeChoices = [
-		{ value: 'update', label: '🌀 update (default)' },
+		{ value: 'update', label: '🔧 update (default)' },
 		{ value: 'feat', label: '✨ feat' },
 		{ value: 'fix', label: '🐛 fix' },
 		{ value: 'chore', label: '🛠️  chore' },
@@ -118,6 +117,10 @@ async function finalPush() {
 		{ value: 'revert', label: '🔁 revert' },
 		{ value: 'build', label: '🧱 build' },
 		{ value: 'ci', label: '🚀 ci' },
+		{ value: 'release', label: '🔖 release' },
+		{ value: 'deps', label: '📦 deps' },
+		{ value: 'cleanup', label: '🧹 cleanup' },
+		{ value: 'merge', label: '🧭 merge' },
 		{ value: '__custom__', label: '✍  Custom...' },
 	];
 
