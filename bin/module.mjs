@@ -3,23 +3,16 @@
 
 // @ts-check
 
-import { confirm, intro, isCancel, outro, select, text } from '@clack/prompts';
+import { confirm, intro, isCancel, select, text } from '@clack/prompts';
 import chalk from 'chalk';
 import { existsSync } from 'fs';
-import { writeFile } from 'fs/promises';
 import minimist from 'minimist';
 import path from 'path';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
-import { moduleConfigBoilerplate } from '../templates/module-config-boilerplate.mjs';
 
 /** @typedef {import('../types/define-configs').ModuleConfig} ModuleConfig */
 /** @typedef {ModuleConfig['template']} ModuleName */
-
-const candidates = /* @__PURE__ */ Object.freeze([
-	'nhb.module.config.mjs',
-	'nhb.module.config.js',
-]);
 
 const argv = minimist(process.argv.slice(2), {
 	string: ['template', 'name', 'destination'],
@@ -66,35 +59,6 @@ async function getSourcePath(defaultPath) {
 		process.exit(0);
 	}
 	return result?.trim() || defaultPath;
-}
-
-/** * Ensure config file exists, optionally generate one */
-async function ensureUserConfigFile() {
-	const root = process.cwd();
-	const found = candidates.find((name) => existsSync(path.join(root, name)));
-	if (found) return;
-
-	const result = await confirm({
-		message: chalk.yellow(
-			`⚙️  No 'nhb.module.config.mjs' file detected! Want to create one?`,
-		),
-		initialValue: false,
-	});
-	if (isCancel(result)) {
-		console.log(chalk.gray('⛔ Process cancelled by user!'));
-		process.exit(0);
-	}
-	if (!result) {
-		console.log(
-			chalk.gray(
-				'  ⛔ Proceeding with default settings without custom configuration file!',
-			),
-		);
-		return;
-	}
-	const filePath = path.join(root, 'nhb.module.config.mjs');
-	await writeFile(filePath, moduleConfigBoilerplate, 'utf-8');
-	outro(`📝 Created ${path.relative(root, filePath)} for you.`);
 }
 
 /**
@@ -159,8 +123,7 @@ async function askOverwrite(modulePath) {
 async function createModule() {
 	intro(chalk.cyanBright('📦 NHB Module Generator'));
 
-	await ensureUserConfigFile();
-	const config = await /** @type {Promise<ModuleConfig>} */ (loadUserConfig(candidates));
+	const config = (await loadUserConfig()).module ?? {};
 
 	/** @type {Array<{title: string, value: ModuleName}>} */
 	const customTemplates = Object.keys(config?.customTemplates || {}).map((key) => ({
@@ -186,8 +149,8 @@ async function createModule() {
 		template ?
 			config.customTemplates?.[template]?.destination ||
 			config?.destination ||
-			'src/app/modules'
-		:	'src/app/modules';
+			'src/modules'
+		:	'src/modules';
 
 	const destination = argv.destination || (await getSourcePath(dest));
 	config.destination = destination;

@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import { execa } from 'execa';
 import fs from 'fs/promises';
 import semver from 'semver';
-import { loadCommitConfig } from '../lib/load-commit-config.mjs';
+import { loadUserConfig } from '../lib/config-loader.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
 
 /** @typedef {import('type-fest').PackageJson} PackageJson */
@@ -68,7 +68,7 @@ async function finalPush() {
 	const pkg = JSON.parse(raw);
 	const oldVersion = pkg.version || '0.0.0';
 
-	const config = await loadCommitConfig();
+	const config = (await loadUserConfig()).commit ?? {};
 
 	let version = '';
 	while (true) {

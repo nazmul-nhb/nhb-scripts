@@ -6,6 +6,6 @@
 import { runFormatter } from '../lib/prettier-formatter.mjs';
 
 runFormatter().catch((err) => {
-	console.error('🛑 Formatter failed:', err.message);
+	console.error('🛑 Formatter failed:', err);
 	process.exit(0);
 });

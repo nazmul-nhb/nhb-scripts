@@ -50,7 +50,7 @@ export interface CustomTemplate {
 	 * Optional path where the module should be generated.
 	 *
 	 * If not provided, the global or default destination from the config will be used.
-	 * Can be absolute or relative (e.g., `src/app/modules`).
+	 * Can be absolute or relative (e.g., `src/modules`).
 	 */
 	destination?: string;
 
@@ -77,11 +77,11 @@ export interface CustomTemplate {
 	files: FileEntry[] | FileGenerator;
 }
 
-/** User configuration for the NHB Module Generator. */
+/** User configuration for `nhb-module` script. */
 export interface ModuleConfig {
 	/** Name of built-in template (e.g., "express-mongoose-zod") */
 	template?: LooseLiteral<'express-mongoose-zod'>;
-	/** Directory where modules should be generated (default: `"src/app/modules"`) */
+	/** Directory where modules should be generated (default: `"src/modules"`) */
 	destination?: string;
 	/**
 	 * Whether to create a subfolder using the module names.
@@ -97,14 +97,7 @@ export interface ModuleConfig {
 	force?: boolean;
 }
 
-/**
- * * Define module config for NHB Module Generator.
- *
- * @param config User configuration for the NHB Module Generator.
- */
-export declare function defineModuleConfig(config: ModuleConfig): ModuleConfig;
-
-/** User configuration for the NHB Format script. */
+/** User configuration for `nhb-format` script. */
 export interface FormatConfig {
 	/**
 	 * Additional CLI arguments to pass to Prettier.
@@ -126,22 +119,35 @@ export interface FormatConfig {
 	ignorePath?: string;
 }
 
-/**
- * * Define prettier config for NHB Format script.
- *
- * @param config User configuration for the NHB Format script.
- */
-export declare function defineFormatConfig(config: FormatConfig): FormatConfig;
-
-/** User configuration for the NHB Commit script. */
+/** User configuration for `nhb-commit` script. */
 export interface CommitConfig {
 	/** Run Prettier formatter before committing */
 	runFormatter?: boolean;
 }
 
+/** User configuration for `nhb-count` script.*/
+export interface CountConfig {
+	/** Set default path (folder/file). Default is `.` (project root) */
+	defaultPath?: string;
+	/** Exclude directories from being scanned. Default is `['node_modules', 'dist', 'build']` */
+	excludePaths?: string[];
+}
+
+/** User configuration for `nhb-scripts`. */
+export interface ScriptConfig {
+	/** User configuration for `nhb-format` script. */
+	format?: FormatConfig;
+	/** User configuration for `nhb-commit` script. */
+	commit?: CommitConfig;
+	/** User configuration for `nhb-module` script. */
+	module?: ModuleConfig;
+	/** User configuration for `nhb-count` script.*/
+	count?: CountConfig;
+}
+
 /**
- * * Define commit config for NHB Commit script.
+ * * Define commit config for `nhb-scripts`.
  *
- * @param config User configuration for the NHB Commit script.
+ * @param config User configuration for `nhb-scripts`.
  */
-export declare function defineCommitConfig(config: CommitConfig): CommitConfig;
+export declare function defineScriptConfig(config: ScriptConfig): ScriptConfig;

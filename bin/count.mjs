@@ -8,6 +8,7 @@ import chalk from 'chalk';
 import fs from 'fs/promises';
 import { extname, join, resolve } from 'path';
 import tsModule from 'typescript';
+import { loadUserConfig } from '../lib/config-loader.mjs';
 
 /**
  * @typedef {Object} Exports
@@ -25,16 +26,17 @@ import tsModule from 'typescript';
 async function getFilePath() {
 	intro(chalk.cyan('📂 Export Counter'));
 
+	const defaultPath = (await loadUserConfig()).count?.defaultPath ?? '.';
+
 	const inputPath = await text({
 		message: chalk.cyanBright(
-			`───────────────────────────────────────────────────────────────────────────────\n` +
-				`🎯 Please specify the path to a ${chalk.yellowBright.bold('"JavaScript/TypeScript/MJS"')} file or folder.\n` +
+			`───────────────────────────────────────────────────────────────────────────────-----\n` +
+				`🎯 Please specify the path to a ${chalk.yellowBright.bold('"js/ts/mjs"')} file or a folder containing ${chalk.yellowBright.bold('"js/ts/mjs"')} files.\n` +
 				`   - Enter the full file path (with extension) to process a specific file.\n` +
 				`   - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n` +
-				`   - Leave it empty to scan the default file: ${chalk.bgYellowBright.bold.whiteBright(' src/index.ts ')}.\n` +
-				`───────────────────────────────────────────────────────────────────────────────\n`,
+				`   - Leave it empty to scan the default folder/file: ${chalk.bgYellowBright.bold.whiteBright(defaultPath)}\n`,
 		),
-		placeholder: 'src/index.ts',
+		placeholder: defaultPath,
 	});
 
 	if (isCancel(inputPath)) {
@@ -42,7 +44,7 @@ async function getFilePath() {
 		process.exit(0);
 	}
 
-	const filePath = (inputPath || '').trim() || 'src/index.ts';
+	const filePath = (inputPath || '')?.trim() || defaultPath;
 	return resolve(filePath);
 }
 
@@ -140,7 +142,18 @@ async function getFilesFromFolder(folderPath) {
 
 	for (const file of files) {
 		const fullPath = join(folderPath, file.name);
+
+		// Skip node_modules and dist directories
 		if (file.isDirectory()) {
+			const excludePaths = (await loadUserConfig()).count?.excludePaths ?? [
+				'node_modules',
+				'dist',
+				'build',
+			];
+
+			if (excludePaths.includes(file.name)) {
+				continue;
+			}
 			filePaths = filePaths.concat(await getFilesFromFolder(fullPath));
 		} else if (['.js', '.ts', '.mjs'].includes(extname(file.name))) {
 			filePaths.push(fullPath);

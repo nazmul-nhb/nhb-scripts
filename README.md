@@ -158,7 +158,7 @@ Create a `nhb.module.config.mjs` file in the project root:
 import { defineModuleConfig } from 'nhb-scripts';
 
 export default defineModuleConfig({
-  destination: 'src/app/modules',  // default path if not overridden via CLI
+  destination: 'src/modules',      // default path if not overridden via CLI
   template: 'basic-app',           // optional default, it's not necessary as cli will prompt to choose from existing templates
   force: false,                    // disables overwrite unless true
   customTemplates: {
@@ -251,10 +251,10 @@ pnpm module --name=user --template=basic-app --destination=src/features --force
 pnpm module --name user --template basic-app --destination src/features --force
 
 # Using aliases
-pnpm module -n auth -t express-mongoose-zod -d src/app/modules
+pnpm module -n auth -t express-mongoose-zod -d src/modules
 
 # Force overwrite if module exists
-pnpm module -n blog -t express-mongoose-zod -d src/app/modules -f
+pnpm module -n blog -t express-mongoose-zod -d src/modules -f
 ```
 
 ---
