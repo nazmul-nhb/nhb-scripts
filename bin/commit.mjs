@@ -34,7 +34,7 @@ async function updateVersion(newVersion) {
 export async function commitAndPush(message, version) {
 	const s = spinner();
 
-	s.start(chalk.blue('📤 Committing & pushing changes...'));
+	s.start(chalk.blue('📤 Committing & pushing changes'));
 
 	try {
 		await execa('git', ['add', '.']);
