@@ -95,7 +95,7 @@ export default defineScriptConfig({
 
 > More Scripts Coming Soon...
 
-<!-- > ✅ All scripts are available via **`pnpm` scripts** or as **binaries** (if installed globally). -->
+<!-- > ✅ All scripts are available via **`pnpm/npm/yarn` scripts** or as **binaries** (if installed globally). -->
 
 > Most of the examples here are shown using `pnpm` as package manager, you can use other package managers like `npm` or `yarn` or others.
 
@@ -148,7 +148,7 @@ pnpm nhb-format      # 🎨 Format code with prettier
 pnpm nhb-count       # 📦 Count exports in files
 ```
 
-> Replace `pnpm` with `npm` or `yarn` if you're using those instead.
+> Replace `pnpm` with `npm run` or `yarn` if you're using those instead.
 
 ---
 
@@ -393,7 +393,7 @@ A configurable build runner with progress estimator that can execute your build 
 
 - ✅ Define any build commands in your `nhb.scripts.config.mjs` (defaults to `rimraf dist` + `tsc`).
 - ✅ Dynamically add multiple commands with arguments and `execa` options.
-- ✅ Always cleans your specified dist folder before each build to avoid conflicts.
+- ✅ Always cleans (using `rimraf`) your specified dist folder before each build to avoid conflicts.
 - ✅ Run post‑build hooks (`after`) as an array of async functions (e.g., `fixJsExtensions('dist/esm')`).
 - ✅ Rich output: shows file sizes, count, and total build time.
 
@@ -412,21 +412,31 @@ export default defineScriptConfig({
   build: {
     distFolder: 'output', // optional, default: "dist"
     commands: [
-      { cmd: 'rimraf', args: ['output'] },
       { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
       { cmd: 'tsc', args: ['-p', 'tsconfig.esm.json'], options: { stdio: 'inherit' } }
     ],
     after: [
-     () => fixJsExtensions('output/esm'),
-     () => fixTypeExports({
-        distPath: 'dist/dts',
-        packageJsonPath: 'package.json',
-        typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
-        extraPatterns: [
-            { pattern: 'plugins', folderName: 'plugins' },
-        ]
-      })
-    ]
+        () => fixJsExtensions('dist/esm'),
+        () => fixTypeExports({
+            distPath: 'dist/dts',
+            packageJsonPath: 'package.json',
+            typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
+            extraPatterns: [
+                { pattern: 'plugins', folderName: 'plugins' },
+            ],
+            extraStatic: {
+                './types': {
+                    types: './dist/dts/types/index.d.ts',
+                    default: './dist/dts/types/index.d.ts'
+                },
+                './constants': {
+                    types: './dist/dts/constants.d.ts',
+                    import: './dist/esm/constants.js',
+                    require: './dist/cjs/constants.js'
+                },
+            }
+        }),
+    ],
   }
 });
 ```

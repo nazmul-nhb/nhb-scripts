@@ -193,23 +193,82 @@ export declare async function fixTsExtensions(dir: string, isRoot?: boolean): Pr
 /** * Run prettier formatter */
 export declare async function runFormatter(): Promise<void>;
 
-/** Configuration options for `fixTypeExports` */
+/**
+ * Configuration options for `fixTypeExports`.
+ * 
+ * These options let you control how your `package.json` is updated with `exports`
+ * and `typesVersions` entries by scanning your generated type declarations (`.d.ts`)
+ * and optional extra patterns (like plugins).
+ */
 export interface FixTypeExportsOptions {
-   /** Absolute or relative path to the folder containing `dts` output */
+	/**
+	 * Path to the directory containing your generated type declarations (`.d.ts`).
+	 * 
+	 * - Can be absolute or relative to `process.cwd()`.
+	 * - Defaults to `dist/dts`.
+	 * 
+	 * For example: `"build/types"` or `"/absolute/path/to/dts"`.
+	 */
 	distPath?: string;
-	/** Absolute or relative path to the `package.json` */
+
+	/**
+	 * Path to your `package.json` file to update.
+	 * 
+	 * - Can be absolute or relative to `process.cwd()`.
+	 * - Defaults to `package.json` in the project root.
+	 */
 	packageJsonPath?: string;
-	/** Candidate type filenames (default: `['types.d.ts', 'interfaces.d.ts']`) */
+
+	/**
+	 * List of candidate filenames to look for within each module directory.
+	 * 
+	 * When scanning a module folder, the first matching file from this list
+	 * will be used as the `types` entry in `exports` and `typesVersions`.
+	 * 
+	 * Defaults to: `["types.d.ts", "interfaces.d.ts"]`.
+	 */
 	typeFileCandidates?: string[];
-	/** Extra export scanning patterns, e.g. plugins */
+
+	/**
+	 * Extra scanning patterns for subpaths like plugins or addons.
+	 * 
+	 * Each entry specifies:
+	 * - `pattern`: the prefix to use in the resulting `exports` key
+	 * - `folderName`: the actual folder name under which these files are located
+	 * 
+	 * For example, `{ pattern: "plugins", folderName: "plugins" }`
+	 * will scan for `.d.ts` files in any `plugins` subfolder and create
+	 * export entries like `"./plugins/<fileName>"`.
+	 */
 	extraPatterns?: Array<{
-		/** Patten string to include in the package.json */
+		/** The export path prefix (e.g., `"plugins"` will create `"./plugins/<name>"` in exports). */
 		pattern: string;
-		/** Folder in which it will reside */
-        folderName: string;
+		/** The directory name to search for (e.g., `"plugins"`). */
+		folderName: string;
 	}>;
-	extraStatic?: Record<string, { types: string, import?: string, require?: string, default?: string }>;
+
+	/**
+	 * Static export mappings to always include.
+	 * 
+	 * These are directly merged into `pkg.exports`, bypassing automatic scanning.
+	 * Keys should be the export path (e.g., `"./constants"`), and values
+	 * should specify the corresponding files.
+	 */
+	extraStatic?: Record<
+		string,
+		{
+			/** Path to the `.d.ts` file for this export. */
+			types: string;
+			/** Optional path to the ESM implementation. */
+			import?: string;
+			/** Optional path to the CJS implementation. */
+			require?: string;
+			/** Optional path to use as the default export target. */
+			default?: string;
+		}
+	>;
 }
+
 
 /**
  * Updates the `exports` and `typesVersions` fields of your `package.json`
