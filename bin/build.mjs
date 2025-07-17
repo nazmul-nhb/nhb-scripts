@@ -14,7 +14,7 @@ import { estimator } from '../lib/estimator.mjs';
 
 /**
  * @typedef {import('execa').Result} Result
- * @typedef {import('../types/define-configs.d.ts').BuildCommand} BuildCommand
+ * @typedef {import('../types/index.d.ts').BuildCommand} BuildCommand
  */
 
 /**

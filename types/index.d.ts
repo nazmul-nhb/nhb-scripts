@@ -1,6 +1,6 @@
-import type { LooseLiteral } from 'nhb-toolbox/utils/types';
 import type { Options as ExecaOptions } from 'execa';
-import type { VoidFunction, AsyncFunction } from 'nhb-toolbox/types';
+import type { AsyncFunction, VoidFunction } from 'nhb-toolbox/types';
+import type { LooseLiteral } from 'nhb-toolbox/utils/types';
 
 /**
  * A single file definition to be generated as part of a module.
@@ -175,3 +175,67 @@ export interface ScriptConfig {
  * @param config User configuration for `nhb-scripts`.
  */
 export declare function defineScriptConfig(config: ScriptConfig): ScriptConfig;
+
+/**
+ * * Fix `.js` extensions in `ESM` files.
+ * @param dir - Directory to fix
+ * @param isRoot - Internal flag to show spinner only once
+ */
+export declare async function fixJsExtensions(dir: string, isRoot?: boolean): Promise<void>;
+
+/**
+ * * Fix `.ts` extensions in `ESM` files.
+ * @param dir - Directory to fix
+ * @param isRoot - Internal flag to show spinner only once
+ */
+export declare async function fixTsExtensions(dir: string, isRoot?: boolean): Promise<void>;
+
+/** * Run prettier formatter */
+export declare async function runFormatter(): Promise<void>;
+
+/** Configuration options for `fixTypeExports` */
+export interface FixTypeExportsOptions {
+   /** Absolute or relative path to the folder containing `dts` output */
+	distPath?: string;
+	/** Absolute or relative path to the `package.json` */
+	packageJsonPath?: string;
+	/** Candidate type filenames (default: `['types.d.ts', 'interfaces.d.ts']`) */
+	typeFileCandidates?: string[];
+	/** Extra export scanning patterns, e.g. plugins */
+	extraPatterns?: Array<{
+		/** Patten string to include in the package.json */
+		pattern: string;
+		/** Folder in which it will reside */
+        folderName: string;
+    }>;
+}
+
+/**
+ * Updates the `exports` and `typesVersions` fields of your `package.json`
+ * based on the generated type declaration files under your distribution folder.
+ *
+ * This helper scans your `dist` (or custom) directory for modules and optionally
+ * plugin-like subpaths, then dynamically builds a `package.json` exports map.
+ *
+ * ✅ **Features:**
+ * - Automatically detects `types.d.ts` or `interfaces.d.ts` in module folders.
+ * - Adds them to `package.json` under `exports` and `typesVersions`.
+ * - Handles both ESM and CJS entry points.
+ * - Supports configurable `distPath` and `packageJsonPath`.
+ *
+ * @param {FixTypeExportsOptions} [options] - Optional configuration.
+ * 
+ * @example
+ * // Using defaults (scans ./dist/dts and updates ./package.json)
+ * fixTypeExports();
+ *
+ * @example
+ * // Custom dist folder and package.json path
+ * fixTypeExports({
+ *   distPath: 'build/types',
+ *   packageJsonPath: './pkg/package.json',
+ *   extraPatterns: ['addons', 'plugins']
+ * });
+ *
+ */
+export declare function fixTypeExports(options: FixTypeExportsOptions): void;
