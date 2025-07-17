@@ -96,12 +96,12 @@ async function finalPush() {
 
 		if (!isValidVersion(version, oldVersion)) {
 			console.log(
-				chalk.red('⚠ Invalid or older version. Use valid semver like 1.2.3'),
+				chalk.red('⚠  Invalid or older version. Use valid semver like 1.2.3'),
 			);
 			continue;
 		}
 
-		console.log(`✔ Selected version: ${version}`);
+		console.log(`✔  Selected version: ${version}`);
 		break;
 	}
 
