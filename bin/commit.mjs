@@ -73,7 +73,7 @@ async function finalPush() {
 	let version = '';
 	while (true) {
 		const input = await text({
-			message: `Current version: ${chalk.yellow(oldVersion)}\n> Enter new version (press enter to skip):`,
+			message: `Current version: ${chalk.yellow(oldVersion)}\n>  Enter new version (press enter to skip):`,
 			placeholder: oldVersion,
 			defaultValue: oldVersion
 		});
