@@ -393,7 +393,7 @@ A configurable build runner with progress estimator that can execute your build 
 
 - ✅ Define any build commands in your `nhb.scripts.config.mjs` (defaults to `rimraf dist` + `tsc`).
 - ✅ Dynamically add multiple commands with arguments and `execa` options.
-- ✅ Always cleans (using `rimraf`) your specified dist folder before each build to avoid conflicts.
+- ✅ Always cleans (using `rimraf`, you must have `rimraf` installed in your `devDependencies`) your specified dist folder before each build to avoid conflicts.
 - ✅ Run post‑build hooks (`after`) as an array of async functions (e.g., `fixJsExtensions('dist/esm')`).
 - ✅ Rich output: shows file sizes, count, and total build time.
 
