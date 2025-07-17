@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.5.0",
+  "version": "1.5.1-rc.1",
   "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/define-configs.d.ts",
   "main": "index.mjs",
@@ -10,13 +10,15 @@
     "nhb-commit": "bin/commit.mjs",
     "nhb-module": "bin/module.mjs",
     "nhb-count": "bin/count.mjs",
-    "nhb-format": "bin/format.mjs"
+    "nhb-format": "bin/format.mjs",
+    "nhb-build": "node bin/build.mjs"
   },
   "scripts": {
     "module": "node bin/module.mjs",
     "commit": "node bin/commit.mjs",
     "count": "node bin/count.mjs",
-    "format": "node bin/format.mjs"
+    "format": "node bin/format.mjs",
+    "build": "node bin/build.mjs"
   },
   "publishConfig": {
     "access": "public"

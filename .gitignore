@@ -3,6 +3,6 @@ __*.*
 coverage
 TODO.md
 dist
-src/files
+src
 
 .estimator

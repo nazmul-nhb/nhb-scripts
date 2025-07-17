@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// format.mjs
+// bin/format.mjs
 
 // @ts-check
 

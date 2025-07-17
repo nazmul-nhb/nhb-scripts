@@ -1,6 +1,6 @@
 // @ts-check
 
-import { defineScriptConfig } from "./index.mjs";
+import { defineScriptConfig, fixJsExtensions, fixTypeExports } from "./index.mjs";
 
 
 export default defineScriptConfig({
@@ -15,6 +15,28 @@ export default defineScriptConfig({
     count: {
         defaultPath: 'lib',
         excludePaths: ['node_modules', 'dist', 'build']
+    },
+    build: {
+        distFolder: 'dist',
+        commands: [
+            { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
+            {
+                cmd: 'tsc',
+                args: ['-p', 'tsconfig.esm.json'],
+                options: { stdio: 'inherit' }
+            }
+        ],
+        after: [
+            () => fixJsExtensions('dist/esm'),
+            () => fixTypeExports({
+                distPath: 'dist/dts',
+                packageJsonPath: 'package.json',
+                typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
+                extraPatterns: [
+                    { pattern: 'plugins', folderName: 'plugins' },
+                ]
+            }),
+        ],
     },
     module: {
         destination: 'src/modules', // optional, default: "src/modules"

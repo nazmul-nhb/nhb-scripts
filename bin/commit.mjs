@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// commit.mjs
+// bin/commit.mjs
 
 // @ts-check
 
@@ -167,7 +167,7 @@ async function finalPush() {
 	const formattedMessage =
 		scopeResult?.trim() ?
 			`${finalType}(${scopeResult?.trim()}): ${messageResult?.trim()}`
-		:	`${finalType}: ${messageResult?.trim()}`;
+			: `${finalType}: ${messageResult?.trim()}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);

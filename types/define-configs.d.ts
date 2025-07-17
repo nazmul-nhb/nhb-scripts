@@ -1,4 +1,6 @@
 import type { LooseLiteral } from 'nhb-toolbox/utils/types';
+import type { Options as ExecaOptions } from 'execa';
+import type { VoidFunction, AsyncFunction } from 'nhb-toolbox/types';
 
 /**
  * A single file definition to be generated as part of a module.
@@ -133,6 +135,26 @@ export interface CountConfig {
 	excludePaths?: string[];
 }
 
+/**  Represents a single build command that will be executed by `execa`. */
+export interface BuildCommand {
+	/** The command to run, e.g., `tsc` or `rimraf`. */
+	cmd: string;
+	/** Arguments to pass to the command. */
+	args?: string[];
+	/** Extra options to pass to execa (e.g., stdio). */
+	options?: ExecaOptions;
+}
+
+/** User configuration for `nhb-build` script. */
+export interface BuildConfig {
+	/** The output folder name, default is `"dist"`. */
+	distFolder?: string;
+	/** The sequence of commands to run for building. */
+	commands?: BuildCommand[];
+	/** Hooks to run after the build completes.*/
+	after?: Array<VoidFunction | AsyncFunction<void>>;
+}
+
 /** User configuration for `nhb-scripts`. */
 export interface ScriptConfig {
 	/** User configuration for `nhb-format` script. */
@@ -143,6 +165,8 @@ export interface ScriptConfig {
 	module?: ModuleConfig;
 	/** User configuration for `nhb-count` script.*/
 	count?: CountConfig;
+	/** User configuration for `nhb-build` script. */
+	build?: BuildConfig;
 }
 
 /**

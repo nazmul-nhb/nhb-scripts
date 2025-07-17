@@ -88,6 +88,7 @@ export default defineScriptConfig({
 | Script       | Description                                                                 |
 | ------------ | --------------------------------------------------------------------------- |
 | [nhb-module](#-nhb-module--module-generator) | Scaffold module (folder with files) (e.g., Express + Mongoose + Zod by default) with templates.  |
+| [nhb-build](#️-nhb-build--customizable-build-runner-with-progress-visualization) |  Customizable Build Runner with Progress Visualization.  |
 | [nhb-commit](#-nhb-commit--commit-version-updates-with-semver--custom-message) | Generate a conventional commit message interactively with validation.       |
 | [nhb-format](#-nhb-format--code-formatter-prettier-runner) | Format code with `prettier`.       |
 | [nhb-count](#-nhb-count--export-counter-cli) | Count export declarations (default, named, aliased) in JS/TS files/folders. |
@@ -381,6 +382,139 @@ You can define multiple templates and dynamically select one at CLI prompt or vi
 
 - If a module already exists and `--force` is not used, the CLI prompts confirmation.
 - You can abort at any step via keyboard interrupt (`Ctrl+C` or `Esc` on prompts).
+
+---
+
+## 🏗️ `nhb-build` — Customizable Build Runner with Progress Visualization
+
+A configurable build runner with progress estimator that can execute your build commands in sequence (e.g., `tsc`, `rollup`, `vite`) and then run optional post‑build hooks like `fixTypeExports()` or `fixJsExtensions()`.
+
+### ✨ Features
+
+- ✅ Define any build commands in your `nhb.scripts.config.mjs` (defaults to `rimraf dist` + `tsc`).
+- ✅ Dynamically add multiple commands with arguments and `execa` options.
+- ✅ Always cleans your specified dist folder before each build to avoid conflicts.
+- ✅ Run post‑build hooks (`after`) as an array of async functions (e.g., `fixJsExtensions('dist/esm')`).
+- ✅ Rich output: shows file sizes, count, and total build time.
+
+---
+
+### ⚙️ Configuration
+
+Add a `build` section in your `nhb.scripts.config.mjs`:
+
+```js
+// @ts-check
+import { defineScriptConfig, fixJsExtensions, fixTypeExports} from 'nhb-scripts';
+
+export default defineScriptConfig({
+  // Other configs...
+  build: {
+    distFolder: 'output', // optional, default: "dist"
+    commands: [
+      { cmd: 'rimraf', args: ['output'] },
+      { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
+      { cmd: 'tsc', args: ['-p', 'tsconfig.esm.json'], options: { stdio: 'inherit' } }
+    ],
+    after: [
+     () => fixJsExtensions('output/esm'),
+     () => fixTypeExports({
+        distPath: 'dist/dts',
+        packageJsonPath: 'package.json',
+        typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
+        extraPatterns: [
+            { pattern: 'plugins', folderName: 'plugins' },
+        ]
+      })
+    ]
+  }
+});
+```
+
+#### 🏗️ **Options**
+
+| Field        | Type                   | Default   | Description                                                 |
+| ------------ | ---------------------- | --------- | ----------------------------------------------------------- |
+| `distFolder` | `string`               | `dist`    | Output folder used for size reporting and cleanup.          |
+| `commands`   | `Array<BuildCommand>`  | see below | Array of build commands.                                    |
+| `after`      | `Array<Promise<void>>` | `[]`      | Post‑build hooks to run sequentially after commands finish. |
+
+**`BuildCommand` shape:**
+
+```ts
+{
+  cmd: string;           // executable to run (e.g. "tsc", "rimraf")
+  args?: string[];       // arguments for the command
+  options?: import('execa').Options; // additional execa options
+}
+```
+
+---
+
+### 📦 Usage
+
+Add to `package.json`:
+
+```json
+{
+  "scripts": {
+    "build": "nhb-build"
+  }
+}
+```
+
+Then run:
+
+```bash
+pnpm build
+# or
+npm run build
+# or
+yarn build
+```
+
+---
+
+### ✅ Example Output
+
+```bash
+📦 Build Your Application
+─────────────────────────────────────────────
+Building...
+
+✓ Transformed Files:
+🟨 dist/esm/index.js                              3.20 kB
+🟦 dist/dts/index.d.ts                            0.45 kB
+🟩 dist/esm/index.js.map                          1.15 kB
+...
+✓ Total Files: 25; Total Size: 89.42 kB
+📦 Application was built in 3.27 seconds!
+```
+
+---
+
+### 🔧 Post‑Build Hooks
+
+`after` hooks run **after all build commands succeed**, in order.
+You can pass any async function returning a Promise, for example:
+
+```js
+import { fixJsExtensions } from 'nhb-scripts/fix-imports';
+import { fixTypeExports } from 'nhb-scripts/fix-type-exports';
+
+export default defineScriptConfig({
+  build: {
+    after: [
+      fixJsExtensions('dist/esm'),
+      fixTypeExports()
+    ]
+  }
+});
+```
+
+---
+
+> ✨ **Tip:** Because `nhb-build` uses `execa`, all commands respect your local environment and `cwd`, so you can run any build tools your project needs.
 
 ---
 
