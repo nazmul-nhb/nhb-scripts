@@ -23,9 +23,63 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
 
 > Most scripts display a progress bar for the current task and automatically create a `.estimator` folder, which is also added to `.gitignore`.
 
-## Known Issue(s)
+## Unified Configuration System
 
-- There are some issues with config files, cli flickering and conflict resolution(s). These will be fixed soon using different method.
+All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. The default configuration includes:
+
+```js
+// @ts-check
+
+import { defineScriptConfig } from 'nhb-scripts';
+
+export default defineScriptConfig({
+    format: {
+        args: ['--write'],
+        files: ['.'],
+        ignorePath: '.prettierignore',
+    },
+    commit: {
+        runFormatter: false, // do not run formatter,  use `true` to format before committing 
+    },
+    count: {
+        defaultPath: '.', // default path to scan
+        excludePaths: ['node_modules', 'dist', 'build'] // folders to exclude
+    },
+    module: {
+        destination: 'src/modules', // optional, default: "src/modules"
+        template: 'my-template1', // or omit, it's not necessary as cli will prompt to choose
+        force: false, // `true` if you want to override the existing module
+        customTemplates: {
+            'my-template1': {
+                createFolder: true, // if `false` does not create folder with the module name from cli
+                destination: 'src/app', // optional, will prioritize inputs from cli
+                // Use dynamic moduleName in filenames and contents
+                files: (moduleName) => [
+                    { name: `\${moduleName}.controllers.ts`, content: `// controllers for \${moduleName}` },
+                    { name: `\${moduleName}.services.ts`, content: `// services for \${moduleName}` }
+                ]
+            },
+            'my-template2': {
+                destination: 'src/features', // optional, will prioritize inputs from cli
+                // Use static file list with contents
+                files: [
+                    { name: 'index.ts', content: '// content' },
+                    { name: 'dummy.js', content: '// dummy' }
+                ]
+            },
+        },
+        // Optional hooks to inspect or execute something at the beginning or after the module generation
+        hooks: {
+            onGenerate(name) {
+                console.log('➡️ Generating:', name);
+            },
+            onComplete(name) {
+                console.log('✅ Complete:', name);
+            }
+        }
+    }
+});
+```
 
 ---
 
@@ -137,7 +191,6 @@ npm run module
 - Uses a **default template** (`express-mongoose-zod`) or your **custom templates** via a config file.
 - Prevents overwriting by default unless `--force` is passed or set in config.
 - Allows lifecycle hooks: `onGenerate`, `onComplete`.
-- Auto creates (if it is not created before) custom configuration file for template injection: `nhb.module.config.mjs`.
 
 ---
 
@@ -151,53 +204,39 @@ npm run module
 
 ### 📁 Custom Template Support
 
-Create a `nhb.module.config.mjs` file in the project root:
+Configure templates in `nhb.scripts.config.mjs`:
 
 ```js
-// @ts-check
-import { defineModuleConfig } from 'nhb-scripts';
-
-export default defineModuleConfig({
-  destination: 'src/modules',      // default path if not overridden via CLI
-  template: 'basic-app',           // optional default, it's not necessary as cli will prompt to choose from existing templates
-  force: false,                    // disables overwrite unless true
-  customTemplates: {
-    // 🔁 Function-style: dynamic filenames or content
-    'basic-app': {
-      destination: 'src/app',
-      files: (moduleName) => [
-        {
-          name: `${moduleName}.controller.ts`,
-          content: `// controller for ${moduleName}`,
+module: {
+    destination: 'src/modules',
+    template: 'my-template1',
+    force: false,
+    customTemplates: {
+        'my-template1': {
+            createFolder: true, // whether to create module folder
+            destination: 'src/app',
+            files: (moduleName) => [
+                { name: `${moduleName}.controller.ts`, content: `// controller for ${moduleName}` },
+                { name: `${moduleName}.service.ts`, content: `// service for ${moduleName}` }
+            ]
         },
-        {
-          name: `${moduleName}.service.ts`,
-          content: `// service logic for ${moduleName}`,
+        'my-template2': {
+            files: [
+                { name: 'index.ts', content: '// content' },
+                { name: 'routes.ts', content: 'export const route = "auth";' }
+            ]
+        }
+    },
+    hooks: {
+        onGenerate(name) {
+            console.log('🚀 Generating module:', name);
         },
-      ],
-    },
-
-    // 📦 Static-style: hardcoded files
-    'admin-module': {
-      files: [
-        { name: 'controller.ts', content: '// controller' },
-        { name: 'model.ts', content: '// mongoose model' },
-      ],
-    },
-  },
-
-  hooks: {
-    onGenerate(name) {
-      console.log('🚀 Generating module:', name);
-    },
-    onComplete(name) {
-      console.log('🎉 Finished:', name);
+        onComplete(name) {
+            console.log('🎉 Finished:', name);
+        }
     }
-  }
-});
+}
 ```
-
-> The script will prompt you to create this config file automatically if missing.
 
 #### 🧠 Why dynamic `files()`?
 
@@ -234,12 +273,13 @@ You can provide either of the following:
 
 You can also generate modules non-interactively using CLI flags to streamline automation or scripting:
 
-| Flag            | Alias | Description                                        |
-| --------------- | ----- | -------------------------------------------------- |
-| `--name`        | `-n`  | Name of the module                                 |
-| `--template`    | `-t`  | Template to use (`express-mongoose-zod` or custom) |
-| `--destination` | `-d`  | Directory to generate module into                  |
-| `--force`       | `-f`  | Overwrite existing module if already present       |
+| Flag             | Alias | Description                                        |
+| ---------------- | ----- | -------------------------------------------------- |
+| `--name`         | `-n`  | Name of the module                                 |
+| `--template`     | `-t`  | Template to use (`express-mongoose-zod` or custom) |
+| `--destination`  | `-d`  | Directory to generate module into                  |
+| `--force`        | `-f`  | Overwrite existing module if already present       |
+| `--create-folder`| `-cf` | Create folder for module (default: `true`)         |
 
 Example:
 
@@ -255,6 +295,12 @@ pnpm module -n auth -t express-mongoose-zod -d src/modules
 
 # Force overwrite if module exists
 pnpm module -n blog -t express-mongoose-zod -d src/modules -f
+
+# With create folder flag
+pnpm module --name=user --template=basic-app --destination=src/features --force --create-folder=false
+
+# Using aliases
+pnpm module -n auth -t express-mongoose-zod -d src/modules -cf false
 ```
 
 ---
@@ -275,18 +321,17 @@ pnpm module -n blog -t express-mongoose-zod -d src/modules -f
 Given:
 
 ```js
-// nhb.module.config.mjs
-export default defineModuleConfig({
-  destination: 'src/features',
-  customTemplates: {
-    'basic-app': {
-      files: (name) => [
-        { name: `${name}.ts`, content: `// module: ${name}` },
-        { name: `${name}.routes.ts`, content: `// routes for ${name}` },
-      ]
-    },
-  },
-});
+module: {
+    destination: 'src/features',
+    customTemplates: {
+        'basic-app': {
+            files: (name) => [
+                { name: `${name}.ts`, content: `// module: ${name}` },
+                { name: `${name}.routes.ts`, content: `// routes for ${name}` }
+            ]
+        }
+    }
+}
 ```
 
 Run:
@@ -344,7 +389,7 @@ You can define multiple templates and dynamically select one at CLI prompt or vi
 A simple, interactive CLI to:
 
 - Safely bump the package version (`package.json`)
-- Add a **typed Git commit message** (with optional scope)
+- Add a **conventional typed Git commit message** (with optional scope)
 - Automatically commit and push
 
 This ensures your version bumps and commit messages are semver-valid, consistent, and expressive.
@@ -468,29 +513,14 @@ This is required because the script **automatically commits and pushes** version
 
 ---
 
-### ⚙️ `nhb.commit.config.mjs` — Optional Config File
+### Configuration
 
-You can optionally add a config file at the root of your project to extend the behavior of `nhb-commit`.
+In `nhb.scripts.config.mjs`:
 
-> Supported file names:
->
-> - `nhb.commit.config.mjs`
-> - `nhb.commit.config.js`
-
----
-
-#### 🛠️ Example Config
-
-```ts
-// nhb.commit.config.mjs
-
-// @ts-check
-
-import { defineCommitConfig } from 'nhb-scripts';
-
-export default defineCommitConfig({
- runFormatter: false
-});
+```js
+commit: {
+    runFormatter: false // set true to run Prettier before committing
+}
 ```
 
 ---
@@ -540,7 +570,7 @@ You can abort at any time using `Ctrl+C` or `Esc`.
 
 ## 🎨 `nhb-format` — Code Formatter (Prettier Runner)
 
-A utility script that ensures clean and consistent formatting using **Prettier**, with optional config and auto-scaffolding support.
+A script that ensures clean and consistent formatting using **Prettier**, with optional config and auto-scaffolding support.
 
 ---
 
@@ -567,8 +597,8 @@ pnpm format
 1. Ensures `.prettierrc.json` and `.prettierignore` exist in the project root (auto-generates if missing).
 2. Loads user config from:
 
-   - `nhb.format.config.mjs` or
-   - `nhb.format.config.js`
+   - `nhb.scripts.config.mjs` or
+   - `nhb.scripts.config.js`
 3. Executes Prettier with the defined args/files.
 
 > 💡 If no config file exists, it runs Prettier with default args: `--write .`
@@ -577,18 +607,14 @@ pnpm format
 
 ### 🛠️ Example Config
 
-Create a `nhb.format.config.mjs` file:
+Update format1 property in `nhb.scripts.config.mjs` file:
 
 ```js
-// @ts-check
-
-import { defineFormatConfig } from 'nhb-scripts';
-
-export default defineFormatConfig({
- args: ['--write'],
- files: ['.',],
- ignorePath: '.prettierignore'
-});
+format: {
+    args: ['--write'],
+    files: ['src', 'lib'],
+    ignorePath: '.prettierignore'
+}
 ```
 
 ---
@@ -659,42 +685,73 @@ pnpm count
  }
  ```
 
+or use as:
+
+```bash
+pnpm nhb-count
+```
+
 ---
+
+### Configuration
+
+In `nhb.scripts.config.mjs`:
+
+```js
+count: {
+    defaultPath: '.', // Default path when no input is provided
+    excludePaths: [   // Directories automatically excluded
+        'node_modules',
+        'dist', 
+        'build'
+    ]
+}
+```
 
 ### 🧭 Interactive CLI Prompts
 
 When executed, the script will prompt you:
 
 ```bash
-🎯 Please specify the path to a "JavaScript/TypeScript/MJS" file or folder.
-
-   - Enter a file path to process a specific file.
-   - Enter a folder path to scan all .js, .ts, or .mjs files recursively.
-   - Leave it empty to scan the default file: src/index.ts.
+📂 Export Counter
+───────────────────────────────────────────────────────────────────────────────-----
+🎯 Please specify the path to a "js/ts/mjs" file or folder containing "js/ts/mjs" files.
+   - Enter file path (with extension) to analyze one file
+   - Enter folder path to scan recursively
+   - Press Enter to use default path: [shows configured defaultPath]
 ```
 
----
+### Exactly What Happens
 
-### 📂 Folder Scan Behavior
+1. If you **enter a file path**:
+   - Must be `.js`, `.ts`, or `.mjs`
+   - Analyzes only that file
 
-- If a **folder** is entered, all `.ts`, `.js`, and `.mjs` files inside are scanned recursively.
-- If a **file** is entered, only that file is analyzed.
-- If **nothing is entered**, the script defaults to `src/index.ts`.
+2. If you **enter a folder path**:
+   - Recursively scans for matching files
+   - Automatically excludes `node_modules`, `dist`, `build`
+   - Respects additional `excludePaths` from config
 
----
+3. If you **press Enter**:
+   - Uses `defaultPath` from config (defaults to `.`)
 
-### 📤 Output Format
-
-Each file's result is logged like this:
+### Output Example
 
 ```bash
 📦 Export Summary for "src/utils/math.ts":
-🔸 Default Exports        : 1
-🔹 Named Exports (Total)  : 5
-   ┣ Direct               : 3
-   ┗ Aliased              : 2
-🔺 Total Type Exports     : 4
+🔸 Default Exports         : 1
+🔹 Named Exports (Total)   : 5
+   ┣ Direct                : 3
+   ┗ Aliased               : 2 
+🔺 Total Type Exports      : 4
 ```
+
+Key Notes:
+
+- No command-line arguments accepted
+- Path must be entered interactively
+- Default path comes from config
+- Exclusion rules are automatic
 
 ---
 
@@ -733,6 +790,8 @@ Output:
 ```
 
 ---
+
+> Built with ❤️ to make developer lives easier – because every second saved is a second earned.
 
 ## 📄 License
 

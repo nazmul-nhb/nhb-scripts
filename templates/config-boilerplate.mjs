@@ -7,11 +7,11 @@ import { defineScriptConfig } from 'nhb-scripts';
 export default defineScriptConfig({
     format: {
         args: ['--write'],
-        files: ['lib', 'bin', 'templates'],
+        files: ['.'],
         ignorePath: '.prettierignore',
     },
     commit: {
-        runFormatter: true, // do not run formatter,  use \`true\` to format before committing 
+        runFormatter: false, // do not run formatter,  use \`true\` to format before committing 
     },
     count: {
         defaultPath: '.',
@@ -23,6 +23,7 @@ export default defineScriptConfig({
         force: false, // \`true\` if you want to override the existing module
         customTemplates: {
             'my-template1': {
+                createFolder: true, // if \`false\` does not create folder with the module name from cli
                 destination: 'src/app', // optional, will prioritize inputs from cli
                 // Use dynamic moduleName in filenames and contents
                 files: (moduleName) => [
@@ -42,7 +43,7 @@ export default defineScriptConfig({
         // Optional hooks to inspect or execute something at the beginning or after the module generation
         hooks: {
             onGenerate(name) {
-                console.log('✅ Generating:', name);
+                console.log('➡️ Generating:', name);
             },
             onComplete(name) {
                 console.log('✅ Complete:', name);
