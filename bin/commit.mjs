@@ -75,6 +75,7 @@ async function finalPush() {
 		const input = await text({
 			message: `Current version: ${chalk.yellow(oldVersion)}\n> Enter new version (press enter to skip):`,
 			placeholder: oldVersion,
+			defaultValue: oldVersion
 		});
 
 		if (isCancel(input)) {

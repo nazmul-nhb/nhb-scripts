@@ -207,7 +207,8 @@ export interface FixTypeExportsOptions {
 		pattern: string;
 		/** Folder in which it will reside */
         folderName: string;
-    }>;
+	}>;
+	extraStatic?: Record<string, { types: string, import?: string, require?: string, default?: string }>;
 }
 
 /**
