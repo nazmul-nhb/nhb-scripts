@@ -75,7 +75,7 @@ async function finalPush() {
 		const input = await text({
 			message: `Current version: ${chalk.yellow(oldVersion)}\n>  Enter new version (press enter to skip):`,
 			placeholder: oldVersion,
-			defaultValue: oldVersion
+			defaultValue: oldVersion,
 		});
 
 		if (isCancel(input)) {
@@ -168,7 +168,7 @@ async function finalPush() {
 	const formattedMessage =
 		scopeResult?.trim() ?
 			`${finalType}(${scopeResult?.trim()}): ${messageResult?.trim()}`
-			: `${finalType}: ${messageResult?.trim()}`;
+		:	`${finalType}: ${messageResult?.trim()}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);

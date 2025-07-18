@@ -2,7 +2,6 @@
 
 import { defineScriptConfig, fixJsExtensions, fixTypeExports } from "./index.mjs";
 
-
 export default defineScriptConfig({
     format: {
         args: ['--write'],
@@ -18,6 +17,7 @@ export default defineScriptConfig({
     },
     build: {
         distFolder: 'dist',
+        deleteDist: true,
         commands: [
             { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
             {
@@ -27,7 +27,7 @@ export default defineScriptConfig({
             }
         ],
         after: [
-            () => fixJsExtensions('dist/esm'),
+            async () => await fixJsExtensions('dist/esm'),
             () => fixTypeExports({
                 distPath: 'dist/dts',
                 packageJsonPath: 'package.json',

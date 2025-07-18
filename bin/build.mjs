@@ -11,6 +11,7 @@ import { isValidArray, roundNumber } from 'nhb-toolbox';
 import { extname } from 'path';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { estimator } from '../lib/estimator.mjs';
+import { rimraf } from 'rimraf';
 
 /**
  * @typedef {import('execa').Result} Result
@@ -38,20 +39,17 @@ const getFileIcon = (filePath) => {
 (async () => {
 	intro(chalk.yellowBright('📦 Build Your Application'));
 
-	const config = (await loadUserConfig()).build ?? {};
-
-	const distFolder = config.distFolder || 'dist';
+	const {
+		after = [],
+		commands: cmds = [],
+		deleteDist = true,
+		distFolder = 'dist',
+	} = (await loadUserConfig()).build ?? {};
 
 	/** @type {BuildCommand[]} */
-	const defaultCommands = [
-		{ cmd: 'rimraf', args: [distFolder] },
-		{ cmd: 'tsc', options: { stdio: 'inherit' } },
-	];
+	const defaultCommands = [{ cmd: 'tsc', options: { stdio: 'inherit' } }];
 
-	const commands =
-		isValidArray(config.commands) ?
-			[{ cmd: 'rimraf', args: [distFolder] }, ...config.commands]
-			: defaultCommands;
+	const commands = isValidArray(cmds) ? cmds : defaultCommands;
 
 	const startTime = performance.now();
 
@@ -61,6 +59,10 @@ const getFileIcon = (filePath) => {
 
 		await estimator(
 			(async () => {
+				if (deleteDist) {
+					await rimraf(distFolder);
+				}
+
 				for (const command of commands) {
 					const { cmd, args = [], options = {} } = command;
 					await execa(cmd, args, { cwd: process.cwd(), ...options });
@@ -108,8 +110,8 @@ const getFileIcon = (filePath) => {
 
 		s.stop(chalk.green(`✓ ${totalFiles}; ${totalFileSize}`));
 
-		if (Array.isArray(config.after)) {
-			for (const afterHook of config.after) {
+		if (Array.isArray(after)) {
+			for (const afterHook of after) {
 				await afterHook();
 			}
 		}

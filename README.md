@@ -45,6 +45,40 @@ export default defineScriptConfig({
         defaultPath: '.', // default path to scan
         excludePaths: ['node_modules', 'dist', 'build'] // folders to exclude
     },
+    build: {
+      distFolder: 'dist', // optional, default: "dist"
+      deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
+      commands: [
+          { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
+          {
+              cmd: 'tsc',
+              args: ['-p', 'tsconfig.esm.json'],
+              options: { stdio: 'inherit' }
+          }
+      ],
+      after: [
+          async () => await fixJsExtensions('dist/esm'),
+          () => fixTypeExports({
+              distPath: 'dist/dts',
+              packageJsonPath: 'package.json',
+              typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
+              extraPatterns: [
+                  { pattern: 'plugins', folderName: 'plugins' },
+              ],
+              extraStatic: {
+                  './types': {
+                      types: './dist/dts/types/index.d.ts',
+                      default: './dist/dts/types/index.d.ts'
+                  },
+                  './constants': {
+                      types: './dist/dts/constants.d.ts',
+                      import: './dist/esm/constants.js',
+                      require: './dist/cjs/constants.js'
+                  },
+              }
+          }),
+      ],
+    },
     module: {
         destination: 'src/modules', // optional, default: "src/modules"
         template: 'my-template1', // or omit, it's not necessary as cli will prompt to choose
@@ -391,9 +425,9 @@ A configurable build runner with progress estimator that can execute your build 
 
 ### ✨ Features
 
-- ✅ Define any build commands in your `nhb.scripts.config.mjs` (defaults to `rimraf dist` + `tsc`).
+- ✅ Define any build commands in your `nhb.scripts.config.mjs` (defaults to `tsc`).
 - ✅ Dynamically add multiple commands with arguments and `execa` options.
-- ✅ Always cleans (using `rimraf`, you must have `rimraf` installed in your `devDependencies`) your specified dist folder before each build to avoid conflicts.
+- ✅ Always cleans your specified dist folder (using `rimraf`) before each build to avoid conflicts. You can configure this behavior.
 - ✅ Run post‑build hooks (`after`) as an array of async functions (e.g., `fixJsExtensions('dist/esm')`).
 - ✅ Rich output: shows file sizes, count, and total build time.
 
@@ -411,12 +445,13 @@ export default defineScriptConfig({
   // Other configs...
   build: {
     distFolder: 'output', // optional, default: "dist"
+    deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
     commands: [
       { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
       { cmd: 'tsc', args: ['-p', 'tsconfig.esm.json'], options: { stdio: 'inherit' } }
     ],
     after: [
-        () => fixJsExtensions('dist/esm'),
+        async () => await fixJsExtensions('dist/esm'),
         () => fixTypeExports({
             distPath: 'dist/dts',
             packageJsonPath: 'package.json',

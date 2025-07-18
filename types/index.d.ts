@@ -137,11 +137,11 @@ export interface CountConfig {
 
 /**  Represents a single build command that will be executed by `execa`. */
 export interface BuildCommand {
-	/** The command to run, e.g., `tsc` or `rimraf`. */
+	/** The command to run, e.g., `tsc`, `rimraf` etc. Must be installed in project deps. */
 	cmd: string;
-	/** Arguments to pass to the command. */
+	/** Arguments to pass to the command. Invalid args will throw errors. */
 	args?: string[];
-	/** Extra options to pass to execa (e.g., stdio). */
+	/** Extra options to pass to `execa` (e.g., `stdio`). */
 	options?: ExecaOptions;
 }
 
@@ -149,9 +149,11 @@ export interface BuildCommand {
 export interface BuildConfig {
 	/** The output folder name, default is `"dist"`. */
 	distFolder?: string;
+	/** Whether to delete the `dist` (or custom) folder before each build. Defaults to `true`. */
+	deleteDist?: boolean;
 	/** The sequence of commands to run for building. */
 	commands?: BuildCommand[];
-	/** Hooks to run after the build completes.*/
+	/** Hooks to run after the build completes. */
 	after?: Array<VoidFunction | AsyncFunction<void>>;
 }
 
