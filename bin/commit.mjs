@@ -10,6 +10,7 @@ import fs from 'fs/promises';
 import semver from 'semver';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
+import { note } from '@clack/prompts';
 
 /** @typedef {import('type-fest').PackageJson} PackageJson */
 
@@ -23,7 +24,7 @@ async function updateVersion(newVersion) {
 	const pkg = JSON.parse(raw);
 	pkg.version = newVersion;
 	await fs.writeFile('./package.json', JSON.stringify(pkg, null, 2) + '\n');
-	console.info(chalk.green(`✓ Version updated to ${newVersion}`));
+	console.info(chalk.green(`✓  Version updated to ${newVersion}`));
 }
 
 /**
@@ -39,9 +40,20 @@ export async function commitAndPush(message, version) {
 	try {
 		await execa('git', ['add', '.']);
 		await execa('git', ['commit', '-m', message]);
-		await execa('git', ['push'], { stdio: 'inherit' });
+		const { stdout } = await execa('git', ['push']);
 
 		s.stop(chalk.green('✓ Changes committed and pushed!'));
+
+		if (stdout?.trim()) {
+			const lines = stdout
+				.split('\n')
+				.filter(Boolean)
+				.map((line) => chalk.cyan('• ') + line)
+				.join('\n');
+
+			note(lines, chalk.magenta('✓ Status after Remote Push'));
+		}
+
 		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
 	} catch (err) {
 		s.stop(chalk.red('❌ Commit or push failed!'));
@@ -168,7 +180,7 @@ async function finalPush() {
 	const formattedMessage =
 		scopeResult?.trim() ?
 			`${finalType}(${scopeResult?.trim()}): ${messageResult?.trim()}`
-		:	`${finalType}: ${messageResult?.trim()}`;
+			: `${finalType}: ${messageResult?.trim()}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);
