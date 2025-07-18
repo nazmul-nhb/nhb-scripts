@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/index.d.ts",
   "main": "index.mjs",
@@ -19,8 +19,7 @@
     "module": "node bin/module.mjs",
     "commit": "node bin/commit.mjs",
     "count": "node bin/count.mjs",
-    "format": "node bin/format.mjs",
-    "build": "node bin/build.mjs"
+    "format": "node bin/format.mjs"
   },
   "publishConfig": {
     "access": "public"
