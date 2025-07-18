@@ -17,11 +17,33 @@
   </a>
 </p>
 
-## nhb-scripts
-
 A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScript projects. Built to reduce repetitive boilerplate and improve developer velocity — no magic, just clean logic.
 
 > Most scripts display a progress bar for the current task and automatically create a `.estimator` folder, which is also added to `.gitignore`.
+
+## ⚡ Compatibility
+
+<img src="https://img.shields.io/badge/Environment-Node.js%20only-green?style=flat&logo=node.js&logoColor=white" alt="Node.js Only" />
+
+> **Important:**  
+> `nhb-scripts` is designed **only for Node.js environments** (v18 or later).  
+> It is **not intended for browser bundling**, so tools like [Bundlephobia](https://bundlephobia.com/) may report missing browser dependencies.  
+> This is expected behavior and does **not** affect usage in Node.js.
+
+### ✅ Requirements
+
+- Node.js **18 or newer**  
+- `npm`, `pnpm`, or `yarn` for installation
+
+```bash
+pnpm add -D nhb-scripts
+# or
+npm install -D nhb-scripts
+# or
+yarn add -D nhb-scripts
+```
+
+---
 
 ## Unified Configuration System
 
