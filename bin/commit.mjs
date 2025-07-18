@@ -40,12 +40,15 @@ export async function commitAndPush(message, version) {
 	try {
 		await execa('git', ['add', '.']);
 		await execa('git', ['commit', '-m', message]);
-		const { stdout } = await execa('git', ['push']);
+
+		const { stdout, stderr } = await execa('git', ['push']);
 
 		s.stop(chalk.green('✓ Changes committed and pushed!'));
 
-		if (stdout?.trim()) {
-			const lines = stdout
+		const output = (stdout + '\n' + stderr)?.trim();
+
+		if (output) {
+			const lines = output
 				.split('\n')
 				.filter(Boolean)
 				.map((line) => chalk.cyan('• ') + line)
@@ -53,6 +56,7 @@ export async function commitAndPush(message, version) {
 
 			note(lines, chalk.magenta('✓ Status after Remote Push'));
 		}
+
 
 		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
 	} catch (err) {
