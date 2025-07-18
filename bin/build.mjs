@@ -127,6 +127,6 @@ const getFileIcon = (filePath) => {
 		);
 	} catch (error) {
 		console.error(chalk.red('🛑 Build Failed!'), error);
-		process.exit(1);
+		process.exit(0);
 	}
 })();

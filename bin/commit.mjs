@@ -71,7 +71,6 @@ export async function commitAndPush(message, version) {
 
 		s.stop(chalk.green('✓ Changes committed and pushed!'));
 
-
 		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
 	} catch (err) {
 		s.stop(chalk.red('❌ Commit or push failed!'));
@@ -198,7 +197,7 @@ async function finalPush() {
 	const formattedMessage =
 		scopeResult?.trim() ?
 			`${finalType}(${scopeResult?.trim()}): ${messageResult?.trim()}`
-			: `${finalType}: ${messageResult?.trim()}`;
+		:	`${finalType}: ${messageResult?.trim()}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);

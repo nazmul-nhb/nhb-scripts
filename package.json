@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.6.10",
+  "version": "1.7.0",
   "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/index.d.ts",
   "main": "index.mjs",
@@ -11,6 +11,8 @@
     "nhb-module": "bin/module.mjs",
     "nhb-count": "bin/count.mjs",
     "nhb-format": "bin/format.mjs",
+    "nhb-lint": "bin/lint.mjs",
+    "nhb-fix": "bin/fix.mjs",
     "nhb-build": "bin/build.mjs"
   },
   "scripts": {

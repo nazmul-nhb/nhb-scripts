@@ -157,6 +157,14 @@ export interface BuildConfig {
 	after?: Array<VoidFunction | AsyncFunction<void>>;
 }
 
+/** User configuration for `nhb-lint` and `nhb-fix` scripts. */
+export interface LintConfig {
+	/** Folders to lint/fix. Defaults to `'src'` */
+	folders?: string[];
+	/** `globby` patterns to count files (optional). Defaults to `'**\/*.ts'` */
+	patterns?: string[];
+}
+
 /** User configuration for `nhb-scripts`. */
 export interface ScriptConfig {
 	/** User configuration for `nhb-format` script. */
@@ -169,6 +177,10 @@ export interface ScriptConfig {
 	count?: CountConfig;
 	/** User configuration for `nhb-build` script. */
 	build?: BuildConfig;
+	/** User configuration for `nhb-lint` script. */
+	lint?: LintConfig;
+	/** User configuration for `nhb-fix` script. */
+	fix?: LintConfig;
 }
 
 /**
@@ -183,21 +195,21 @@ export declare function defineScriptConfig(config: ScriptConfig): ScriptConfig;
  * @param dir - Directory to fix
  * @param isRoot - Internal flag to show spinner only once
  */
-export declare async function fixJsExtensions(dir: string, isRoot?: boolean): Promise<void>;
+export declare function fixJsExtensions(dir: string, isRoot?: boolean): Promise<void>;
 
 /**
  * * Fix `.ts` extensions in `ESM` files.
  * @param dir - Directory to fix
  * @param isRoot - Internal flag to show spinner only once
  */
-export declare async function fixTsExtensions(dir: string, isRoot?: boolean): Promise<void>;
+export declare function fixTsExtensions(dir: string, isRoot?: boolean): Promise<void>;
 
 /** * Run prettier formatter */
-export declare async function runFormatter(): Promise<void>;
+export declare function runFormatter(): Promise<void>;
 
 /**
  * Configuration options for `fixTypeExports`.
- * 
+ *
  * These options let you control how your `package.json` is updated with `exports`
  * and `typesVersions` entries by scanning your generated type declarations (`.d.ts`)
  * and optional extra patterns (like plugins).
@@ -205,17 +217,17 @@ export declare async function runFormatter(): Promise<void>;
 export interface FixTypeExportsOptions {
 	/**
 	 * Path to the directory containing your generated type declarations (`.d.ts`).
-	 * 
+	 *
 	 * - Can be absolute or relative to `process.cwd()`.
 	 * - Defaults to `dist/dts`.
-	 * 
+	 *
 	 * For example: `"build/types"` or `"/absolute/path/to/dts"`.
 	 */
 	distPath?: string;
 
 	/**
 	 * Path to your `package.json` file to update.
-	 * 
+	 *
 	 * - Can be absolute or relative to `process.cwd()`.
 	 * - Defaults to `package.json` in the project root.
 	 */
@@ -223,21 +235,21 @@ export interface FixTypeExportsOptions {
 
 	/**
 	 * List of candidate filenames to look for within each module directory.
-	 * 
+	 *
 	 * When scanning a module folder, the first matching file from this list
 	 * will be used as the `types` entry in `exports` and `typesVersions`.
-	 * 
+	 *
 	 * Defaults to: `["types.d.ts", "interfaces.d.ts"]`.
 	 */
 	typeFileCandidates?: string[];
 
 	/**
 	 * Extra scanning patterns for subpaths like plugins or addons.
-	 * 
+	 *
 	 * Each entry specifies:
 	 * - `pattern`: the prefix to use in the resulting `exports` key
 	 * - `folderName`: the actual folder name under which these files are located
-	 * 
+	 *
 	 * For example, `{ pattern: "plugins", folderName: "plugins" }`
 	 * will scan for `.d.ts` files in any `plugins` subfolder and create
 	 * export entries like `"./plugins/<fileName>"`.
@@ -251,7 +263,7 @@ export interface FixTypeExportsOptions {
 
 	/**
 	 * Static export mappings to always include.
-	 * 
+	 *
 	 * These are directly merged into `pkg.exports`, bypassing automatic scanning.
 	 * Keys should be the export path (e.g., `"./constants"`), and values
 	 * should specify the corresponding files.
@@ -271,7 +283,6 @@ export interface FixTypeExportsOptions {
 	>;
 }
 
-
 /**
  * Updates the `exports` and `typesVersions` fields of your `package.json`
  * based on the generated type declaration files under your distribution folder.
@@ -286,7 +297,7 @@ export interface FixTypeExportsOptions {
  * - Supports configurable `distPath` and `packageJsonPath`.
  *
  * @param {FixTypeExportsOptions} [options] - Optional configuration.
- * 
+ *
  * @example
  * // Using defaults (scans ./dist/dts and updates ./package.json)
  * fixTypeExports();

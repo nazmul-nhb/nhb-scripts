@@ -5,11 +5,11 @@ import { defineScriptConfig, fixJsExtensions, fixTypeExports } from "./index.mjs
 export default defineScriptConfig({
     format: {
         args: ['--write'],
-        files: ['lib', 'bin', 'templates'],
+        files: ['lib', 'bin', 'templates', 'types'],
         ignorePath: '.prettierignore',
     },
     commit: {
-        runFormatter: false, // do not run formatter,  use `true` to format before committing 
+        runFormatter: true,
     },
     count: {
         defaultPath: 'lib',
