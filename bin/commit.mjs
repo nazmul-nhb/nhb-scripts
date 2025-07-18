@@ -20,10 +20,13 @@ import { note } from '@clack/prompts';
  */
 async function updateVersion(newVersion) {
 	const raw = await fs.readFile('./package.json', 'utf-8');
+
 	/** @type {PackageJson} */
 	const pkg = JSON.parse(raw);
 	pkg.version = newVersion;
+
 	await fs.writeFile('./package.json', JSON.stringify(pkg, null, 2) + '\n');
+
 	console.info(chalk.green(`✓  Version updated to ${newVersion}`));
 }
 
