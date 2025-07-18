@@ -100,6 +100,7 @@ async function finalPush() {
 			message: `Current version: ${chalk.yellow(oldVersion)}\n>  Enter new version (press enter to skip):`,
 			placeholder: oldVersion,
 			defaultValue: oldVersion,
+			initialValue: oldVersion,
 		});
 
 		if (isCancel(input)) {
