@@ -46,15 +46,13 @@ export async function commitAndPush(message, version) {
 			const commitLines = commitOut
 				.split('\n')
 				.filter(Boolean)
-				.map((line) => chalk.cyan('• ') + line)
+				.map((line) => chalk.cyan('• ') + line?.trim())
 				.join('\n');
 
 			note(commitLines, chalk.magenta('✓ Commit Summary'));
 		}
 
 		const { stdout, stderr } = await execa('git', ['push', '--verbose']);
-
-		s.stop(chalk.green('✓ Changes committed and pushed!'));
 
 		const pushOut = (stdout + '\n' + stderr)?.trim();
 
@@ -67,6 +65,8 @@ export async function commitAndPush(message, version) {
 
 			note(lines, chalk.magenta('✓ Git Summary'));
 		}
+
+		s.stop(chalk.green('✓ Changes committed and pushed!'));
 
 
 		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
