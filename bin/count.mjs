@@ -31,10 +31,10 @@ async function getFilePath() {
 	const inputPath = await text({
 		message: chalk.cyanBright(
 			`───────────────────────────────────────────────────────────────────────────────-----\n` +
-				`🎯 Please specify the path to a ${chalk.yellowBright.bold('"js/ts/mjs"')} file or a folder containing ${chalk.yellowBright.bold('"js/ts/mjs"')} files.\n` +
-				`   - Enter the full file path (with extension) to process a specific file.\n` +
-				`   - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n` +
-				`   - Leave it empty to scan the default folder/file: ${chalk.bgYellowBright.bold.whiteBright(defaultPath)}\n`,
+			`🎯 Please specify the path to a ${chalk.yellowBright.bold('"js/ts/mjs"')} file or a folder containing ${chalk.yellowBright.bold('"js/ts/mjs"')} files.\n` +
+			`   - Enter the full file path (with extension) to process a specific file.\n` +
+			`   - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n` +
+			`   - Leave it empty to scan the default folder/file: ${chalk.bgYellowBright.bold.whiteBright(defaultPath)}\n`,
 		),
 		placeholder: defaultPath,
 	});
@@ -199,7 +199,7 @@ async function getFilesFromFolder(folderPath) {
 			);
 		}
 
-		outro(chalk.green('✅ Scan completed!'));
+		outro(chalk.green('🎉 Scan completed!'));
 	} catch (error) {
 		console.error(chalk.red('🛑 Unexpected Error:\n'), error);
 		process.exit(0);

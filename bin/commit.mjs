@@ -23,7 +23,7 @@ async function updateVersion(newVersion) {
 	const pkg = JSON.parse(raw);
 	pkg.version = newVersion;
 	await fs.writeFile('./package.json', JSON.stringify(pkg, null, 2) + '\n');
-	console.info(chalk.green(`✅ Version updated to ${newVersion}`));
+	console.info(chalk.green(`✓ Version updated to ${newVersion}`));
 }
 
 /**
@@ -35,14 +35,13 @@ export async function commitAndPush(message, version) {
 	const s = spinner();
 
 	s.start(chalk.blue('📤 Committing & pushing changes'));
-	console.log('\n');
 
 	try {
 		await execa('git', ['add', '.']);
 		await execa('git', ['commit', '-m', message]);
 		await execa('git', ['push'], { stdio: 'inherit' });
 
-		s.stop(chalk.green('✅ Changes committed and pushed!'));
+		s.stop(chalk.green('✓ Changes committed and pushed!'));
 		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
 	} catch (err) {
 		s.stop(chalk.red('❌ Commit or push failed!'));
