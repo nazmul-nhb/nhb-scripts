@@ -150,7 +150,7 @@ async function createModule() {
 			config.customTemplates?.[template]?.destination ||
 			config?.destination ||
 			'src/modules'
-			: 'src/modules';
+		:	'src/modules';
 
 	const destination = argv.destination || (await getSourcePath(dest));
 	config.destination = destination;
@@ -168,7 +168,7 @@ async function createModule() {
 	const modulePath =
 		shouldCreateFolder ?
 			path.resolve(destination, moduleName)
-			: path.resolve(destination);
+		:	path.resolve(destination);
 
 	if (existsSync(modulePath) && !argv.force && !config.force) {
 		const shouldOverwrite = await askOverwrite(modulePath);

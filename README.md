@@ -23,7 +23,7 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
 
 ## ⚡ Compatibility
 
-<img src="https://img.shields.io/badge/Environment-Node.js%20only-green?style=flat&logo=node.js&logoColor=white" alt="Node.js Only" />
+<img src="https://img.shields.io/badge/Environment-Node.js%20only-teal?style=flat&logo=node.js&logoColor=white" alt="Node.js Only" />
 
 > **Important:**  
 > `nhb-scripts` is designed **only for Node.js environments** (v18 or later).  
