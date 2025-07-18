@@ -39,24 +39,33 @@ export async function commitAndPush(message, version) {
 
 	try {
 		await execa('git', ['add', '.']);
-		await execa('git', ['commit', '-m', message]);
+
+		const { stdout: commitOut } = await execa('git', ['commit', '-m', message]);
+
+		if (commitOut.trim()) {
+			const commitLines = commitOut
+				.split('\n')
+				.filter(Boolean)
+				.map((line) => chalk.cyan('• ') + line)
+				.join('\n');
+
+			note(commitLines, chalk.magenta('✓ Commit Summary'));
+		}
 
 		const { stdout, stderr } = await execa('git', ['push', '--verbose']);
 
-		console.log({ stdout, stderr });
-
 		s.stop(chalk.green('✓ Changes committed and pushed!'));
 
-		const output = (stdout + '\n' + stderr)?.trim();
+		const pushOut = (stdout + '\n' + stderr)?.trim();
 
-		if (output) {
-			const lines = output
-				.split('\n')
+		if (pushOut) {
+			const lines = pushOut
+				?.split('\n')
 				.filter(Boolean)
 				.map((line) => chalk.cyan('• ') + line?.trim())
 				.join('\n');
 
-			note(lines, chalk.magenta('✓ Git Status'));
+			note(lines, chalk.magenta('✓ Git Summary'));
 		}
 
 
