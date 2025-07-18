@@ -27,8 +27,8 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
 
 > **Important:**  
 > `nhb-scripts` is designed **only for Node.js environments** (v18 or later).  
-> It is **not intended for browser bundling**, so tools like [Bundlephobia](https://bundlephobia.com/) may report missing browser dependencies.  
-> This is expected behavior and does **not** affect usage in Node.js.
+> It is **not intended for browser environment**, so tools like [Bundlephobia](https://bundlephobia.com/) may report missing browser dependencies.  
+> This is expected behavior and does **not** affect usage in `Node.js`.
 
 ### ✅ Requirements
 
@@ -47,7 +47,7 @@ yarn add -D nhb-scripts
 
 ## Unified Configuration System
 
-All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. The default and other available configuration includes:
+All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. The default configuration and other available (noted if not default) options include:
 
 ```js
 // @ts-check
@@ -72,18 +72,20 @@ export default defineScriptConfig({
     build: {
       distFolder: 'dist', // optional, default: "dist"
       deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
-      // Not default
-      commands: [
+      commands: [ // default is [{cmd: 'tsc'}]
+        // Not default
           { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
+        // Not default
           {
               cmd: 'tsc',
               args: ['-p', 'tsconfig.esm.json'],
               options: { stdio: 'inherit' }
           }
       ],
-      // Not default
       after: [
+        // Not default
           async () => await fixJsExtensions('dist/esm'),
+        // Not default
           async () => await fixTypeExports({
               distPath: 'dist/dts',
               packageJsonPath: 'package.json',

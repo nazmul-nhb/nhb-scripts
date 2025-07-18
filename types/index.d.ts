@@ -311,4 +311,4 @@ export interface FixTypeExportsOptions {
  * });
  *
  */
-export declare function fixTypeExports(options: FixTypeExportsOptions): void;
+export declare function fixTypeExports(options: FixTypeExportsOptions): Promise<void>;
