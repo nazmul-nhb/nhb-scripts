@@ -60,7 +60,7 @@ import { checkEslintDeps, ensureEslintConfig } from '../lib/lint-helpers.mjs';
 
 		s.stop(
 			chalk.green(
-				`✓ Scanned total ${chalk.blueBright.bold(totalFiles)} in ${chalk.blueBright.bold(
+				`✓ Scanned total ${chalk.blueBright.bold(totalFiles)} files in ${chalk.blueBright.bold(
 					lintTime,
 				)} seconds!`,
 			),
