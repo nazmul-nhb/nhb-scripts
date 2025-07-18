@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.6.7",
+  "version": "1.6.9",
   "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/index.d.ts",
   "main": "index.mjs",
@@ -66,6 +66,19 @@
     "type-fest": "^4.41.0",
     "typescript": "^5.8.3"
   },
+  "bundleDependencies": [
+    "@clack/prompts",
+    "chalk",
+    "execa",
+    "globby",
+    "minimist",
+    "nhb-toolbox",
+    "progress-estimator",
+    "rimraf",
+    "semver",
+    "type-fest",
+    "typescript"
+  ],
   "devDependencies": {
     "@types/node": "^24.0.10",
     "@types/semver": "^7.7.0",
