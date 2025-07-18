@@ -11,11 +11,10 @@ import { roundNumber } from 'nhb-toolbox';
 import process from 'process';
 
 import { loadUserConfig } from '../lib/config-loader.mjs';
-import { detectPackageManager } from '../lib/detect-package-manager.mjs';
 import { checkEslintDeps, ensureEslintConfig } from '../lib/lint-helpers.mjs';
 
 (async () => {
-	intro(chalk.cyan('🚀 Run ESLint Linter'));
+	intro(chalk.cyan('🚀 Run ESLint Fixer'));
 	const startTime = performance.now();
 
 	checkEslintDeps();
@@ -23,7 +22,7 @@ import { checkEslintDeps, ensureEslintConfig } from '../lib/lint-helpers.mjs';
 	try {
 		const configFile = await ensureEslintConfig();
 
-		const userConfig = (await loadUserConfig()).lint ?? {};
+		const userConfig = (await loadUserConfig()).fix ?? {};
 		const folders = userConfig.folders ?? ['src'];
 		const patterns = userConfig.patterns ?? ['**/*.ts'];
 

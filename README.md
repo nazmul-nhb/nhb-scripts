@@ -47,7 +47,7 @@ yarn add -D nhb-scripts
 
 ## Unified Configuration System
 
-All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. The default configuration includes:
+All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. The default and other available configuration includes:
 
 ```js
 // @ts-check
@@ -60,6 +60,8 @@ export default defineScriptConfig({
         files: ['.'],
         ignorePath: '.prettierignore',
     },
+    lint: { folders: ['src'], patterns: ['**/*.ts'] }, // Optional, these are defaults
+    fix: { folders: ['src'], patterns: ['**/*.ts'] }, // Optional, these are defaults
     commit: {
         runFormatter: false, // do not run formatter,  use `true` to format before committing 
     },
@@ -70,6 +72,7 @@ export default defineScriptConfig({
     build: {
       distFolder: 'dist', // optional, default: "dist"
       deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
+      // Not default
       commands: [
           { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
           {
@@ -78,6 +81,7 @@ export default defineScriptConfig({
               options: { stdio: 'inherit' }
           }
       ],
+      // Not default
       after: [
           async () => await fixJsExtensions('dist/esm'),
           () => fixTypeExports({
@@ -147,6 +151,8 @@ export default defineScriptConfig({
 | [nhb-build](#️-nhb-build--customizable-build-runner-with-progress-visualization) |  Customizable Build Runner with Progress Visualization.  |
 | [nhb-commit](#-nhb-commit--commit-version-updates-with-semver--custom-message) | Generate a conventional commit message interactively with validation.       |
 | [nhb-format](#-nhb-format--code-formatter-prettier-runner) | Format code with `prettier`.       |
+| [nhb-lint](#-nhb-lint--eslint-linter-runner) | Lint code with `eslint`.                         |
+| [nhb-fix](#-nhb-fix--eslint-autofix-runner) | Fix linting errors in code with `eslint`.       |
 | [nhb-count](#-nhb-count--export-counter-cli) | Count export declarations (default, named, aliased) in JS/TS files/folders. |
 
 > More Scripts Coming Soon...
@@ -854,6 +860,145 @@ Or if config is invalid/missing:
 ❌ Prettier not found. Please install `prettier`.
 # install it using your favorite package manager. (npm/pnpm/yarn etc.)
 ```
+
+---
+
+## ✅ `nhb-lint` — ESLint Linter Runner
+
+Run ESLint across your project with a unified configuration system.
+It **automatically detects your folders and patterns** from `nhb.scripts.config.mjs` and shows a **detailed lint summary** with all issues.
+
+### ⚙️ Setup in `package.json`
+
+```json
+{
+  "scripts": {
+    "lint": "nhb-lint"
+  }
+}
+```
+
+Run:
+
+```bash
+pnpm lint
+# or
+npm run lint
+# or
+yarn lint
+```
+
+---
+
+### ✨ Features
+
+- ✅ Auto‑detects and ensures ESLint configuration (`.eslintrc.cjs` etc.)
+- ✅ Loads lint config (`folders`, `patterns`) from `nhb.scripts.config.mjs`
+- ✅ Rich output with a **bullet‑point summary** of all ESLint findings
+- ✅ Shows scanned file count and total runtime
+- ✅ Works with TypeScript & JavaScript projects (ESM only)
+
+---
+
+### 🛠️ Example Config
+
+In `nhb.scripts.config.mjs`:
+
+```js
+lint: {
+  folders: ['src', 'tests'],        // optional; default: ["src"]
+  patterns: ['**/*.ts', '**/*.tsx'] // optional; default: ["**/*.ts"]
+}
+```
+
+---
+
+### 📦 Output Example
+
+```bash
+🚀 Run ESLint Linter
+⏳ Linting Your Code in src, tests...
+
+✓ Lint Summary
+ • src/index.ts:12:3  warning  Unexpected console statement  no-console
+ • src/utils/helpers.ts:45:10  error  Missing return type on function  @typescript-eslint/explicit-module-boundary-types
+ • tests/app.spec.ts:5:1  error  Prefer const over let  prefer-const
+
+✓ Scanned total 58 files in 2.43 seconds!
+🎉 Linting completed in folders: src, tests
+```
+
+---
+
+## 🔧 `nhb-fix` — ESLint Auto‑Fix Runner
+
+Run ESLint with the `--fix` flag to **automatically fix** many common issues in your code.
+
+### ⚙️ Setup in `package.json`
+
+```json
+{
+  "scripts": {
+    "fix": "nhb-fix"
+  }
+}
+```
+
+Run:
+
+```bash
+pnpm fix
+# or
+npm run fix
+# or
+yarn fix
+```
+
+---
+
+### ✨ Features
+
+- ✅ Same detection and configuration as `nhb-lint`
+- ✅ Applies **auto‑fixable** rules (formatting, unused vars, etc.)
+- ✅ Shows a **fix summary** with all changes applied
+- ✅ Counts scanned files and shows runtime
+
+---
+
+### 📦 Output Example
+
+```bash
+🚀 Run ESLint Linter
+⏳ Fixing Your Code in src...
+
+✓ Fix Summary
+ • src/utils/array.ts:12:1  fixed  Remove unused import
+ • src/components/Button.tsx:5:1  fixed  Format JSX spacing
+
+✓ Scanned total 58 files in 2.02 seconds!
+🎉 Fixing completed in folders: src
+```
+
+---
+
+### 🧭 Configuration
+
+`nhb-fix` use the `fix` section in `nhb.scripts.config.mjs`:
+
+```js
+fix: {
+  folders: ['src'],        // Folders to lint
+  patterns: ['**/*.ts']    // Glob patterns per folder
+}
+```
+
+---
+
+### 💡 Pro Tips
+
+- Run `pnpm lint` before pushing to catch errors early.
+- Run `pnpm fix` to automatically resolve fixable issues.
+- Combine with `nhb-commit` (`runFormatter` option) for a fully automated commit pipeline.
 
 ---
 
