@@ -3,29 +3,25 @@
 
 // @ts-check
 
-import { intro, isCancel, outro, select, spinner, text } from '@clack/prompts';
+import { intro, isCancel, note, outro, select, spinner, text } from '@clack/prompts';
 import chalk from 'chalk';
 import { execa } from 'execa';
-import fs from 'fs/promises';
 import semver from 'semver';
-import { loadUserConfig } from '../lib/config-loader.mjs';
-import { runFormatter } from '../lib/prettier-formatter.mjs';
-import { note } from '@clack/prompts';
 
-/** @typedef {import('type-fest').PackageJson} PackageJson */
+import { loadUserConfig } from '../lib/config-loader.mjs';
+import { parsePackageJson, writeToPackageJson } from '../lib/package-json-utils.mjs';
+import { runFormatter } from '../lib/prettier-formatter.mjs';
 
 /**
  * * Updates version in package.json
  * @param {string} newVersion
  */
 async function updateVersion(newVersion) {
-	const raw = await fs.readFile('./package.json', 'utf-8');
+	const pkg = parsePackageJson();
 
-	/** @type {PackageJson} */
-	const pkg = JSON.parse(raw);
 	pkg.version = newVersion;
 
-	await fs.writeFile('./package.json', JSON.stringify(pkg, null, 2) + '\n');
+	await writeToPackageJson(pkg);
 
 	console.info(chalk.green(`✓  Version updated to ${newVersion}`));
 }
@@ -92,9 +88,8 @@ function isValidVersion(newVersion, currentVersion) {
 async function finalPush() {
 	intro(chalk.cyan('🚀 Commit & Push'));
 
-	const raw = await fs.readFile('./package.json', 'utf-8');
-	/** @type {PackageJson} */
-	const pkg = JSON.parse(raw);
+	const pkg = parsePackageJson();
+
 	const oldVersion = pkg.version || '0.0.0';
 
 	const config = (await loadUserConfig()).commit ?? {};

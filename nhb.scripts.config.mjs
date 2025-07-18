@@ -28,7 +28,7 @@ export default defineScriptConfig({
         ],
         after: [
             async () => await fixJsExtensions('dist/esm'),
-            () => fixTypeExports({
+            async () => await fixTypeExports({
                 distPath: 'dist/dts',
                 packageJsonPath: 'package.json',
                 typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],

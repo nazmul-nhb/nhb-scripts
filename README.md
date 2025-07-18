@@ -84,7 +84,7 @@ export default defineScriptConfig({
       // Not default
       after: [
           async () => await fixJsExtensions('dist/esm'),
-          () => fixTypeExports({
+          async () => await fixTypeExports({
               distPath: 'dist/dts',
               packageJsonPath: 'package.json',
               typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
@@ -480,7 +480,7 @@ export default defineScriptConfig({
     ],
     after: [
         async () => await fixJsExtensions('dist/esm'),
-        () => fixTypeExports({
+        async () => await fixTypeExports({
             distPath: 'dist/dts',
             packageJsonPath: 'package.json',
             typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
@@ -572,15 +572,34 @@ Building...
 You can pass any async function returning a Promise, for example:
 
 ```js
-import { fixJsExtensions } from 'nhb-scripts/fix-imports';
-import { fixTypeExports } from 'nhb-scripts/fix-type-exports';
+// @ts-check
+
+import { fixJsExtensions, fixTypeExports} from 'nhb-scripts';
 
 export default defineScriptConfig({
   build: {
     after: [
-      fixJsExtensions('dist/esm'),
-      fixTypeExports()
-    ]
+        async () => await fixJsExtensions('dist/esm'),
+        async () => await fixTypeExports({
+            distPath: 'dist/dts',
+            packageJsonPath: 'package.json',
+            typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
+            extraPatterns: [
+                { pattern: 'plugins', folderName: 'plugins' },
+            ],
+            extraStatic: {
+                './types': {
+                    types: './dist/dts/types/index.d.ts',
+                    default: './dist/dts/types/index.d.ts'
+                },
+                './constants': {
+                    types: './dist/dts/constants.d.ts',
+                    import: './dist/esm/constants.js',
+                    require: './dist/cjs/constants.js'
+                },
+            }
+        }),
+    ],
   }
 });
 ```
