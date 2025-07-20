@@ -8,6 +8,7 @@ import chalk from 'chalk';
 import { existsSync } from 'fs';
 import minimist from 'minimist';
 import path from 'path';
+import { normalizeResult, showCancelMessage } from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 
@@ -32,15 +33,12 @@ const argv = minimist(process.argv.slice(2), {
 
 /** @returns {Promise<string>} */
 async function getModuleNameFromPrompt() {
-	const result = await text({
-		message: chalk.cyan('Enter module name:'),
-		validate: (val) => (val.trim() ? undefined : 'Module name is required!'),
-	});
-	if (isCancel(result)) {
-		console.log(chalk.gray('⛔ Process cancelled by user!'));
-		process.exit(0);
-	}
-	return result?.trim();
+	return normalizeResult(
+		await text({
+			message: chalk.cyan('Enter module name:'),
+			validate: (val) => (val.trim() ? undefined : 'Module name is required!'),
+		}),
+	);
 }
 
 /**
@@ -48,21 +46,20 @@ async function getModuleNameFromPrompt() {
  * @returns {Promise<string>}
  */
 async function getSourcePath(defaultPath) {
-	const result = await text({
-		message: chalk.cyan(
-			`Enter a source path (Default is ${defaultPath || 'src/app/module'}):`,
-		),
-		placeholder: defaultPath,
-	});
-	if (isCancel(result)) {
-		console.log(chalk.gray('⛔ Process cancelled by user!'));
-		process.exit(0);
-	}
-	return result?.trim() || defaultPath;
+	const result = normalizeResult(
+		await text({
+			message: chalk.cyan(
+				`Enter a source path (Default is ${defaultPath || 'src/modules'}):`,
+			),
+			placeholder: defaultPath,
+		}),
+	);
+
+	return result ?? defaultPath;
 }
 
 /**
- * @param {Array<{title:string,value:ModuleName}>} choices
+ * @param {Array<{title:string, value:ModuleName}>} choices
  * @returns {Promise<ModuleName>}
  */
 async function getTemplateFromPrompt(choices) {
@@ -75,10 +72,11 @@ async function getTemplateFromPrompt(choices) {
 			})),
 		})
 	);
+
 	if (isCancel(result)) {
-		console.log(chalk.gray('⛔ Process cancelled by user!'));
-		process.exit(0);
+		showCancelMessage();
 	}
+
 	return result;
 }
 
@@ -94,10 +92,12 @@ async function askCreateFolder(moduleName) {
 		),
 		initialValue: true,
 	});
+
 	if (isCancel(result)) {
-		console.log(chalk.gray('⛔ Process cancelled by user!'));
+		console.log(chalk.redBright('⛔ Process cancelled by user!'));
 		process.exit(0);
 	}
+
 	return result;
 }
 
@@ -113,10 +113,12 @@ async function askOverwrite(modulePath) {
 		),
 		initialValue: false,
 	});
+
 	if (isCancel(result)) {
-		console.log(chalk.gray('⛔ Module generation cancelled by user!'));
+		console.log(chalk.redBright('⛔ Module generation cancelled by user!'));
 		process.exit(0);
 	}
+
 	return result;
 }
 
@@ -137,8 +139,7 @@ async function createModule() {
 
 	const moduleName = argv.name || (await getModuleNameFromPrompt());
 	if (!moduleName) {
-		console.error(chalk.red('🛑 Module name is required!'));
-		process.exit(0);
+		showCancelMessage('🛑 Module name is required!');
 	}
 
 	const template =
@@ -173,7 +174,7 @@ async function createModule() {
 	if (existsSync(modulePath) && !argv.force && !config.force) {
 		const shouldOverwrite = await askOverwrite(modulePath);
 		if (!shouldOverwrite) {
-			console.log(chalk.gray('⛔ Module generation cancelled by user!'));
+			console.log(chalk.redBright('⛔ Module generation cancelled by user!'));
 			process.exit(0);
 		}
 		config.force = true;

@@ -3,11 +3,12 @@
 
 // @ts-check
 
-import { intro, isCancel, note, outro, select, spinner, text } from '@clack/prompts';
+import { intro, note, outro, select, spinner, text } from '@clack/prompts';
 import chalk from 'chalk';
 import { execa } from 'execa';
 import semver from 'semver';
 
+import { mimicClack, normalizeResult } from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { parsePackageJson, writeToPackageJson } from '../lib/package-json-utils.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
@@ -23,7 +24,7 @@ async function updateVersion(newVersion) {
 
 	await writeToPackageJson(pkg);
 
-	console.info(chalk.green(`✓  Version updated to ${newVersion}`));
+	mimicClack(chalk.green(`✓ Version updated to ${chalk.yellowBright(newVersion)}`));
 }
 
 /**
@@ -94,39 +95,36 @@ async function finalPush() {
 
 	const config = (await loadUserConfig()).commit ?? {};
 
+	mimicClack(`Current version: ${chalk.yellow(oldVersion)}`);
+
 	let version = '';
 	while (true) {
-		const input = await text({
-			message: `Current version: ${chalk.yellow(oldVersion)}\n>  Enter new version (press enter to skip):`,
-			placeholder: oldVersion,
-			defaultValue: oldVersion,
-			initialValue: oldVersion,
-		});
-
-		if (isCancel(input)) {
-			console.log(chalk.gray('⛔ Process cancelled by user!'));
-			process.exit(0);
-		}
+		const input = normalizeResult(
+			await text({
+				message: `${chalk.cyanBright.bold('Enter new version (press enter to skip):')}`,
+				placeholder: oldVersion,
+				defaultValue: oldVersion,
+				initialValue: oldVersion,
+			}),
+		);
 
 		version = (input || '').trim();
 		if (!version) {
 			version = oldVersion;
-			console.info(
-				chalk.cyanBright(
-					`${chalk.red('⨉')} Using previous version: ${chalk.yellow(version)}`,
-				),
+			mimicClack(
+				chalk.cyanBright(`🔄️ Using previous version: ${chalk.yellow(version)}`),
 			);
 			break;
 		}
 
 		if (!isValidVersion(version, oldVersion)) {
-			console.log(
-				chalk.red('⚠  Invalid or older version. Use valid semver like 1.2.3'),
+			mimicClack(
+				chalk.red('🛑 Invalid or older version. Use valid semver like 1.2.3'),
 			);
 			continue;
 		}
 
-		console.log(`✔  Selected version: ${version}`);
+		mimicClack(chalk.green(`✔ Selected version: ${chalk.yellowBright(version)}`));
 		break;
 	}
 
@@ -150,50 +148,45 @@ async function finalPush() {
 		{ value: '__custom__', label: '✍  Custom...' },
 	];
 
-	const typeResult = await select({
-		message: chalk.cyan('Select commit type:'),
-		options: typeChoices,
-	});
-
-	if (isCancel(typeResult)) {
-		console.log(chalk.gray('⛔ Process cancelled by user!'));
-		process.exit(0);
-	}
+	const typeResult = normalizeResult(
+		await select({
+			message: chalk.cyan('Select commit type:'),
+			options: typeChoices,
+		}),
+	);
 
 	let finalType = typeResult;
 	if (typeResult === '__custom__') {
-		const customType = await text({
-			message: chalk.magenta('Enter custom commit type:'),
-			validate: (val) => (val?.trim() ? '' : 'Commit type is required!'),
-		});
-		if (isCancel(customType)) {
-			console.log(chalk.gray('⛔ Process cancelled by user!'));
-			process.exit(0);
-		}
-		finalType = (customType || '')?.trim();
+		const customType = normalizeResult(
+			await text({
+				message: chalk.magenta('Enter custom commit type:'),
+				validate: (val) => (val?.trim() ? '' : '🛑 Commit type is required!'),
+			}),
+		);
+
+		finalType = customType;
 	}
 
-	const scopeResult = await text({
-		message: chalk.gray('Enter a scope (optional):'),
-	});
-	if (isCancel(scopeResult)) {
-		console.log(chalk.gray('⛔ Process cancelled by user!'));
-		process.exit(0);
-	}
+	const scopeResult = normalizeResult(
+		await text({
+			message: chalk.gray('Enter a scope (optional):'),
+			initialValue: ' ',
+		}),
+	);
 
-	const messageResult = await text({
-		message: chalk.cyan('Enter commit message (required):'),
-		validate: (val) => (val.trim() ? '' : '⚠ Message cannot be empty!'),
-	});
-	if (isCancel(messageResult)) {
-		console.log(chalk.gray('⛔ Process cancelled by user!'));
-		process.exit(0);
-	}
+	const messageResult = normalizeResult(
+		await text({
+			message: chalk.cyan('Enter commit message (required):'),
+			validate: (val) => (val.trim() ? '' : '🛑 Message cannot be empty!'),
+		}),
+	);
+
+	console.log(chalk.gray('│'));
 
 	const formattedMessage =
-		scopeResult?.trim() ?
-			`${finalType}(${scopeResult?.trim()}): ${messageResult?.trim()}`
-		:	`${finalType}: ${messageResult?.trim()}`;
+		scopeResult ?
+			`${finalType}(${scopeResult}): ${messageResult}`
+		:	`${finalType}: ${messageResult}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);

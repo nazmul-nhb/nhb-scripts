@@ -24,8 +24,8 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8
       nhb-toolbox:
-        specifier: ^4.12.67
-        version: 4.12.67
+        specifier: ^4.12.81
+        version: 4.12.81
       progress-estimator:
         specifier: ^0.3.1
         version: 0.3.1
@@ -302,8 +302,8 @@ packages:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
 
-  nhb-toolbox@4.12.67:
-    resolution: {integrity: sha512-KZw+fphmxulntl/VQBgLTEct+KUIDTP6KcRBbghSx1130Ny86v7sd+E6zvYqX13xPeyNeUHWTgrSwVkrOa9lpw==}
+  nhb-toolbox@4.12.81:
+    resolution: {integrity: sha512-uqUjNQAk6jCmOIEACos0RVcIZqB0aPV2zrhs5X2V1qKc4cxf8bTlyddDXc3Bk24z9gu6EIBqNrFFrdz5dAlr4g==}
 
   npm-run-path@6.0.0:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
@@ -712,7 +712,7 @@ snapshots:
 
   minipass@7.1.2: {}
 
-  nhb-toolbox@4.12.67: {}
+  nhb-toolbox@4.12.81: {}
 
   npm-run-path@6.0.0:
     dependencies:
