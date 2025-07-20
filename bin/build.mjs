@@ -38,7 +38,7 @@ const getFileIcon = (filePath) => {
 };
 
 (async () => {
-	intro(chalk.yellowBright('📦 Build with NHB Build'));
+	intro(chalk.yellowBright('📦 NHB Build'));
 	console.log('│');
 
 	const {
@@ -67,7 +67,7 @@ const getFileIcon = (filePath) => {
 					await execa(cmd, args, { cwd: process.cwd(), ...options });
 				}
 			})(),
-			chalk.yellowBright(' Building Your Application...'),
+			chalk.yellowBright(' 📦 Building Your Application...'),
 		);
 
 		// Gather Transformed Files
@@ -105,7 +105,7 @@ const getFileIcon = (filePath) => {
 
 		const totalFileSize = `Total Size: ${chalk.blueBright.bold(totalSizeInKB)} kB`;
 
-		mimicClack(chalk.green(`✓ ${totalFiles}; ${totalFileSize}`));
+		mimicClack(chalk.green(`📂 ${totalFiles}; ${totalFileSize}`));
 
 		if (Array.isArray(after)) {
 			for (const afterHook of after) {
