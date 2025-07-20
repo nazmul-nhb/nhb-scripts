@@ -3,15 +3,16 @@
 
 // @ts-check
 
-import { intro, outro, spinner } from '@clack/prompts';
+import { intro, note, outro } from '@clack/prompts';
 import chalk from 'chalk';
 import { execa } from 'execa';
 import { globby } from 'globby';
 import { isValidArray, roundNumber } from 'nhb-toolbox';
 import { extname } from 'path';
+import { rimraf } from 'rimraf';
+import { mimicClack } from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { estimator } from '../lib/estimator.mjs';
-import { rimraf } from 'rimraf';
 
 /**
  * @typedef {import('execa').Result} Result
@@ -54,9 +55,6 @@ const getFileIcon = (filePath) => {
 	const startTime = performance.now();
 
 	try {
-		const s = spinner();
-		s.start(chalk.yellowBright('Building'));
-
 		await estimator(
 			(async () => {
 				if (deleteDist) {
@@ -77,9 +75,6 @@ const getFileIcon = (filePath) => {
 			objectMode: true,
 		});
 
-		// Log Transformed Files
-		console.info(chalk.green('\n✓ Transformed Files:'));
-
 		let totalSize = 0;
 
 		const rows = outputFiles.map(({ path, stats }) => {
@@ -91,24 +86,25 @@ const getFileIcon = (filePath) => {
 
 			return [
 				chalk.yellow(`${fileIcon} ${path}`),
-				chalk.cyan(`${sizeInKB.toFixed(2)} kB`),
+				chalk.cyan(`${roundNumber(sizeInKB)} kB`),
 			];
 		});
 
-		const columnWidth = 80;
+		const lines = rows
+			.map(([left, right]) => `${chalk.cyan('•')} ${left.padEnd(80)}${right}`)
+			.join('\n');
 
-		rows.forEach(([left, right]) => {
-			console.info(`${left.padEnd(columnWidth)}${right}`);
-		});
+		// Log Transformed Files
+		note(lines, chalk.green('✓ Transformed Files'));
 
 		// Log Total Size and Build Time
-		const totalSizeInKB = totalSize.toFixed(2);
+		const totalSizeInKB = roundNumber(totalSize);
 
 		const totalFiles = `Total Files: ${chalk.blueBright.bold(outputFiles.length)}`;
 
 		const totalFileSize = `Total Size: ${chalk.blueBright.bold(totalSizeInKB)} kB`;
 
-		s.stop(chalk.green(`✓ ${totalFiles}; ${totalFileSize}`));
+		mimicClack(chalk.green(`✓ ${totalFiles}; ${totalFileSize}`));
 
 		if (Array.isArray(after)) {
 			for (const afterHook of after) {
