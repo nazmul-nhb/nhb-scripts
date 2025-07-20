@@ -38,7 +38,8 @@ const getFileIcon = (filePath) => {
 };
 
 (async () => {
-	intro(chalk.yellowBright('📦 Build Your Application'));
+	intro(chalk.yellowBright('📦 Build with NHB Build'));
+	console.log('│');
 
 	const {
 		after = [],
@@ -66,7 +67,7 @@ const getFileIcon = (filePath) => {
 					await execa(cmd, args, { cwd: process.cwd(), ...options });
 				}
 			})(),
-			chalk.yellowBright('Building Your Application...'),
+			chalk.yellowBright(' Building Your Application...'),
 		);
 
 		// Gather Transformed Files
