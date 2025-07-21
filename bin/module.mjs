@@ -8,7 +8,12 @@ import chalk from 'chalk';
 import { existsSync } from 'fs';
 import minimist from 'minimist';
 import path from 'path';
-import { normalizeResult, showCancelMessage } from '../lib/clack-utils.mjs';
+import {
+	normalizeBooleanResult,
+	normalizeStringResult,
+	showCancelMessage,
+	validateStringInput,
+} from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 
@@ -33,10 +38,10 @@ const argv = minimist(process.argv.slice(2), {
 
 /** @returns {Promise<string>} */
 async function getModuleNameFromPrompt() {
-	return normalizeResult(
+	return normalizeStringResult(
 		await text({
-			message: chalk.cyan('Enter module name:'),
-			validate: (val) => (val.trim() ? undefined : 'Module name is required!'),
+			message: chalk.cyan('📦 Enter module name:'),
+			validate: validateStringInput,
 		}),
 	);
 }
@@ -46,10 +51,10 @@ async function getModuleNameFromPrompt() {
  * @returns {Promise<string>}
  */
 async function getSourcePath(defaultPath) {
-	const result = normalizeResult(
+	const result = normalizeStringResult(
 		await text({
 			message: chalk.cyan(
-				`Enter a source path (Default is ${defaultPath || 'src/modules'}):`,
+				`📂 Enter a source path (Default is ${defaultPath || 'src/modules'}):`,
 			),
 			placeholder: defaultPath,
 		}),
@@ -65,7 +70,7 @@ async function getSourcePath(defaultPath) {
 async function getTemplateFromPrompt(choices) {
 	const result = /** @type {ModuleName} */ (
 		await select({
-			message: chalk.magenta('Choose a module template'),
+			message: chalk.magenta('📂 Choose a module template'),
 			options: choices.map((c) => ({
 				value: c.value,
 				label: c.title,
@@ -86,19 +91,14 @@ async function getTemplateFromPrompt(choices) {
  * @returns {Promise<boolean>}
  */
 async function askCreateFolder(moduleName) {
-	const result = await confirm({
-		message: chalk.blueBright(
-			`Do you want to generate files inside a folder named "${moduleName}"?`,
-		),
-		initialValue: true,
-	});
-
-	if (isCancel(result)) {
-		console.log(chalk.redBright('⛔ Process cancelled by user!'));
-		process.exit(0);
-	}
-
-	return result;
+	return normalizeBooleanResult(
+		await confirm({
+			message: chalk.blueBright(
+				`❔ Do you want to generate files inside a folder named "${moduleName}"?`,
+			),
+			initialValue: true,
+		}),
+	);
 }
 
 /**
@@ -107,23 +107,18 @@ async function askCreateFolder(moduleName) {
  * @returns {Promise<boolean>}
  */
 async function askOverwrite(modulePath) {
-	const result = await confirm({
-		message: chalk.yellow(
-			`Files in "${modulePath}" already exist. Overwrite conflicting files/folders?`,
-		),
-		initialValue: false,
-	});
-
-	if (isCancel(result)) {
-		console.log(chalk.redBright('⛔ Module generation cancelled by user!'));
-		process.exit(0);
-	}
-
-	return result;
+	return normalizeBooleanResult(
+		await confirm({
+			message: chalk.yellow(
+				`⛔ Files in "${modulePath}" already exist. Overwrite conflicting files/folders?`,
+			),
+			initialValue: false,
+		}),
+	);
 }
 
 async function createModule() {
-	intro(chalk.cyanBright('📦 NHB Module Generator'));
+	intro(chalk.cyan.bold('📂 NHB Module Generator'));
 
 	const config = (await loadUserConfig()).module ?? {};
 
@@ -137,7 +132,9 @@ async function createModule() {
 		{ title: 'Express + Mongoose + Zod', value: 'express-mongoose-zod' },
 	];
 
-	const moduleName = argv.name || (await getModuleNameFromPrompt());
+	const moduleName = /** @type {string} */ (
+		argv.name || (await getModuleNameFromPrompt())
+	);
 	if (!moduleName) {
 		showCancelMessage('🛑 Module name is required!');
 	}
@@ -174,12 +171,11 @@ async function createModule() {
 	if (existsSync(modulePath) && !argv.force && !config.force) {
 		const shouldOverwrite = await askOverwrite(modulePath);
 		if (!shouldOverwrite) {
-			console.log(chalk.redBright('⛔ Module generation cancelled by user!'));
-			process.exit(0);
+			showCancelMessage('⛔ Module generation cancelled by user!');
 		}
 		config.force = true;
 	} else {
-		config.force = argv.force || false;
+		config.force = /** @type {boolean} */ argv.force || false;
 	}
 
 	config.hooks?.onGenerate?.(moduleName);

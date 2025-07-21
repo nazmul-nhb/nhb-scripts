@@ -10,7 +10,7 @@ import { globby } from 'globby';
 import { isValidArray, roundNumber } from 'nhb-toolbox';
 import { extname } from 'path';
 import { rimraf } from 'rimraf';
-import { mimicClack } from '../lib/clack-utils.mjs';
+import { addPipeOnLeft, mimicClack } from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { estimator } from '../lib/estimator.mjs';
 
@@ -38,8 +38,8 @@ const getFileIcon = (filePath) => {
 };
 
 (async () => {
-	intro(chalk.yellowBright('📦 NHB Build'));
-	console.log('│');
+	intro(chalk.yellowBright.bold('📦 NHB Build'));
+	addPipeOnLeft();
 
 	const {
 		after = [],

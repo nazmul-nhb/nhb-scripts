@@ -3,13 +3,13 @@
 
 // @ts-check
 
-import { intro, isCancel, outro, text } from '@clack/prompts';
+import { intro, outro, text } from '@clack/prompts';
 import chalk from 'chalk';
 import fs from 'fs/promises';
 import { extname, join, resolve } from 'path';
 import tsModule from 'typescript';
+import { addPipeOnLeft, normalizeStringResult } from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';
-import { normalizeResult } from '../lib/clack-utils.mjs';
 
 /**
  * @typedef {Object} Exports
@@ -25,24 +25,32 @@ import { normalizeResult } from '../lib/clack-utils.mjs';
  * @returns {Promise<string>} The resolved path
  */
 async function getFilePath() {
-	intro(chalk.cyan('📂 Export Counter'));
+	intro(chalk.cyan.bold('📂 Export Counter'));
 
 	const defaultPath = (await loadUserConfig()).count?.defaultPath ?? '.';
 
-	const inputPath = normalizeResult(
+	const inputPath = normalizeStringResult(
 		await text({
-			message: chalk.cyanBright(
-				`───────────────────────────────────────────────────────────────────────────────-----\n` +
-					`🎯 Please specify the path to a ${chalk.yellowBright.bold('"js/ts/mjs"')} file or a folder containing ${chalk.yellowBright.bold('"js/ts/mjs"')} files.\n` +
-					`   - Enter the full file path (with extension) to process a specific file.\n` +
-					`   - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n` +
-					`   - Leave it empty to scan the default folder/file: ${chalk.bgYellowBright.bold.whiteBright(defaultPath)}\n`,
+			message: chalk.gray(
+				chalk.cyanBright.bold(
+					`🎯 Please specify the path to a ${chalk.yellowBright('"js/ts/mjs"')} file or a folder containing ${chalk.yellowBright('"js/ts/mjs"')} files.\n`,
+				) +
+					addPipeOnLeft(
+						' - Enter the full file path (with extension) to process a specific file.\n',
+					) +
+					addPipeOnLeft(
+						` - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n`,
+					) +
+					addPipeOnLeft(
+						` - Leave it empty to scan the default folder/file: ${chalk.bgYellowBright.bold.whiteBright(defaultPath)}\n`,
+					) +
+					addPipeOnLeft(),
 			),
-			placeholder: defaultPath,
+			placeholder: `e.g. ${chalk.yellowBright('src/app')} or ${chalk.yellowBright('src/index.ts')}`,
 		}),
 	);
 
-	const filePath = (inputPath || '')?.trim() || defaultPath;
+	const filePath = inputPath || defaultPath;
 	return resolve(filePath);
 }
 

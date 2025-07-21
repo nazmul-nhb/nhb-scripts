@@ -14,7 +14,7 @@ import { loadUserConfig } from '../lib/config-loader.mjs';
 import { checkEslintDeps, ensureEslintConfig } from '../lib/lint-helpers.mjs';
 
 (async () => {
-	intro(chalk.cyan('🚀 Run ESLint Linter'));
+	intro(chalk.cyan.bold('🚀 Run ESLint Linter'));
 	const startTime = performance.now();
 
 	checkEslintDeps();
@@ -68,7 +68,7 @@ import { checkEslintDeps, ensureEslintConfig } from '../lib/lint-helpers.mjs';
 
 		outro(chalk.green(`🎉 Linting completed in folders: ${folders.join(', ')}`));
 	} catch (err) {
-		outro(chalk.red('❌ ESLint run failed!'));
+		outro(chalk.red('🛑 ESLint run failed!'));
 		console.error(err);
 		process.exit(0);
 	}

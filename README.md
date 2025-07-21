@@ -442,7 +442,7 @@ You can define multiple templates and dynamically select one at CLI prompt or vi
 
 ---
 
-### ❌ Cancel or Abort
+### 🛑 Cancel or Abort
 
 - If a module already exists and `--force` is not used, the CLI prompts confirmation.
 - You can abort at any step via keyboard interrupt (`Ctrl+C` or `Esc` on prompts).
@@ -790,7 +790,7 @@ If both configs are present and `runFormatter` is `true`, `nhb-commit` will:
 
 ---
 
-### ❌ Cancel or Abort
+### 🛑 Cancel or Abort
 
 You can abort at any time using `Ctrl+C` or `Esc`.
 
@@ -872,14 +872,10 @@ If missing, the script will exit with a warning and suggest installation.
 pnpm format
 
 🎨 Running Prettier...
+
+# Scanned file-list
+
 ✅ Prettier formatting complete!
-```
-
-Or if config is invalid/missing:
-
-```bash
-❌ Prettier not found. Please install `prettier`.
-# install it using your favorite package manager. (npm/pnpm/yarn etc.)
 ```
 
 ---

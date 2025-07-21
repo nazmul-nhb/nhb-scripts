@@ -8,7 +8,11 @@ import chalk from 'chalk';
 import { execa } from 'execa';
 import semver from 'semver';
 
-import { mimicClack, normalizeResult } from '../lib/clack-utils.mjs';
+import {
+	mimicClack,
+	normalizeStringResult,
+	validateStringInput,
+} from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { parsePackageJson, writeToPackageJson } from '../lib/package-json-utils.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
@@ -66,11 +70,11 @@ export async function commitAndPush(message, version) {
 			note(lines, chalk.magenta('✓ Git Summary'));
 		}
 
-		s.stop(chalk.green('✓ Changes committed and pushed!'));
+		s.stop(chalk.green('✓ Changes are committed and pushed to remote repository!'));
 
 		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
 	} catch (err) {
-		s.stop(chalk.red('❌ Commit or push failed!'));
+		s.stop(chalk.red('🛑 Commit or push failed!'));
 		console.error(chalk.red(err));
 		process.exit(0);
 	}
@@ -99,7 +103,7 @@ async function finalPush() {
 
 	let version = '';
 	while (true) {
-		const input = normalizeResult(
+		const input = normalizeStringResult(
 			await text({
 				message: `${chalk.cyanBright.bold('Enter new version (press enter to skip):')}`,
 				placeholder: oldVersion,
@@ -148,7 +152,7 @@ async function finalPush() {
 		{ value: '__custom__', label: '✍  Custom...' },
 	];
 
-	const typeResult = normalizeResult(
+	const typeResult = normalizeStringResult(
 		await select({
 			message: chalk.cyan('Select commit type:'),
 			options: typeChoices,
@@ -157,27 +161,28 @@ async function finalPush() {
 
 	let finalType = typeResult;
 	if (typeResult === '__custom__') {
-		const customType = normalizeResult(
+		const customType = normalizeStringResult(
 			await text({
 				message: chalk.magenta('Enter custom commit type:'),
-				validate: (val) => (val?.trim() ? '' : '🛑 Commit type is required!'),
+				validate: validateStringInput,
 			}),
 		);
 
 		finalType = customType;
 	}
 
-	const scopeResult = normalizeResult(
+	const scopeResult = normalizeStringResult(
 		await text({
 			message: chalk.gray('Enter a scope (optional):'),
-			initialValue: ' ',
+			placeholder: 'e.g. api, ui, auth',
 		}),
 	);
 
-	const messageResult = normalizeResult(
+	const messageResult = normalizeStringResult(
 		await text({
 			message: chalk.cyan('Enter commit message (required):'),
-			validate: (val) => (val.trim() ? '' : '🛑 Message cannot be empty!'),
+			placeholder: 'e.g. added new feature, fixed bug in auth module etc.',
+			validate: validateStringInput,
 		}),
 	);
 
