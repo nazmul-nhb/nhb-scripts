@@ -23,16 +23,16 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
 
 ## ⚡ Compatibility
 
-<img src="https://img.shields.io/badge/Environment-Node.js%20only-teal?style=flat&logo=node.js&logoColor=white" alt="Node.js Only" />
+<img src="https://img.shields.io/badge/Node.js-Version%2020+-teal?style=flat&logo=node.js&logoColor=green" alt="Node.js 20+" />
 
 > **Important:**  
-> `nhb-scripts` is designed **only for Node.js environments** (v18 or later).  
+> `nhb-scripts` is designed **only for Node.js environments** (v20 or later).  
 > It is **not intended for browser environment**, so tools like [Bundlephobia](https://bundlephobia.com/) may report missing browser dependencies.  
 > This is expected behavior and does **not** affect usage in `Node.js`.
 
 ### ✅ Requirements
 
-- Node.js **18 or newer**  
+- Node.js **20 or newer**  
 - `npm`, `pnpm`, or `yarn` for installation
 
 ```bash
