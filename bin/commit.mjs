@@ -70,7 +70,9 @@ export async function commitAndPush(message, version) {
 			note(lines, chalk.magenta('✓ Git Summary'));
 		}
 
-		s.stop(chalk.green('✓ Changes are committed and pushed to remote repository!'));
+		s.stop(
+			chalk.green('✅ Changes are committed and pushed to the remote repository!'),
+		);
 
 		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
 	} catch (err) {

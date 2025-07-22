@@ -1,12 +1,14 @@
 // @ts-check
 
-import { capitalizeString } from 'nhb-toolbox';
+import { capitalizeString, pluralizer } from 'nhb-toolbox';
 
 /**
  * @param {string} module
  * @returns {Array<{ name: string, content: string }>}
  */
 export function expressMongooseZodTemplate(module) {
+	const capModule = capitalizeString(module);
+
 	return [
 		{
 			name: `${module}.routes.ts`,
@@ -16,7 +18,7 @@ import { ${module}Controllers } from './${module}.controllers';
 
 const router = Router();
 
-router.get('/', ${module}Controllers.getAll${capitalizeString(module)}s);
+router.get('/', ${module}Controllers.getAll${capModule}s);
 
 export const ${module}Routes = router;
             `,
@@ -28,40 +30,40 @@ import catchAsync from '../../utilities/catchAsync';
 import sendResponse from '../../utilities/sendResponse';
 import { ${module}Services } from './${module}.services';
             
-const getAll${capitalizeString(module)}s = catchAsync(async (_req, res) => {
-    const ${module}s = await ${module}Services.getAll${capitalizeString(module)}sFromDB();
+const getAll${capModule}s = catchAsync(async (_req, res) => {
+    const ${module}s = await ${module}Services.getAll${capModule}sFromDB();
 
-    sendResponse(res, '${capitalizeString(module)}', 'GET', ${module}s);
+    sendResponse(res, '${capModule}', 'GET', ${module}s);
 });
 
-export const ${module}Controllers = { getAll${capitalizeString(module)}s };
+export const ${module}Controllers = { getAll${capModule}s };
             `,
 		},
 		{
 			name: `${module}.services.ts`,
 			content: `
 import { QueryBuilder } from '../../classes/QueryBuilder';
-import { ${capitalizeString(module)} } from './${module}.model';
+import { ${capModule} } from './${module}.model';
 
-const getAll${capitalizeString(module)}sFromDB = async (query?: Record<string, unknown>) => {
-    const ${module}Query = new QueryBuilder(${capitalizeString(module)}.find(), query).sort();
-    // const ${module}s = await ${capitalizeString(module)}.find({});
+const getAll${capModule}sFromDB = async (query?: Record<string, unknown>) => {
+    const ${module}Query = new QueryBuilder(${capModule}.find(), query).sort();
+    // const ${module}s = await ${capModule}.find({});
 
     const ${module}s = await ${module}Query.modelQuery;
 
     return ${module}s;
 };
 
-export const ${module}Services = { getAll${capitalizeString(module)}sFromDB };
+export const ${module}Services = { getAll${capModule}sFromDB };
             `,
 		},
 		{
 			name: `${module}.model.ts`,
 			content: `
 import { Schema, model } from 'mongoose';
-import type { I${capitalizeString(module)}Doc } from './${module}.types';
+import type { I${capModule}Doc } from './${module}.types';
 
-const ${module}Schema = new Schema<I${capitalizeString(module)}Doc>(
+const ${module}Schema = new Schema<I${capModule}Doc>(
     {
         // Define schema here
     },
@@ -74,7 +76,7 @@ const ${module}Schema = new Schema<I${capitalizeString(module)}Doc>(
 	},
 );
 
-export const ${capitalizeString(module)} = model<I${capitalizeString(module)}Doc>('${capitalizeString(module)}', ${module}Schema);
+export const ${capModule} = model<I${capModule}Doc>('${pluralizer.toPlural(capModule)}', ${module}Schema);
             `,
 		},
 		{
@@ -94,12 +96,12 @@ export const ${module}Validations = { creationSchema };
 			content: `
 import type { Document, Types } from 'mongoose';
 
-export interface I${capitalizeString(module)} {
+export interface I${capModule} {
     // Define interface
     property: "Define types";
 }
 
-export interface I${capitalizeString(module)}Doc extends I${capitalizeString(module)}, Document {
+export interface I${capModule}Doc extends I${capModule}, Document {
 	_id: Types.ObjectId;
 	created_at: string;
 	updated_at: string;
