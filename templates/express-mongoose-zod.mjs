@@ -2,70 +2,89 @@
 
 import { capitalizeString, pluralizer } from 'nhb-toolbox';
 
-/**
- * @param {string} module
- * @returns {Array<{ name: string, content: string }>}
- */
-export function expressMongooseZodTemplate(module) {
-	const capModule = capitalizeString(module);
+/** @type {import('../types/index.d.ts').expressMongooseZodTemplate} */
+export function expressMongooseZodTemplate(moduleName) {
+	const capModule = capitalizeString(moduleName);
+	const pluralModule = pluralizer.toPlural(capModule);
 
 	return [
 		{
-			name: `${module}.routes.ts`,
+			name: `${moduleName}.routes.ts`,
 			content: `
 import { Router } from 'express';
-import { ${module}Controllers } from './${module}.controllers';
+import { ${moduleName}Controllers } from './${moduleName}.controllers';
+import validateRequest from '../../middlewares/validateRequest';
+import { ${moduleName}Validations } from './${moduleName}.validation';
 
 const router = Router();
 
-router.get('/', ${module}Controllers.getAll${capModule}s);
+router.post(
+	'/',
+	validateRequest(${moduleName}Validations.creationSchema),
+	${moduleName}Controllers.create${capModule},
+);
 
-export const ${module}Routes = router;
+router.get('/', ${moduleName}Controllers.getAll${pluralModule});
+
+export const ${moduleName}Routes = router;
             `,
 		},
 		{
-			name: `${module}.controllers.ts`,
+			name: `${moduleName}.controllers.ts`,
 			content: `
 import catchAsync from '../../utilities/catchAsync';
 import sendResponse from '../../utilities/sendResponse';
-import { ${module}Services } from './${module}.services';
-            
-const getAll${capModule}s = catchAsync(async (_req, res) => {
-    const ${module}s = await ${module}Services.getAll${capModule}sFromDB();
+import { ${moduleName}Services } from './${moduleName}.services';
 
-    sendResponse(res, '${capModule}', 'GET', ${module}s);
+const create${capModule} = catchAsync(async (req, res) => {
+	const new${capModule} = await ${moduleName}Services.create${capModule}InDB(req.body);
+
+	sendResponse(res, '${capModule}', 'POST', new${capModule});
+});
+            
+const getAll${pluralModule} = catchAsync(async (_req, res) => {
+    const ${moduleName}s = await ${moduleName}Services.getAll${pluralModule}FromDB();
+
+    sendResponse(res, '${capModule}', 'GET', ${moduleName}s);
 });
 
-export const ${module}Controllers = { getAll${capModule}s };
+export const ${moduleName}Controllers = { getAll${pluralModule} };
             `,
 		},
 		{
-			name: `${module}.services.ts`,
+			name: `${moduleName}.services.ts`,
 			content: `
 import { QueryBuilder } from '../../classes/QueryBuilder';
-import { ${capModule} } from './${module}.model';
+import { ${capModule} } from './${moduleName}.model';
+import type { I${capModule} } from './${moduleName}.types';
 
-const getAll${capModule}sFromDB = async (query?: Record<string, unknown>) => {
-    const ${module}Query = new QueryBuilder(${capModule}.find(), query).sort();
-    // const ${module}s = await ${capModule}.find({});
+const create${capModule}InDB = async (payload: I${capModule}) => {
+	const new${moduleName} = await ${capModule}.create(payload);
 
-    const ${module}s = await ${module}Query.modelQuery;
-
-    return ${module}s;
+	return new${moduleName};
 };
 
-export const ${module}Services = { getAll${capModule}sFromDB };
+const getAll${pluralModule}FromDB = async (query?: Record<string, unknown>) => {
+    const ${moduleName}Query = new QueryBuilder(${capModule}.find(), query).sort();
+    // const ${moduleName}s = await ${capModule}.find({});
+
+    const ${moduleName}s = await ${moduleName}Query.modelQuery;
+
+    return ${moduleName}s;
+};
+
+export const ${moduleName}Services = { create${capModule}InDB, getAll${pluralModule}FromDB };
             `,
 		},
 		{
-			name: `${module}.model.ts`,
+			name: `${moduleName}.model.ts`,
 			content: `
 import { Schema, model } from 'mongoose';
-import type { I${capModule}Doc } from './${module}.types';
+import type { I${capModule}Doc } from './${moduleName}.types';
 
-const ${module}Schema = new Schema<I${capModule}Doc>(
+const ${moduleName}Schema = new Schema<I${capModule}Doc>(
     {
-        // Define schema here
+        // Define ${moduleName}Schema here
     },
 	{
 		timestamps: {
@@ -76,11 +95,11 @@ const ${module}Schema = new Schema<I${capModule}Doc>(
 	},
 );
 
-export const ${capModule} = model<I${capModule}Doc>('${pluralizer.toPlural(capModule)}', ${module}Schema);
+export const ${capModule} = model<I${capModule}Doc>('${pluralModule}', ${moduleName}Schema);
             `,
 		},
 		{
-			name: `${module}.validation.ts`,
+			name: `${moduleName}.validation.ts`,
 			content: `
 import { z } from 'zod';
 
@@ -88,16 +107,16 @@ const creationSchema = z
     .object({})
     .strict();
 
-export const ${module}Validations = { creationSchema };
+export const ${moduleName}Validations = { creationSchema };
             `,
 		},
 		{
-			name: `${module}.types.ts`,
+			name: `${moduleName}.types.ts`,
 			content: `
 import type { Document, Types } from 'mongoose';
 
 export interface I${capModule} {
-    // Define interface
+    // Define I${capModule} interface
     property: "Define types";
 }
 

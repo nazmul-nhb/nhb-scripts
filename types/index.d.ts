@@ -99,6 +99,14 @@ export interface ModuleConfig {
 	force?: boolean;
 }
 
+/**
+ * * Generates a module (set of files) for an Express.js application using Mongoose and Zod for validation.
+ * _This template includes routes, controllers, services, models, validations, and types._
+ * @param moduleName - The name of the module being generated. Useful for dynamic filenames or contents.
+ * @returns An array of `FileEntry` objects representing the files to be generated.
+ */
+export declare function expressMongooseZodTemplate(moduleName: string): FileEntry[];
+
 /** User configuration for `nhb-format` script. */
 export interface FormatConfig {
 	/**
