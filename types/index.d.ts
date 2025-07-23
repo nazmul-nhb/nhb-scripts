@@ -1,6 +1,5 @@
 import type { Options as ExecaOptions } from 'execa';
 import type { AsyncFunction, VoidFunction } from 'nhb-toolbox/types';
-import type { LooseLiteral } from 'nhb-toolbox/utils/types';
 
 /**
  * A single file definition to be generated as part of a module.
@@ -82,7 +81,7 @@ export interface CustomTemplate {
 /** User configuration for `nhb-module` script. */
 export interface ModuleConfig {
 	/** Name of built-in template (e.g., "express-mongoose-zod") */
-	template?: LooseLiteral<'express-mongoose-zod'>;
+	template?: string;
 	/** Directory where modules should be generated (default: `"src/modules"`) */
 	destination?: string;
 	/**

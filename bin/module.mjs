@@ -3,10 +3,11 @@
 
 // @ts-check
 
-import { confirm, intro, isCancel, select, text } from '@clack/prompts';
+import { confirm, intro, select, text } from '@clack/prompts';
 import chalk from 'chalk';
 import { existsSync } from 'fs';
 import minimist from 'minimist';
+import { convertStringCase, replaceAllInString } from 'nhb-toolbox';
 import path from 'path';
 import {
 	normalizeBooleanResult,
@@ -18,7 +19,6 @@ import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 
 /** @typedef {import('../types/index.d.ts').ModuleConfig} ModuleConfig */
-/** @typedef {ModuleConfig['template']} ModuleName */
 
 const argv = minimist(process.argv.slice(2), {
 	string: ['template', 'name', 'destination'],
@@ -64,25 +64,19 @@ async function getSourcePath(defaultPath) {
 }
 
 /**
- * @param {Array<{title:string, value:ModuleName}>} choices
- * @returns {Promise<ModuleName>}
+ * @param {Array<{title:string, value:string}>} choices
+ * @returns {Promise<string>}
  */
 async function getTemplateFromPrompt(choices) {
-	const result = /** @type {ModuleName} */ (
+	return normalizeStringResult(
 		await select({
 			message: chalk.magenta('📂 Choose a module template'),
 			options: choices.map((c) => ({
 				value: c.value,
 				label: c.title,
 			})),
-		})
+		}),
 	);
-
-	if (isCancel(result)) {
-		showCancelMessage();
-	}
-
-	return result;
 }
 
 /**
@@ -122,26 +116,22 @@ async function createModule() {
 
 	const config = (await loadUserConfig()).module ?? {};
 
-	/** @type {Array<{title: string, value: ModuleName}>} */
+	/** @type {Array<{title: string, value: string}>} */
 	const customTemplates = Object.keys(config?.customTemplates || {}).map((key) => ({
-		title: `🧩 Custom: ${key}`,
+		title: `🧩 ${convertStringCase(replaceAllInString(key, /[-._]/, ' '), 'Title Case')}`,
 		value: key,
 	}));
 
-	const builtInTemplates = [
-		{ title: 'Express + Mongoose + Zod', value: 'express-mongoose-zod' },
-	];
+	const moduleName =
+		/** @type {string} */ (argv.name) || (await getModuleNameFromPrompt());
 
-	const moduleName = /** @type {string} */ (
-		argv.name || (await getModuleNameFromPrompt())
-	);
 	if (!moduleName) {
 		showCancelMessage('🛑 Module name is required!');
 	}
 
 	const template =
-		argv.template ||
-		(await getTemplateFromPrompt([...builtInTemplates, ...customTemplates]));
+		/** @type {string} */ (argv.template) ||
+		(await getTemplateFromPrompt(customTemplates));
 
 	const dest =
 		template ?

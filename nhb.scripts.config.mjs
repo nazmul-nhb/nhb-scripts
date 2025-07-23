@@ -1,6 +1,6 @@
 // @ts-check
 
-import { defineScriptConfig, fixJsExtensions, fixTypeExports } from "./index.mjs";
+import { defineScriptConfig, expressMongooseZodTemplate, fixJsExtensions, fixTypeExports } from "./index.mjs";
 
 export default defineScriptConfig({
     format: {
@@ -43,7 +43,12 @@ export default defineScriptConfig({
         template: 'my-template1', // or omit, it's not necessary as cli will prompt to choose
         force: false, // `true` if you want to override the existing module
         customTemplates: {
-            'my-template1': {
+            'express-mongoose-zod': {
+                createFolder: true,
+                destination: 'src/app/modules',
+                files: expressMongooseZodTemplate
+            },
+            'my.template1': {
                 createFolder: true, // if `false` does not create folder with the module name from cli
                 destination: 'src/app', // optional, will prioritize inputs from cli
                 // Use dynamic moduleName in filenames and contents
@@ -52,7 +57,7 @@ export default defineScriptConfig({
                     { name: `${moduleName}.services.ts`, content: `// services for ${moduleName}` }
                 ]
             },
-            'my-template2': {
+            'my_template2': {
                 destination: 'src/features', // optional, will prioritize inputs from cli
                 // Use static file list with contents
                 files: [
