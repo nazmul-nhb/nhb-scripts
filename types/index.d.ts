@@ -80,8 +80,8 @@ export interface CustomTemplate {
 
 /** User configuration for `nhb-module` script. */
 export interface ModuleConfig {
-	/** Name of built-in template (e.g., "express-mongoose-zod") */
-	template?: string;
+	/** Name of a template to be used as default (e.g., "express-mongoose-zod") */
+	defaultTemplate?: string;
 	/** Directory where modules should be generated (default: `"src/modules"`) */
 	destination?: string;
 	/**
@@ -90,8 +90,8 @@ export interface ModuleConfig {
 	 * Defaults to `true`.
 	 */
 	createFolder?: boolean;
-	/**  Optional list of custom file definitions */
-	customTemplates?: Record<string, CustomTemplate>;
+	/**  Record of custom template definitions */
+	templates: Record<string, CustomTemplate>;
 	/** Optional lifecycle hook functions */
 	hooks?: ModuleHooks;
 	/** Forcefully create a module even if it already exists */

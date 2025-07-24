@@ -7,7 +7,7 @@ import { confirm, intro, select, text } from '@clack/prompts';
 import chalk from 'chalk';
 import { existsSync } from 'fs';
 import minimist from 'minimist';
-import { convertStringCase, replaceAllInString } from 'nhb-toolbox';
+import { convertStringCase, isNotEmptyObject, isValidArray } from 'nhb-toolbox';
 import path from 'path';
 import {
 	normalizeBooleanResult,
@@ -65,16 +65,19 @@ async function getSourcePath(defaultPath) {
 
 /**
  * @param {Array<{title:string, value:string}>} choices
+ * @param {string | undefined} defaultTemplate
  * @returns {Promise<string>}
  */
-async function getTemplateFromPrompt(choices) {
+async function getTemplateFromPrompt(choices, defaultTemplate) {
 	return normalizeStringResult(
 		await select({
 			message: chalk.magenta('📂 Choose a module template'),
 			options: choices.map((c) => ({
 				value: c.value,
 				label: c.title,
+				...(c.value === defaultTemplate && { hint: 'default' }),
 			})),
+			initialValue: defaultTemplate,
 		}),
 	);
 }
@@ -112,15 +115,28 @@ async function askOverwrite(modulePath) {
 }
 
 async function createModule() {
-	intro(chalk.cyan.bold('📂 NHB Module Generator'));
+	intro(chalk.cyan.bold('🧩 NHB Module Generator'));
 
-	const config = (await loadUserConfig()).module ?? {};
+	const config = (await loadUserConfig()).module;
+
+	if (!isNotEmptyObject(config)) {
+		showCancelMessage(
+			'🛑 No config found for module generation! Please add module config in "nhb.scripts.config.mjs" > "module".',
+		);
+		return;
+	}
 
 	/** @type {Array<{title: string, value: string}>} */
-	const customTemplates = Object.keys(config?.customTemplates || {}).map((key) => ({
-		title: `🧩 ${convertStringCase(replaceAllInString(key, /[-._]/, ' '), 'Title Case')}`,
+	const customTemplates = Object.keys(config?.templates || {}).map((key) => ({
+		title: `🧩 ${convertStringCase(key?.replace(/[-._]/g, ' '), 'Title Case')}`,
 		value: key,
 	}));
+
+	if (!isValidArray(customTemplates)) {
+		showCancelMessage(
+			'🛑 No templates found in module config! Please add a template in "nhb.scripts.config.mjs" > "module" > "templates".',
+		);
+	}
 
 	const moduleName =
 		/** @type {string} */ (argv.name) || (await getModuleNameFromPrompt());
@@ -131,19 +147,20 @@ async function createModule() {
 
 	const template =
 		/** @type {string} */ (argv.template) ||
-		(await getTemplateFromPrompt(customTemplates));
+		(await getTemplateFromPrompt(customTemplates, config.defaultTemplate));
 
 	const dest =
 		template ?
-			config.customTemplates?.[template]?.destination ||
+			config.templates?.[template]?.destination ||
 			config?.destination ||
 			'src/modules'
 		:	'src/modules';
 
-	const destination = argv.destination || (await getSourcePath(dest));
+	const destination =
+		/** @type {string} */ (argv.destination) || (await getSourcePath(dest));
 	config.destination = destination;
 
-	const tpl = config.customTemplates?.[template ?? ''];
+	const tpl = config.templates?.[template ?? ''];
 
 	let shouldCreateFolder = true;
 
@@ -171,7 +188,7 @@ async function createModule() {
 	config.hooks?.onGenerate?.(moduleName);
 
 	if (template) {
-		config.template = template;
+		config.defaultTemplate = template;
 	}
 
 	await generateModule(moduleName, config);

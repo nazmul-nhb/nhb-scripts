@@ -40,13 +40,13 @@ export default defineScriptConfig({
     },
     module: {
         destination: 'src/modules', // optional, default: "src/modules"
-        template: 'my-template1', // or omit, it's not necessary as cli will prompt to choose
+        defaultTemplate: 'my.template1', // selected by default, must match with the keys of `templates` object
         force: false, // `true` if you want to override the existing module
-        customTemplates: {
+        templates: {
             'express-mongoose-zod': {
                 createFolder: true,
                 destination: 'src/app/modules',
-                files: expressMongooseZodTemplate
+                files: expressMongooseZodTemplate // built-in module : function that receives moduleName as argument and creates pre-defined files and contents
             },
             'my.template1': {
                 createFolder: true, // if `false` does not create folder with the module name from cli
@@ -69,7 +69,7 @@ export default defineScriptConfig({
         // Optional hooks to inspect or execute something at the beginning or after the module generation
         hooks: {
             onGenerate(name) {
-                console.log('➡️ Generating:', name);
+                console.log('➡️  Generating:', name);
             },
             onComplete(name) {
                 console.log('✅ Complete:', name);
