@@ -125,7 +125,7 @@ const update${capModule}InDB = async (id: string, payload: Partial<I${capModule}
 	if (!updated${capModule}) {
 		throw new ErrorWithStatus(
 			'Not Updated Error',
-			\`Cannot update specified ${moduleName} with ID \${ id }!\`,
+			\`Cannot update specified ${moduleName} with ID \${id}!\`,
 			STATUS_CODES.INTERNAL_SERVER_ERROR,
 			'update_${moduleName}',
 		);
@@ -140,7 +140,7 @@ const delete${capModule}FromDB = async (id: string) => {
 	if (result.deletedCount < 1) {
 		throw new ErrorWithStatus(
 			'Delete Failed Error',
-			\`Failed to delete ${moduleName} with ID \${ id }!\`,
+			\`Failed to delete ${moduleName} with ID \${id}!\`,
 			STATUS_CODES.INTERNAL_SERVER_ERROR,
 			'delete_${moduleName}',
 		);
@@ -192,7 +192,7 @@ ${moduleName}Schema.statics.find${capModule}ById = async function (id: string) {
 	if (!${moduleName}) {
 		throw new ErrorWithStatus(
 			'Not Found Error',
-			\`No ${moduleName} found with ID \${ id }!\`,
+			\`No ${moduleName} found with ID \${id}!\`,
 			STATUS_CODES.NOT_FOUND,
 			'${moduleName}',
 		);
