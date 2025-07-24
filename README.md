@@ -52,7 +52,7 @@ All scripts use a single configuration file `nhb.scripts.config.mjs` that is aut
 ```js
 // @ts-check
 
-import { defineScriptConfig } from 'nhb-scripts';
+import { defineScriptConfig, expressMongooseZodTemplate } from 'nhb-scripts';
 
 export default defineScriptConfig({
     format: {
@@ -109,19 +109,24 @@ export default defineScriptConfig({
     },
     module: {
         destination: 'src/modules', // optional, default: "src/modules"
-        template: 'my-template1', // or omit, it's not necessary as cli will prompt to choose
+        defaultTemplate: 'my.template1', // selected by default, must match with the keys of `templates` object
         force: false, // `true` if you want to override the existing module
-        customTemplates: {
-            'my-template1': {
+        templates: {
+            'express-mongoose-zod': {
+                createFolder: true,
+                destination: 'src/app/modules',
+                files: expressMongooseZodTemplate // pre-built module : function that receives moduleName as argument and creates pre-defined files and contents
+            },
+            'my.template1': {
                 createFolder: true, // if `false` does not create folder with the module name from cli
                 destination: 'src/app', // optional, will prioritize inputs from cli
                 // Use dynamic moduleName in filenames and contents
                 files: (moduleName) => [
-                    { name: `\${moduleName}.controllers.ts`, content: `// controllers for \${moduleName}` },
-                    { name: `\${moduleName}.services.ts`, content: `// services for \${moduleName}` }
+                    { name: `${moduleName}.controllers.ts`, content: `// controllers for ${moduleName}` },
+                    { name: `${moduleName}.services.ts`, content: `// services for ${moduleName}` }
                 ]
             },
-            'my-template2': {
+            'my_template2': {
                 destination: 'src/features', // optional, will prioritize inputs from cli
                 // Use static file list with contents
                 files: [
@@ -133,7 +138,7 @@ export default defineScriptConfig({
         // Optional hooks to inspect or execute something at the beginning or after the module generation
         hooks: {
             onGenerate(name) {
-                console.log('➡️ Generating:', name);
+                console.log('➡️  Generating:', name);
             },
             onComplete(name) {
                 console.log('✅ Complete:', name);
@@ -253,17 +258,17 @@ npm run module
 ### 🛠️ What It Does
 
 - Prompts for module name, destination, and template (unless passed as CLI flags).
-- Uses a **default template** (`express-mongoose-zod`) or your **custom templates** via a config file.
+- Uses a **pre-built template** (`express-mongoose-zod` : imported function `expressMongooseZodTemplate`) or your **custom templates** via a config file.
 - Prevents overwriting by default unless `--force` is passed or set in config.
 - Allows lifecycle hooks: `onGenerate`, `onComplete`.
 
 ---
 
-### 📦 Default Template
+### 📦 Pre-built Template
 
 | Name                   | Description                                                            |
 | ---------------------- | ---------------------------------------------------------------------- |
-| `express-mongoose-zod` | Basic Express route + Mongoose model + Zod schema generator (built-in) |
+| `express-mongoose-zod` | Basic Express route + Mongoose model + Zod schema generator (built-in : imported function `expressMongooseZodTemplate`) |
 
 ---
 
@@ -273,31 +278,40 @@ Configure templates in `nhb.scripts.config.mjs`:
 
 ```js
 module: {
-    destination: 'src/modules',
-    template: 'my-template1',
-    force: false,
-    customTemplates: {
-        'my-template1': {
-            createFolder: true, // whether to create module folder
-            destination: 'src/app',
+    destination: 'src/modules', // optional, default: "src/modules"
+    defaultTemplate: 'my.template1', // selected by default, must match with the keys of `templates` object
+    force: false, // `true` if you want to override the existing module
+    templates: {
+        'express-mongoose-zod': {
+            createFolder: true,
+            destination: 'src/app/modules',
+            files: expressMongooseZodTemplate // pre-built module : function that receives moduleName as argument and creates pre-defined files and contents
+        },
+        'my.template1': {
+            createFolder: true, // if `false` does not create folder with the module name from cli
+            destination: 'src/app', // optional, will prioritize inputs from cli
+            // Use dynamic moduleName in filenames and contents
             files: (moduleName) => [
-                { name: `${moduleName}.controller.ts`, content: `// controller for ${moduleName}` },
-                { name: `${moduleName}.service.ts`, content: `// service for ${moduleName}` }
+                { name: `${moduleName}.controllers.ts`, content: `// controllers for ${moduleName}` },
+                { name: `${moduleName}.services.ts`, content: `// services for ${moduleName}` }
             ]
         },
-        'my-template2': {
+        'my_template2': {
+            destination: 'src/features', // optional, will prioritize inputs from cli
+            // Use static file list with contents
             files: [
                 { name: 'index.ts', content: '// content' },
-                { name: 'routes.ts', content: 'export const route = "auth";' }
+                { name: 'dummy.js', content: '// dummy' }
             ]
-        }
+        },
     },
+    // Optional hooks to inspect or execute something at the beginning or after the module generation
     hooks: {
         onGenerate(name) {
-            console.log('🚀 Generating module:', name);
+            console.log('➡️  Generating:', name);
         },
         onComplete(name) {
-            console.log('🎉 Finished:', name);
+            console.log('✅ Complete:', name);
         }
     }
 }
@@ -341,7 +355,7 @@ You can also generate modules non-interactively using CLI flags to streamline au
 | Flag             | Alias | Description                                        |
 | ---------------- | ----- | -------------------------------------------------- |
 | `--name`         | `-n`  | Name of the module                                 |
-| `--template`     | `-t`  | Template to use (`express-mongoose-zod` or custom) |
+| `--template`     | `-t`  | Template to use                                    |
 | `--destination`  | `-d`  | Directory to generate module into                  |
 | `--force`        | `-f`  | Overwrite existing module if already present       |
 | `--create-folder`| `-cf` | Create folder for module (default: `true`)         |

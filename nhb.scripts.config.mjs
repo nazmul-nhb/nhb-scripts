@@ -46,7 +46,7 @@ export default defineScriptConfig({
             'express-mongoose-zod': {
                 createFolder: true,
                 destination: 'src/app/modules',
-                files: expressMongooseZodTemplate // built-in module : function that receives moduleName as argument and creates pre-defined files and contents
+                files: expressMongooseZodTemplate // pre-built module : function that receives moduleName as argument and creates pre-defined files and contents
             },
             'my.template1': {
                 createFolder: true, // if `false` does not create folder with the module name from cli
