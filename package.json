@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.8.11",
+  "version": "1.8.20",
   "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/index.d.ts",
   "main": "index.mjs",
@@ -13,13 +13,15 @@
     "nhb-format": "bin/format.mjs",
     "nhb-lint": "bin/lint.mjs",
     "nhb-fix": "bin/fix.mjs",
-    "nhb-build": "bin/build.mjs"
+    "nhb-build": "bin/build.mjs",
+    "nhb-delete": "bin/delete.mjs"
   },
   "scripts": {
     "module": "node bin/module.mjs",
     "commit": "node bin/commit.mjs",
     "count": "node bin/count.mjs",
-    "format": "node bin/format.mjs"
+    "format": "node bin/format.mjs",
+    "delete": "node bin/delete.mjs"
   },
   "publishConfig": {
     "access": "public"

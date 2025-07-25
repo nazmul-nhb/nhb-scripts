@@ -66,14 +66,5 @@ export default defineScriptConfig({
                 ]
             },
         },
-        // Optional hooks to inspect or execute something at the beginning or after the module generation
-        hooks: {
-            onGenerate(name) {
-                console.log('➡️  Generating:', name);
-            },
-            onComplete(name) {
-                console.log('✅ Complete:', name);
-            }
-        }
     }
 });
