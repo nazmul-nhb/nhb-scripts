@@ -213,11 +213,14 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 		showCancelMessage('🛑 Nothing is selected!');
 	}
 
+	const totalItems = pluralizer.pluralize('item', {
+		count: targets.length,
+		inclusive: true,
+	});
+
 	const confirmed = normalizeBooleanResult(
 		await confirm({
-			message: chalk.red(
-				`❓ Are you sure to delete ${pluralizer.pluralize('item', { count: targets.length, inclusive: true })}?`,
-			),
+			message: chalk.red(`❓ Are you sure to delete ${totalItems}?`),
 			initialValue: true,
 		}),
 	);
@@ -236,15 +239,18 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 			} else {
 				await fs.promises.unlink(target);
 			}
-			mimicClack(chalk.green('✨ Deleted: ') + path.relative(process.cwd(), target));
-		} catch (err) {
 			mimicClack(
-				chalk.red('❌ Failed: ') + path.relative(process.cwd(), target),
+				`${chalk.green('✨ Deleted')} : ${chalk.yellowBright(path.relative(process.cwd(), target))}`,
+			);
+		} catch (err) {
+			console.error(
+				chalk.red('🛑 Delete Failed: ') + path.relative(process.cwd(), target),
 				err,
 			);
+			process.exit(0);
 		}
 	}
 	s.stop('✅ Operation Successful!');
 
-	outro(chalk.green('🎉 Deletion Complete!'));
+	outro(chalk.green(`🎉 Deleted ${totalItems}!`));
 })();

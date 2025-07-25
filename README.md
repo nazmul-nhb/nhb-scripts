@@ -9,9 +9,9 @@
   <a href="https://www.npmjs.com/package/nhb-scripts" aria-label="Version">
     <img src="https://img.shields.io/npm/v/nhb-scripts.svg?label=NPM&style=flat&color=teal&logo=npm" alt="Latest Version" />
   </a>
-  <a href="https://bundlephobia.com/result?p=nhb-scripts" aria-label="Bundle size">
+  <!-- <a href="https://bundlephobia.com/result?p=nhb-scripts" aria-label="Bundle size">
     <img src="https://img.shields.io/bundlephobia/minzip/nhb-scripts?style=flat&color=purple&label=SIZE&logo=nodedotjs" alt="Bundle Size" />
-  </a>
+  </a> -->
   <a href="https://www.npmjs.com/package/nhb-scripts" aria-label="License">
     <img src="https://img.shields.io/npm/l/nhb-scripts.svg?label=LICENSE&style=flat&color=orange&logo=open-source-initiative" alt="License" />
   </a>
@@ -240,7 +240,7 @@ This CLI simplifies creating module directories and boilerplate files with optio
 }
 ```
 
-Use via:
+then use via:
 
 ```bash
 pnpm module
@@ -252,6 +252,12 @@ yarn module
 
 ```bash
 npm run module
+```
+
+or directly use as:
+
+```bash
+pnpm nhb-module
 ```
 
 ---
@@ -553,7 +559,7 @@ Add to `package.json`:
 }
 ```
 
-Then run:
+then run via:
 
 ```bash
 pnpm build
@@ -561,6 +567,12 @@ pnpm build
 npm run build
 # or
 yarn build
+```
+
+or directly use as:
+
+```bash
+pnpm nhb-build
 ```
 
 ---
@@ -649,10 +661,16 @@ This ensures your version bumps and commit messages are semver-valid, consistent
 }
 ```
 
-Use via:
+then run via:
 
 ```bash
 pnpm commit
+```
+
+or directly use as:
+
+```bash
+pnpm nhb-commit
 ```
 
 ---
@@ -827,10 +845,16 @@ A script that ensures clean and consistent formatting using **Prettier**, with o
 }
 ```
 
-Run it via:
+then run it via:
 
 ```bash
 pnpm format
+```
+
+or directly use as:
+
+```bash
+pnpm nhb-format
 ```
 
 ---
@@ -910,7 +934,7 @@ It **automatically detects your folders and patterns** from `nhb.scripts.config.
 }
 ```
 
-Run:
+then run via:
 
 ```bash
 pnpm lint
@@ -918,6 +942,12 @@ pnpm lint
 npm run lint
 # or
 yarn lint
+```
+
+or directly use as:
+
+```bash
+pnpm nhb-lint
 ```
 
 ---
@@ -976,7 +1006,7 @@ Run ESLint with the `--fix` flag to **automatically fix** many common issues in 
 }
 ```
 
-Run:
+then run via:
 
 ```bash
 pnpm fix
@@ -984,6 +1014,12 @@ pnpm fix
 npm run fix
 # or
 yarn fix
+```
+
+or directly use as:
+
+```bash
+pnpm nhb-fix
 ```
 
 ---
@@ -1063,7 +1099,13 @@ pnpm count
  }
  ```
 
-or use as:
+then run via:
+
+```bash
+pnpm count
+```
+
+or directly use as:
 
 ```bash
 pnpm nhb-count
@@ -1192,7 +1234,13 @@ Safely clean up your project with a guided, prompt‑driven experience to browse
  }
  ```
 
-or use as:
+then run via:
+
+```bash
+pnpm delete
+```
+
+or directly use as:
 
 ```bash
 pnpm nhb-delete
