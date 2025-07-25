@@ -161,6 +161,7 @@ export default defineScriptConfig({
 | [nhb-lint](#-nhb-lint--eslint-linter-runner) | Lint code with `eslint`.                         |
 | [nhb-fix](#-nhb-fix--eslint-autofix-runner) | Fix linting errors in code with `eslint`.       |
 | [nhb-count](#-nhb-count--export-counter-cli) | Count export declarations (default, named, aliased) in JS/TS files/folders. |
+| [nhb-delete](#-nhb-delete--interactive-file--folder-remover) | Interactive File(s)/Folder(s) Remover. |
 
 > More Scripts Coming Soon...
 
@@ -1165,6 +1166,55 @@ Output:
    ┗ Aliased              : 1
 🔺 Total Type Exports     : 1
 ```
+
+---
+
+### 🗑 `nhb-delete` – Interactive File & Folder Remover
+
+Safely clean up your project with a guided, prompt‑driven experience to browse and delete files or directories.
+
+> Deleting large or deeply nested folders from VS Code often takes a long time or fails unexpectedly — `nhb-delete` offers a faster and more reliable solution.
+
+✅ Navigate into sub-folders or go back anytime  
+✅ Multi‑select files and folders for deletion  
+✅ Empty folders immediately prompt for deletion  
+✅ Skips opening truly empty directories
+
+#### 🚀 Usage
+
+> **Note:** This must be configured in your `package.json` scripts:
+
+ ```json
+ {
+   "scripts": {
+     "delete": "nhb-delete"
+   }
+ }
+ ```
+
+or use as:
+
+```bash
+pnpm nhb-delete
+```
+
+#### ✨ Features
+
+- **Interactive navigation:** step through your folders with clear prompts.
+- **Smart listings:** if only files exist, jump straight to multi‑select.
+- **Empty folder handling:** offers deletion instead of opening.
+- **Safe confirmation:** always double‑checks before removal.
+
+#### 📌 Example
+
+```bash
+🗑 Delete Directory/File(s)
+? Enter a base path or choose current directory ›
+❯ 📂 Current Directory
+  ✏️  Enter manually
+```
+
+Use **Space** to select and **Enter** to confirm — perfect for cleaning up scaffolds, build artifacts, or leftover files.
 
 ---
 
