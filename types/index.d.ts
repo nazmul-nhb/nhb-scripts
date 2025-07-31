@@ -321,14 +321,14 @@ export interface FixTypeExportsOptions {
 export declare function fixTypeExports(options: FixTypeExportsOptions): Promise<void>;
 
 /**
- * Adds a module name to the `COLLECTIONS` array in `src/app/constants/index.ts`.
+ * * Adds a module name to the `COLLECTIONS` array in `src/app/constants/index.ts`.
  * @param moduleName Name of the module.
  * @remarks Intended to be used with the `onComplete` hook of the `nhb-module` script.
  */
 export function updateCollection(moduleName: string): void;
 
 /**
- * Adds route details to `src/app/routes/index.ts` for the given module.
+ * * Adds route details to `src/app/routes/index.ts` for the given module.
  * @param moduleName Name of the module.
  * @remarks Intended to be used with the `onComplete` hook of the `nhb-module` script.
  */
