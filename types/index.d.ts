@@ -191,7 +191,7 @@ export interface ScriptConfig {
 }
 
 /**
- * * Define commit config for `nhb-scripts`.
+ * * Define configuration for `nhb-scripts`.
  *
  * @param config User configuration for `nhb-scripts`.
  */
