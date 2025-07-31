@@ -11,8 +11,7 @@ export function expressMongooseZodTemplate(moduleName) {
 	return [
 		{
 			name: `${moduleName}.routes.ts`,
-			content: `
-import { Router } from 'express';
+			content: `import { Router } from 'express';
 import { ${moduleName}Controllers } from './${moduleName}.controllers';
 import validateRequest from '../../middlewares/validateRequest';
 import { ${moduleName}Validations } from './${moduleName}.validation';
@@ -42,8 +41,7 @@ export const ${moduleName}Routes = router;
 		},
 		{
 			name: `${moduleName}.controllers.ts`,
-			content: `
-import catchAsync from '../../utilities/catchAsync';
+			content: `import catchAsync from '../../utilities/catchAsync';
 import sendResponse from '../../utilities/sendResponse';
 import { ${moduleName}Services } from './${moduleName}.services';
 
@@ -88,8 +86,7 @@ export const ${moduleName}Controllers = {
 		},
 		{
 			name: `${moduleName}.services.ts`,
-			content: `
-import { ErrorWithStatus } from '../../classes/ErrorWithStatus';
+			content: `import { ErrorWithStatus } from '../../classes/ErrorWithStatus';
 import { QueryBuilder } from '../../classes/QueryBuilder';
 import { STATUS_CODES } from '../../constants/index';
 import { ${capModule} } from './${moduleName}.model';
@@ -158,8 +155,7 @@ export const ${moduleName}Services = {
 		},
 		{
 			name: `${moduleName}.model.ts`,
-			content: `
-import { Schema, model } from 'mongoose';
+			content: `import { Schema, model } from 'mongoose';
 import type { I${capModule}Doc, I${capModule}Model } from './${moduleName}.types';
 import { ErrorWithStatus } from '../../classes/ErrorWithStatus';
 import { STATUS_CODES } from '../../constants/index';
@@ -206,22 +202,20 @@ export const ${capModule} = model<I${capModule}Doc, I${capModule}Model>('${plura
 		},
 		{
 			name: `${moduleName}.validation.ts`,
-			content: `
-import { z } from 'zod';
+			content: `import { z } from 'zod';
 
 const creationSchema = z
     .object({})
     .strict();
 
-const updateSchema = creationSchema.optional();
+const updateSchema = creationSchema.partial();
 
 export const ${moduleName}Validations = { creationSchema, updateSchema };
             `,
 		},
 		{
 			name: `${moduleName}.types.ts`,
-			content: `
-import type { Document, Model, Types } from 'mongoose';
+			content: `import type { Document, Model, Types } from 'mongoose';
 
 export interface I${capModule} {
     // Define I${capModule} interface

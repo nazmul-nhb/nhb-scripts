@@ -7,7 +7,7 @@
     <img src="https://img.shields.io/npm/dm/nhb-scripts.svg?label=DOWNLOADS&style=flat&color=red&logo=npm" alt="Downloads" />
   </a>
   <a href="https://www.npmjs.com/package/nhb-scripts" aria-label="Version">
-    <img src="https://img.shields.io/npm/v/nhb-scripts.svg?label=NPM&style=flat&color=teal&logo=npm" alt="Latest Version" />
+    <img src="https://img.shields.io/npm/v/nhb-scripts.svg?label=nhb-scripts&style=flat&color=teal&logo=npm" alt="Latest Version" />
   </a>
   <!-- <a href="https://bundlephobia.com/result?p=nhb-scripts" aria-label="Bundle size">
     <img src="https://img.shields.io/bundlephobia/minzip/nhb-scripts?style=flat&color=purple&label=SIZE&logo=nodedotjs" alt="Bundle Size" />
