@@ -33,21 +33,21 @@ async function getFilePath() {
 		await text({
 			message: chalk.gray(
 				chalk.cyanBright.bold(
-					`🎯 Please specify the path to a ${chalk.yellowBright('"js/ts/mjs"')} file or a folder containing ${chalk.yellowBright('"js/ts/mjs"')} files.\n`,
+					`🎯 Please specify the path to a ${chalk.yellowBright('"js/ts/mjs"')} file or a folder containing ${chalk.yellowBright('"js/ts/mjs"')} files.\n`
 				) +
 					addPipeOnLeft(
-						' - Enter the full file path (with extension) to process a specific file.\n',
+						' - Enter the full file path (with extension) to process a specific file.\n'
 					) +
 					addPipeOnLeft(
-						` - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n`,
+						` - Enter a folder path to scan all ${chalk.bold.yellowBright('*.js')}, ${chalk.bold.yellowBright('*.ts')}, or ${chalk.bold.yellowBright('*.mjs')} files within.\n`
 					) +
 					addPipeOnLeft(
-						` - Leave it empty to scan the default folder/file: ${chalk.bgYellowBright.bold.whiteBright(defaultPath)}\n`,
+						` - Leave it empty to scan the default folder/file: ${chalk.bgYellowBright.bold.whiteBright(defaultPath)}\n`
 					) +
-					addPipeOnLeft(),
+					addPipeOnLeft()
 			),
 			placeholder: `e.g. ${chalk.yellowBright('src/app')} or ${chalk.yellowBright('src/index.ts')}`,
-		}),
+		})
 	);
 
 	const filePath = inputPath || defaultPath;
@@ -66,7 +66,7 @@ async function countExports(filePath) {
 			filePath,
 			content,
 			tsModule.ScriptTarget.Latest,
-			true,
+			true
 		);
 
 		let namedExportsTotal = 0;
@@ -88,12 +88,12 @@ async function countExports(filePath) {
 			) {
 				if (
 					node.modifiers?.some(
-						(m) => m.kind === tsModule.SyntaxKind.ExportKeyword,
+						(m) => m.kind === tsModule.SyntaxKind.ExportKeyword
 					)
 				) {
 					if (
 						node.modifiers.some(
-							(m) => m.kind === tsModule.SyntaxKind.DefaultKeyword,
+							(m) => m.kind === tsModule.SyntaxKind.DefaultKeyword
 						)
 					) {
 						defaultExports += 1;
@@ -192,16 +192,16 @@ async function getFilesFromFolder(folderPath) {
 			console.info(chalk.green(`\n📦 Export Summary for "${file}":`));
 			console.info(chalk.yellow(`🔸 Default Exports        : ${result.default}`));
 			console.info(
-				chalk.yellow(`🔹 Named Exports (Total)  : ${result.namedExportsTotal}`),
+				chalk.yellow(`🔹 Named Exports (Total)  : ${result.namedExportsTotal}`)
 			);
 			console.info(
-				chalk.yellow(`   ┣ Direct               : ${result.namedExportsDirect}`),
+				chalk.yellow(`   ┣ Direct               : ${result.namedExportsDirect}`)
 			);
 			console.info(
-				chalk.yellow(`   ┗ Aliased              : ${result.namedExportsAliased}`),
+				chalk.yellow(`   ┗ Aliased              : ${result.namedExportsAliased}`)
 			);
 			console.info(
-				chalk.yellow(`🔺 Total Type Exports     : ${result.namedTypeExports}`),
+				chalk.yellow(`🔺 Total Type Exports     : ${result.namedTypeExports}`)
 			);
 		}
 

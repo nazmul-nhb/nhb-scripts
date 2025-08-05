@@ -42,7 +42,7 @@ async function getModuleNameFromPrompt() {
 		await text({
 			message: chalk.cyan('📦 Enter module name:'),
 			validate: validateStringInput,
-		}),
+		})
 	);
 }
 
@@ -54,10 +54,10 @@ async function getSourcePath(defaultPath) {
 	const result = normalizeStringResult(
 		await text({
 			message: chalk.cyan(
-				`📂 Enter a source path (Default is ${defaultPath || 'src/modules'}):`,
+				`📂 Enter a source path (Default is ${defaultPath || 'src/modules'}):`
 			),
 			placeholder: defaultPath,
-		}),
+		})
 	);
 
 	return result ?? defaultPath;
@@ -78,7 +78,7 @@ async function getTemplateFromPrompt(choices, defaultTemplate) {
 				...(c.value === defaultTemplate && { hint: 'default' }),
 			})),
 			initialValue: defaultTemplate,
-		}),
+		})
 	);
 }
 
@@ -91,10 +91,10 @@ async function askCreateFolder(moduleName) {
 	return normalizeBooleanResult(
 		await confirm({
 			message: chalk.blueBright(
-				`❔ Do you want to generate files inside a folder named "${moduleName}"?`,
+				`❔ Do you want to generate files inside a folder named "${moduleName}"?`
 			),
 			initialValue: true,
-		}),
+		})
 	);
 }
 
@@ -107,10 +107,10 @@ async function askOverwrite(modulePath) {
 	return normalizeBooleanResult(
 		await confirm({
 			message: chalk.yellow(
-				`⛔ Files in "${modulePath}" already exist. Overwrite conflicting files/folders?`,
+				`⛔ Files in "${modulePath}" already exist. Overwrite conflicting files/folders?`
 			),
 			initialValue: false,
-		}),
+		})
 	);
 }
 
@@ -121,7 +121,7 @@ async function createModule() {
 
 	if (!isNotEmptyObject(config)) {
 		showCancelMessage(
-			'🛑 No config found for module generation! Please add module config in "nhb.scripts.config.mjs" > "module".',
+			'🛑 No config found for module generation! Please add module config in "nhb.scripts.config.mjs" > "module".'
 		);
 		return;
 	}
@@ -134,7 +134,7 @@ async function createModule() {
 
 	if (!isValidArray(customTemplates)) {
 		showCancelMessage(
-			'🛑 No templates found in module config! Please add a template in "nhb.scripts.config.mjs" > "module" > "templates".',
+			'🛑 No templates found in module config! Please add a template in "nhb.scripts.config.mjs" > "module" > "templates".'
 		);
 	}
 

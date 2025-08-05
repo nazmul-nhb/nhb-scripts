@@ -67,7 +67,7 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 
 			const locked = await multiselect({
 				message: chalk.cyan(
-					`✅ Select items to delete in ${path.relative(process.cwd(), dir) || dir}`,
+					`✅ Select items to delete in ${path.relative(process.cwd(), dir) || dir}`
 				),
 				options: choices,
 				required: false,
@@ -99,7 +99,7 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 			await select({
 				message: chalk.cyan(`📂 ${path.relative(process.cwd(), dir) || dir}`),
 				options,
-			}),
+			})
 		);
 
 		// Back navigation
@@ -116,7 +116,7 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 
 			const locked = await multiselect({
 				message: chalk.cyan(
-					`✅ Select items to delete in ${path.relative(process.cwd(), dir) || dir}`,
+					`✅ Select items to delete in ${path.relative(process.cwd(), dir) || dir}`
 				),
 				options: choices,
 				required: false,
@@ -138,10 +138,10 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 				const confirmEmpty = normalizeBooleanResult(
 					await confirm({
 						message: chalk.red(
-							`🗑 "${path.basename(action)}" is empty. Delete it?`,
+							`🗑 "${path.basename(action)}" is empty. Delete it?`
 						),
 						initialValue: true,
-					}),
+					})
 				);
 				if (confirmEmpty) return [action];
 				continue; // skip deletion, loop again
@@ -162,7 +162,7 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 				{ value: process.cwd(), label: '📂 Current Directory' },
 				{ value: '__manual__', label: '✏️  Enter manually' },
 			],
-		}),
+		})
 	);
 
 	let basePath = inputPath;
@@ -172,7 +172,7 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 				message: chalk.blue('Type or paste full path'),
 				placeholder: 'e.g. src',
 				validate: validateStringInput,
-			}),
+			})
 		);
 		basePath = resolveFromCwd(manual);
 	} else {
@@ -192,10 +192,10 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 			const confirmEmpty = normalizeBooleanResult(
 				await confirm({
 					message: chalk.red(
-						`🗑 "${path.basename(basePath)}" is empty. Delete it?`,
+						`🗑 "${path.basename(basePath)}" is empty. Delete it?`
 					),
 					initialValue: true,
-				}),
+				})
 			);
 			if (confirmEmpty) {
 				targets = [basePath];
@@ -222,7 +222,7 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 		await confirm({
 			message: chalk.red(`❓ Are you sure to delete ${totalItems}?`),
 			initialValue: true,
-		}),
+		})
 	);
 
 	if (!confirmed) {
@@ -240,12 +240,12 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 				await fs.promises.unlink(target);
 			}
 			mimicClack(
-				`${chalk.green('✨ Deleted')} : ${chalk.yellowBright(path.relative(process.cwd(), target))}`,
+				`${chalk.green('✨ Deleted')} : ${chalk.yellowBright(path.relative(process.cwd(), target))}`
 			);
 		} catch (err) {
 			console.error(
 				chalk.red('🛑 Delete Failed: ') + path.relative(process.cwd(), target),
-				err,
+				err
 			);
 			process.exit(0);
 		}

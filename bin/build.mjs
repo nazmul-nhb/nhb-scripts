@@ -67,7 +67,7 @@ const getFileIcon = (filePath) => {
 					await execa(cmd, args, { cwd: process.cwd(), ...options });
 				}
 			})(),
-			chalk.yellowBright(' 📦 Building Your Application...'),
+			chalk.yellowBright(' 📦 Building Your Application...')
 		);
 
 		// Gather Transformed Files
@@ -119,8 +119,8 @@ const getFileIcon = (filePath) => {
 
 		outro(
 			chalk.green(
-				`📦 Application was built in ${chalk.blueBright.bold(buildTime)} seconds!`,
-			),
+				`📦 Application was built in ${chalk.blueBright.bold(buildTime)} seconds!`
+			)
 		);
 	} catch (error) {
 		console.error(chalk.red('🛑 Build Failed!'), error);

@@ -39,7 +39,7 @@ import { checkEslintDeps, ensureEslintConfig } from '../lib/lint-helpers.mjs';
 		const { stdout, stderr } = await execa(
 			'eslint',
 			[...folders, '--fix', '--config', configFile],
-			{ reject: false },
+			{ reject: false }
 		);
 
 		const fixOut = (stdout + '\n' + stderr)?.trim();
@@ -61,9 +61,9 @@ import { checkEslintDeps, ensureEslintConfig } from '../lib/lint-helpers.mjs';
 		s.stop(
 			chalk.green(
 				`✓ Scanned total ${chalk.blueBright.bold(totalFiles)} files in ${chalk.blueBright.bold(
-					lintTime,
-				)} seconds!`,
-			),
+					lintTime
+				)} seconds!`
+			)
 		);
 
 		outro(chalk.green(`🎉 Fixing completed in folders: ${folders.join(', ')}`));

@@ -42,7 +42,7 @@ export interface ModuleHooks {
  */
 export type FileGenerator = (
 	/** The name of the module being generated. Useful for dynamic filenames or contents. */
-	moduleName: string,
+	moduleName: string
 ) => FileEntry[];
 
 /** * Custom template definition for module scaffolding. */
@@ -325,11 +325,11 @@ export declare function fixTypeExports(options: FixTypeExportsOptions): Promise<
  * @param moduleName Name of the module.
  * @remarks Intended to be used with the `onComplete` hook of the `nhb-module` script.
  */
-export function updateCollection(moduleName: string): void;
+export declare function updateCollection(moduleName: string): void;
 
 /**
  * * Adds route details to `src/app/routes/index.ts` for the given module.
  * @param moduleName Name of the module.
  * @remarks Intended to be used with the `onComplete` hook of the `nhb-module` script.
  */
-export function updateRoutes(moduleName: string): void;
+export declare function updateRoutes(moduleName: string): void;

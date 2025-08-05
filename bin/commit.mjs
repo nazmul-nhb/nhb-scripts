@@ -71,7 +71,7 @@ export async function commitAndPush(message, version) {
 		}
 
 		s.stop(
-			chalk.green('✅ Changes are committed and pushed to the remote repository!'),
+			chalk.green('✅ Changes are committed and pushed to the remote repository!')
 		);
 
 		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
@@ -111,21 +111,21 @@ async function finalPush() {
 				placeholder: oldVersion,
 				defaultValue: oldVersion,
 				initialValue: oldVersion,
-			}),
+			})
 		);
 
 		version = (input || '').trim();
 		if (!version) {
 			version = oldVersion;
 			mimicClack(
-				chalk.cyanBright(`🔄️ Using previous version: ${chalk.yellow(version)}`),
+				chalk.cyanBright(`🔄️ Using previous version: ${chalk.yellow(version)}`)
 			);
 			break;
 		}
 
 		if (!isValidVersion(version, oldVersion)) {
 			mimicClack(
-				chalk.red('🛑 Invalid or older version. Use valid semver like 1.2.3'),
+				chalk.red('🛑 Invalid or older version. Use valid semver like 1.2.3')
 			);
 			continue;
 		}
@@ -158,7 +158,7 @@ async function finalPush() {
 		await select({
 			message: chalk.cyan('Select commit type:'),
 			options: typeChoices,
-		}),
+		})
 	);
 
 	let finalType = typeResult;
@@ -167,7 +167,7 @@ async function finalPush() {
 			await text({
 				message: chalk.magenta('Enter custom commit type:'),
 				validate: validateStringInput,
-			}),
+			})
 		);
 
 		finalType = customType;
@@ -177,7 +177,7 @@ async function finalPush() {
 		await text({
 			message: chalk.gray('Enter a scope (optional):'),
 			placeholder: 'e.g. api, ui, auth',
-		}),
+		})
 	);
 
 	const messageResult = normalizeStringResult(
@@ -185,7 +185,7 @@ async function finalPush() {
 			message: chalk.cyan('Enter commit message (required):'),
 			placeholder: 'e.g. added new feature, fixed bug in auth module etc.',
 			validate: validateStringInput,
-		}),
+		})
 	);
 
 	console.log(chalk.gray('│'));
