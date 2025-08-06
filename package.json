@@ -14,6 +14,7 @@
     "nhb-lint": "bin/lint.mjs",
     "nhb-fix": "bin/fix.mjs",
     "nhb-build": "bin/build.mjs",
+    "nhb-husky": "bin/husky.mjs",
     "nhb-delete": "bin/delete.mjs"
   },
   "scripts": {
@@ -21,7 +22,9 @@
     "commit": "node bin/commit.mjs",
     "count": "node bin/count.mjs",
     "format": "node bin/format.mjs",
-    "delete": "node bin/delete.mjs"
+    "nhb-husky": "node bin/husky.mjs",
+    "delete": "node bin/delete.mjs",
+    "prepare": "husky"
   },
   "publishConfig": {
     "access": "public"
@@ -79,6 +82,8 @@
   "devDependencies": {
     "@types/node": "^24.0.10",
     "@types/semver": "^7.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.4",
     "prettier": "^3.6.2"
   },
   "engines": {
