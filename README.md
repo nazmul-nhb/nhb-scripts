@@ -157,6 +157,7 @@ export default defineScriptConfig({
 | [nhb-module](#-nhb-module--module-generator) | Scaffold module (folder with files) (e.g., Express + Mongoose + Zod by default) with templates.  |
 | [nhb-build](#️-nhb-build--customizable-build-runner-with-progress-visualization) |  Customizable Build Runner with Progress Visualization.  |
 | [nhb-commit](#-nhb-commit--commit-version-updates-with-semver--custom-message) | Generate a conventional commit message interactively with validation.       |
+| [nhb-husky](#-nhb-husky---setup-husky-with-lint-staged) | Setup `husky` with `lint-staged` with `prettier` pre-commit hook.       |
 | [nhb-format](#-nhb-format--code-formatter-prettier-runner) | Format code with `prettier`.       |
 | [nhb-lint](#-nhb-lint--eslint-linter-runner) | Lint code with `eslint`.                         |
 | [nhb-fix](#-nhb-fix--eslint-autofix-runner) | Fix linting errors in code with `eslint`.       |
@@ -805,11 +806,13 @@ If `runFormatter: true` is enabled in the config:
 
 ---
 
-### 📁 Optional Formatter Config File
+### 📁 Optional Formatter Config
 
-You can also define a custom formatter config file.
+You can also define a custom formatter config.
 
 Please refer to [nhb-format](#-nhb-format--code-formatter-prettier-runner) for details.
+
+> If you prefer `husky` and `lint-staged` follow the [instructions here](#-nhb-husky---setup-husky-with-lint-staged).
 
 ---
 
@@ -826,6 +829,44 @@ If both configs are present and `runFormatter` is `true`, `nhb-commit` will:
 ### 🛑 Cancel or Abort
 
 You can abort at any time using `Ctrl+C` or `Esc`.
+
+---
+
+## 🐕 `nhb-husky` - Setup Husky with Lint-Staged
+
+Setup `husky` with `lint-staged` with `prettier` pre-commit hook quickly.
+
+> If you use husky with lint-staged make sure to set `runFormatter: false` in `nhb.scripts.config.mjs` file:
+
+```js
+commit: {
+    runFormatter: false,
+}
+```
+
+directly run:
+
+```bash
+pnpm nhb-husky
+```
+
+### 📦 What It Does
+
+1. Installs `husky` and `lint-staged` if not installed already.
+2. Configures `.husky/pre-commit` file with proper `lint-staged` setup.
+3. Creates `.lintstagedrc.json` file with following config:
+
+    ```json
+    {
+      "*.+((c|m)?js(x)?|(c|m)?ts(x)?)": [
+        "prettier --write"
+      ]
+    }
+    ```
+
+    > If `.lintstagedrc.json` file already exists, it skips creating this file.
+
+> For further configuration for these files, please refer to their official docs: [husky](https://typicode.github.io/husky/) and [lint-staged](https://www.npmjs.com/package/lint-staged)
 
 ---
 
