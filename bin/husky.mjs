@@ -7,44 +7,62 @@ import { intro, outro, spinner } from '@clack/prompts';
 import chalk from 'chalk';
 import { execa } from 'execa';
 
-import { installDeps } from '../lib/install-deps.mjs';
-import { parsePackageJson } from '../lib/package-json-utils.mjs';
-import path from 'path';
 import { existsSync } from 'fs';
 import { writeFile } from 'fs/promises';
+import path from 'path';
 import { mimicClack } from '../lib/clack-utils.mjs';
+import { installDeps } from '../lib/install-deps.mjs';
+import { parsePackageJson } from '../lib/package-json-utils.mjs';
 
 async function initHusky() {
 	intro(chalk.cyanBright('🐕 Setup Husky with Lint-Staged'));
 
 	const devDeps = ['husky', 'lint-staged'];
 
-	const s = spinner();
-
-	s.start(chalk.yellowBright("🔃 Installing 'husky' and 'lint-staged'"));
-
 	if (!isHuskyInstalled()) {
-		await installDeps([], devDeps);
-	}
+		const s = spinner();
+		s.start(chalk.yellowBright("🔃 Installing 'husky' and 'lint-staged'"));
 
-	s.stop(chalk.green("✅ Installed 'husky' and 'lint-staged'!"));
+		await installDeps([], devDeps);
+
+		s.stop(chalk.green("✅ Installed 'husky' and 'lint-staged'!"));
+	}
 
 	await execa('husky', ['init'], { cwd: process.cwd() });
 
 	const cwd = process.cwd();
-	const lsPath = path.join(cwd, '.lintstagedrc.json');
+
 	const huskyPath = path.join(cwd, '.husky/pre-commit');
+	const huskyContent = `#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-	await writeFile(huskyPath, `lint-staged`, 'utf-8');
+if [ -f "pnpm-lock.yaml" ]; then
+  pnpm exec lint-staged
+elif [ -f "yarn.lock" ]; then
+  yarn lint-staged
+elif [ -f "bun.lockb" ]; then
+  bunx lint-staged
+else
+  npx lint-staged
+fi
+`;
 
-	const lsContent = JSON.stringify({ '*.+(js|ts)': ['prettier --write'] }, null, 2);
+	await writeFile(huskyPath, huskyContent, 'utf-8');
+	mimicClack(chalk.gray('⚙️  Updated ".husky/pre-commit"'));
+
+	const lsPath = path.join(cwd, '.lintstagedrc.json');
+	const lsContent = JSON.stringify(
+		{ '*.+((c|m)?js(x)?|(c|m)?ts(x)?)': ['prettier --write'] },
+		null,
+		2
+	);
 
 	if (!existsSync(lsPath)) {
 		await writeFile(lsPath, lsContent, 'utf-8');
 		mimicClack(chalk.gray('⚙️  Created default ".lintstagedrc.json"'));
 	}
 
-	outro(chalk.cyanBright(`⚙️  Husky Setup Complete!`));
+	outro(chalk.cyanBright(`🎉 Husky Setup Complete!`));
 }
 
 /**
