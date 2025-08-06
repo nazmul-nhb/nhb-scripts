@@ -3,7 +3,7 @@
 
 // @ts-check
 
-import { intro, outro, spinner } from '@clack/prompts';
+import { intro, outro } from '@clack/prompts';
 import chalk from 'chalk';
 import { execa } from 'execa';
 
@@ -20,12 +20,11 @@ async function initHusky() {
 	const devDeps = ['husky', 'lint-staged'];
 
 	if (!isHuskyInstalled()) {
-		const s = spinner();
-		s.start(chalk.yellowBright("🔃 Installing 'husky' and 'lint-staged'"));
+		mimicClack(chalk.yellowBright("🔃 Installing 'husky' and 'lint-staged'..."));
 
 		await installDeps([], devDeps);
 
-		s.stop(chalk.green("✅ Installed 'husky' and 'lint-staged'!"));
+		mimicClack(chalk.green("✅ Installed 'husky' and 'lint-staged'!"));
 	}
 
 	await execa('husky', ['init'], { cwd: process.cwd() });

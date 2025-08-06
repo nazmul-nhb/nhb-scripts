@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.8.40",
+  "version": "1.8.41",
   "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/index.d.ts",
   "main": "index.mjs",
