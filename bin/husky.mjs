@@ -59,13 +59,13 @@ function isHuskyInstalled() {
 			(pkg.dependencies &&
 				pkg.dependencies.husky &&
 				pkg.dependencies?.['lint-staged']) ||
-			(pkg.devDependencies &&
-				pkg.devDependencies.husky &&
-				pkg.devDependencies?.['lint-staged'])
+				(pkg.devDependencies &&
+					pkg.devDependencies.husky &&
+					pkg.devDependencies?.['lint-staged'])
 		);
 	} catch {
-		return false
+		return false;
 	}
 }
 
-initHusky().catch(console.dir)
+initHusky().catch(console.dir);
