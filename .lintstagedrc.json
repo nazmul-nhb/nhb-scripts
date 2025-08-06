@@ -1,5 +1,5 @@
 {
-  "*.+(js|ts)": [
+  "*.+((c|m)?js(x)?|(c|m)?ts(x)?)": [
     "prettier --write"
   ]
 }
