@@ -4,7 +4,6 @@
 // @ts-check
 
 import {
-	cancel,
 	confirm,
 	intro,
 	isCancel,
@@ -74,7 +73,7 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 			});
 
 			if (isCancel(locked)) {
-				cancel('🛑 Operation cancelled!');
+				outro(chalk.redBright('🛑 Operation cancelled!'));
 				process.exit(0);
 			}
 			if (isValidArray(locked)) return locked;
@@ -123,7 +122,7 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 			});
 
 			if (isCancel(locked)) {
-				cancel('🛑 Operation cancelled!');
+				outro(chalk.redBright('🛑 Operation cancelled!'));
 				process.exit(0);
 			}
 			if (isValidArray(locked)) return locked;
