@@ -196,4 +196,4 @@ async function createModule() {
 	config.hooks?.onComplete?.(moduleName);
 }
 
-createModule();
+createModule().catch(console.dir);
