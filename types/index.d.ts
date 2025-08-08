@@ -102,9 +102,13 @@ export interface ModuleConfig {
  * * Generates a module (set of files) for an Express.js application using Mongoose and Zod for validation.
  * _This template includes routes, controllers, services, models, validations, and types._
  * @param moduleName - The name of the module being generated. Useful for dynamic filenames or contents.
+ * @param useAlias - Whether to use import alias `@/` instead of `src/app/*`, must configure `tsconfig` and `package.json`. Defaults to `false`.
  * @returns An array of `FileEntry` objects representing the files to be generated.
  */
-export declare function expressMongooseZodTemplate(moduleName: string): FileEntry[];
+export declare function expressMongooseZodTemplate(
+	moduleName: string,
+	useAlias: boolean
+): FileEntry[];
 
 /** User configuration for `nhb-format` script. */
 export interface FormatConfig {
@@ -330,6 +334,7 @@ export declare function updateCollection(moduleName: string): void;
 /**
  * * Adds route details to `src/app/routes/index.ts` for the given module.
  * @param moduleName Name of the module.
+ * @param useAlias - Whether to use import alias `@/` instead of `src/app/*`, must configure `tsconfig` and `package.json`. Defaults to `false`.
  * @remarks Intended to be used with the `onComplete` hook of the `nhb-module` script.
  */
-export declare function updateRoutes(moduleName: string): void;
+export declare function updateRoutes(moduleName: string, useAlias: boolean): void;

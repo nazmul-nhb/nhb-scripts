@@ -3,18 +3,21 @@
 import { capitalizeString, pluralizer } from 'nhb-toolbox';
 
 /** @type {import('../types/index.d.ts').expressMongooseZodTemplate} */
-export function expressMongooseZodTemplate(moduleName) {
+export function expressMongooseZodTemplate(moduleName, useAlias = false) {
 	const capModule = capitalizeString(moduleName);
 	const pluralModule = pluralizer.toPlural(moduleName);
 	const pluralCapModule = pluralizer.toPlural(capModule);
 
+	const baseAlias = useAlias ? '@' : '../..';
+	const moduleAlias = useAlias ? '@/modules' : '.';
+
 	return [
 		{
 			name: `${moduleName}.routes.ts`,
-			content: `import { Router } from 'express';
-import { ${moduleName}Controllers } from './${moduleName}.controllers';
-import validateRequest from '../../middlewares/validateRequest';
-import { ${moduleName}Validations } from './${moduleName}.validation';
+			content: `import validateRequest from '${baseAlias}/middlewares/validateRequest';
+import { ${moduleName}Controllers } from '${moduleAlias}/${moduleName}.controllers';
+import { ${moduleName}Validations } from '${moduleAlias}/${moduleName}.validation';
+import { Router } from 'express';
 
 const router = Router();
 
@@ -41,9 +44,9 @@ export const ${moduleName}Routes = router;
 		},
 		{
 			name: `${moduleName}.controllers.ts`,
-			content: `import catchAsync from '../../utilities/catchAsync';
-import sendResponse from '../../utilities/sendResponse';
-import { ${moduleName}Services } from './${moduleName}.services';
+			content: `import { ${moduleName}Services } from '${moduleAlias}/${moduleName}.services';
+import catchAsync from '${baseAlias}/utilities/catchAsync';
+import sendResponse from '${baseAlias}/utilities/sendResponse';
 
 const create${capModule} = catchAsync(async (req, res) => {
 	const new${capModule} = await ${moduleName}Services.create${capModule}InDB(req.body);
@@ -86,11 +89,11 @@ export const ${moduleName}Controllers = {
 		},
 		{
 			name: `${moduleName}.services.ts`,
-			content: `import { ErrorWithStatus } from '../../classes/ErrorWithStatus';
-import { QueryBuilder } from '../../classes/QueryBuilder';
-import { STATUS_CODES } from '../../constants/index';
-import { ${capModule} } from './${moduleName}.model';
-import type { I${capModule} } from './${moduleName}.types';
+			content: `import { ErrorWithStatus } from '${baseAlias}/classes/ErrorWithStatus';
+import { QueryBuilder } from '${baseAlias}/classes/QueryBuilder';
+import { STATUS_CODES } from '${baseAlias}/constants';
+import { ${capModule} } from '${moduleAlias}/${moduleName}.model';
+import type { I${capModule} } from '${moduleAlias}/${moduleName}.types';
 
 const create${capModule}InDB = async (payload: I${capModule}) => {
 	const new${capModule} = await ${capModule}.create(payload);
@@ -155,10 +158,10 @@ export const ${moduleName}Services = {
 		},
 		{
 			name: `${moduleName}.model.ts`,
-			content: `import { Schema, model } from 'mongoose';
-import type { I${capModule}Doc, I${capModule}Model } from './${moduleName}.types';
-import { ErrorWithStatus } from '../../classes/ErrorWithStatus';
-import { STATUS_CODES } from '../../constants/index';
+			content: `import { ErrorWithStatus } from '${baseAlias}/classes/ErrorWithStatus';
+import { STATUS_CODES } from '${baseAlias}/constants/index';
+import type { I${capModule}Doc, I${capModule}Model } from '${moduleAlias}/${moduleName}.types';
+import { Schema, model } from 'mongoose';
 
 const ${moduleName}Schema = new Schema<I${capModule}Doc>(
     {
