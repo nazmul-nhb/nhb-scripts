@@ -107,7 +107,7 @@ export interface ModuleConfig {
  */
 export declare function expressMongooseZodTemplate(
 	moduleName: string,
-	useAlias: boolean
+	useAlias?: boolean
 ): FileEntry[];
 
 /** User configuration for `nhb-format` script. */
@@ -337,4 +337,4 @@ export declare function updateCollection(moduleName: string): void;
  * @param useAlias - Whether to use import alias `@/` instead of `src/app/*`, must configure `tsconfig` and `package.json`. Defaults to `false`.
  * @remarks Intended to be used with the `onComplete` hook of the `nhb-module` script.
  */
-export declare function updateRoutes(moduleName: string, useAlias: boolean): void;
+export declare function updateRoutes(moduleName: string, useAlias?: boolean): void;
