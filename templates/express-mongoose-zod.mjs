@@ -9,7 +9,7 @@ export function expressMongooseZodTemplate(moduleName, useAlias = false) {
 	const pluralCapModule = pluralizer.toPlural(capModule);
 
 	const baseAlias = useAlias ? '@' : '../..';
-	const moduleAlias = useAlias ? '@/modules' : '.';
+	const moduleAlias = useAlias ? `@/modules/${moduleName}` : '.';
 
 	return [
 		{
