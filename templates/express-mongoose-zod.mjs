@@ -159,7 +159,7 @@ export const ${moduleName}Services = {
 		{
 			name: `${moduleName}.model.ts`,
 			content: `import { ErrorWithStatus } from '${baseAlias}/classes/ErrorWithStatus';
-import { STATUS_CODES } from '${baseAlias}/constants/index';
+import { STATUS_CODES } from '${baseAlias}/constants';
 import type { I${capModule}Doc, I${capModule}Model } from '${moduleAlias}/${moduleName}.types';
 import { Schema, model } from 'mongoose';
 
