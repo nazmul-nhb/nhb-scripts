@@ -91,9 +91,9 @@ export const ${moduleName}Controllers = {
 			name: `${moduleName}.services.ts`,
 			content: `import { ErrorWithStatus } from '${baseAlias}/classes/ErrorWithStatus';
 import { QueryBuilder } from '${baseAlias}/classes/QueryBuilder';
-import { STATUS_CODES } from '${baseAlias}/constants';
 import { ${capModule} } from '${moduleAlias}/${moduleName}.model';
 import type { I${capModule} } from '${moduleAlias}/${moduleName}.types';
+import { STATUS_CODES } from 'nhb-toolbox/constants';
 
 const create${capModule}InDB = async (payload: I${capModule}) => {
 	const new${capModule} = await ${capModule}.create(payload);
@@ -159,9 +159,9 @@ export const ${moduleName}Services = {
 		{
 			name: `${moduleName}.model.ts`,
 			content: `import { ErrorWithStatus } from '${baseAlias}/classes/ErrorWithStatus';
-import { STATUS_CODES } from '${baseAlias}/constants';
 import type { I${capModule}Doc, I${capModule}Model } from '${moduleAlias}/${moduleName}.types';
 import { Schema, model } from 'mongoose';
+import { STATUS_CODES } from 'nhb-toolbox/constants';
 
 const ${moduleName}Schema = new Schema<I${capModule}Doc>(
     {
