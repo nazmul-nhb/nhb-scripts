@@ -19,7 +19,82 @@
 
 A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScript projects. Built to reduce repetitive boilerplate and improve developer velocity — no magic, just clean logic.
 
-> Most scripts display a progress bar for the current task and automatically create a `.estimator` folder, which is also added to `.gitignore`.
+## Table of Contents
+
+- [⚡ Compatibility](#-compatibility)
+  - [✅ Requirements](#-requirements)
+- [⚙️ Unified Configuration System](#️-unified-configuration-system)
+- [🧰 Included CLI Scripts](#-included-cli-scripts)
+- [🔧 How to Use in Your Project](#-how-to-use-in-your-project)
+- [🧱 nhb-module — Module Generator](#-nhb-module--module-generator)
+  - [⚙️ Setup in package.json](#️-setup-in-packagejson)
+  - [🛠️ What It Does](#-what-it-does)
+  - [📦 Pre-built Template](#-pre-built-template)
+  - [📁 Custom Template Support](#-custom-template-support)
+    - [🧠 Why dynamic files?](#-why-dynamic-files)
+    - [🗂️ Template Files files](#️-template-files-files)
+  - [💡 CLI Flags](#-cli-flags)
+  - [🤖 What Happens Behind the Scenes](#-what-happens-behind-the-scenes)
+  - [📁 Output Example](#-output-example)
+  - [🧩 Template Shape](#-template-shape)
+  - [🔄 Lifecycle Hooks Optional](#-lifecycle-hooks-optional)
+  - [🛑 Cancel or Abort](#-cancel-or-abort)
+- [🏗️ nhb-build — Customizable Build Runner with Progress Visualization](#️-nhb-build--customizable-build-runner-with-progress-visualization)
+  - [✨ Features](#-features)
+  - [⚙️ Configuration](#-configuration)
+    - [🏗️ Options](#️-options)
+  - [📦 Usage](#-usage)
+  - [✅ Example Output](#-example-output)
+  - [🔧 Post‑Build Hooks](#-postbuild-hooks)
+- [📝 nhb-commit — Commit Version Updates with Semver & Custom Message](#-nhb-commit--commit-version-updates-with-semver--custom-message)
+  - [⚙️ Setup in package.json](#️-setup-in-packagejson)
+  - [🚦 What It Does](#-what-it-does)
+  - [✨ Commit Format](#-commit-format)
+  - [🧩 Supported Types Predefined Choices](#-supported-types-predefined-choices)
+  - [💬 Prompt Flow](#-prompt-flow)
+  - [🧪 Semver Validations](#-semver-validations)
+  - [🔧 Behavior Summary](#-behavior-summary)
+  - [Configuration](#configuration)
+    - [📌 Available Options](#-available-options)
+  - [✨ Formatter Integration Prettier](#-formatter-integration-prettier)
+  - [📁 Optional Formatter Config](#-optional-formatter-config)
+  - [📦 Combined Flow](#-combined-flow)
+  - [🛑 Cancel or Abort](#-cancel-or-abort)
+- [🐕 nhb-husky - Setup Husky with Lint-Staged](#-nhb-husky---setup-husky-with-lint-staged)
+  - [📦 What It Does](#-what-it-does)
+- [🎨 nhb-format — Code Formatter Prettier Runner](#-nhb-format--code-formatter-prettier-runner)
+  - [⚙️ Setup in package.json](#️-setup-in-packagejson)
+  - [📦 What It Does](#-what-it-does)
+  - [🛠️ Example Config](#️-example-config)
+  - [🔄 Automatic Integration with nhb-commit](#-automatic-integration-with-nhb-commit)
+  - [⚠️ Requirements](#-requirements)
+  - [📁 Output Example](#-output-example)
+- [✅ nhb-lint — ESLint Linter Runner](#-nhb-lint--eslint-linter-runner)
+  - [⚙️ Setup in package.json](#️-setup-in-packagejson)
+  - [✨ Features](#-features)
+  - [🛠️ Example Config](#️-example-config)
+  - [📦 Output Example](#-output-example)
+- [🔧 nhb-fix — ESLint Auto‑Fix Runner](#-nhb-fix--eslint-autofix-runner)
+  - [⚙️ Setup in package.json](#️-setup-in-packagejson)
+  - [✨ Features](#-features)
+  - [📦 Output Example](#-output-example)
+  - [🧭 Configuration](#-configuration)
+  - [💡 Pro Tips](#-pro-tips)
+- [📊 nhb-count — Export Counter CLI](#-nhb-count--export-counter-cli)
+  - [🔧 Usage](#-usage)
+  - [Configuration](#configuration)
+  - [🧭 Interactive CLI Prompts](#-interactive-cli-prompts)
+  - [Exactly What Happens](#exactly-what-happens)
+  - [Output Example](#output-example)
+  - [📌 What It Detects](#-what-it-detects)
+  - [✅ Example](#-example)
+  - [🗑 nhb-delete – Interactive File & Folder Remover](#-nhb-delete--interactive-file--folder-remover)
+    - [🚀 Usage](#-usage)
+    - [✨ Features](#-features)
+    - [📌 Example](#-example)
+- [📄 License](#-license)
+
+<!-- /TOC -->
 
 ## ⚡ Compatibility
 
@@ -45,108 +120,115 @@ yarn add -D nhb-scripts
 
 ---
 
-## Unified Configuration System
+<details>
+  <summary>
 
-All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. The default configuration and other available (noted if not default) options include:
+## ⚙️ Unified Configuration System
 
-```js
-// @ts-check
+  </summary>
 
-import { defineScriptConfig, expressMongooseZodTemplate } from 'nhb-scripts';
+  All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. The default configuration and other available (noted if not default) options include:
 
-export default defineScriptConfig({
-    format: {
-        args: ['--write'],
-        files: ['.'],
-        ignorePath: '.prettierignore',
-    },
-    lint: { folders: ['src'], patterns: ['**/*.ts'] }, // Optional, these are defaults
-    fix: { folders: ['src'], patterns: ['**/*.ts'] }, // Optional, these are defaults
-    commit: {
-        runFormatter: false, // do not run formatter,  use `true` to format before committing 
-    },
-    count: {
-        defaultPath: '.', // default path to scan
-        excludePaths: ['node_modules', 'dist', 'build'] // folders to exclude
-    },
-    build: {
-      distFolder: 'dist', // optional, default: "dist"
-      deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
-      commands: [ // default is [{cmd: 'tsc'}]
-        // Not default
-          { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
-        // Not default
-          {
-              cmd: 'tsc',
-              args: ['-p', 'tsconfig.esm.json'],
-              options: { stdio: 'inherit' }
-          }
-      ],
-      after: [
-        // Not default
-          async () => await fixJsExtensions('dist/esm'),
-        // Not default
-          async () => await fixTypeExports({
-              distPath: 'dist/dts',
-              packageJsonPath: 'package.json',
-              typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
-              extraPatterns: [
-                  { pattern: 'plugins', folderName: 'plugins' },
-              ],
-              extraStatic: {
-                  './types': {
-                      types: './dist/dts/types/index.d.ts',
-                      default: './dist/dts/types/index.d.ts'
-                  },
-                  './constants': {
-                      types: './dist/dts/constants.d.ts',
-                      import: './dist/esm/constants.js',
-                      require: './dist/cjs/constants.js'
-                  },
-              }
-          }),
-      ],
-    },
-    module: {
-        destination: 'src/modules', // optional, default: "src/modules"
-        defaultTemplate: 'my.template1', // selected by default, must match with the keys of `templates` object
-        force: false, // `true` if you want to override the existing module
-        templates: {
-            'express-mongoose-zod': {
-                createFolder: true,
-                destination: 'src/app/modules',
-                files: expressMongooseZodTemplate // pre-built module : function that receives moduleName as argument and creates pre-defined files and contents
-            },
-            'my.template1': {
-                createFolder: true, // if `false` does not create folder with the module name from cli
-                destination: 'src/app', // optional, will prioritize inputs from cli
-                // Use dynamic moduleName in filenames and contents
-                files: (moduleName) => [
-                    { name: `${moduleName}.controllers.ts`, content: `// controllers for ${moduleName}` },
-                    { name: `${moduleName}.services.ts`, content: `// services for ${moduleName}` }
-                ]
-            },
-            'my_template2': {
-                destination: 'src/features', // optional, will prioritize inputs from cli
-                // Use static file list with contents
-                files: [
-                    { name: 'index.ts', content: '// content' },
-                    { name: 'dummy.js', content: '// dummy' }
-                ]
-            },
-        },
-        // Optional hooks to inspect or execute something at the beginning or after the module generation
-        hooks: {
-            onGenerate(name) {
-                console.log('➡️  Generating:', name);
-            },
-            onComplete(name) {
-                console.log('✅ Complete:', name);
+  ```js
+  // @ts-check
+
+  import { defineScriptConfig, expressMongooseZodTemplate } from 'nhb-scripts';
+
+  export default defineScriptConfig({
+      format: {
+          args: ['--write'],
+          files: ['.'],
+          ignorePath: '.prettierignore',
+      },
+      lint: { folders: ['src'], patterns: ['**/*.ts'] }, // Optional, these are defaults
+      fix: { folders: ['src'], patterns: ['**/*.ts'] }, // Optional, these are defaults
+      commit: {
+          runFormatter: false, // do not run formatter,  use `true` to format before committing 
+      },
+      count: {
+          defaultPath: '.', // default path to scan
+          excludePaths: ['node_modules', 'dist', 'build'] // folders to exclude
+      },
+      build: {
+        distFolder: 'dist', // optional, default: "dist"
+        deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
+        commands: [ // default is [{cmd: 'tsc'}]
+          // Not default
+            { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
+          // Not default
+            {
+                cmd: 'tsc',
+                args: ['-p', 'tsconfig.esm.json'],
+                options: { stdio: 'inherit' }
             }
-        }
-    }
-});
-```
+        ],
+        after: [
+          // Not default
+            async () => await fixJsExtensions('dist/esm'),
+          // Not default
+            async () => await fixTypeExports({
+                distPath: 'dist/dts',
+                packageJsonPath: 'package.json',
+                typeFileCandidates: ['types.d.ts', 'interfaces.d.ts'],
+                extraPatterns: [
+                    { pattern: 'plugins', folderName: 'plugins' },
+                ],
+                extraStatic: {
+                    './types': {
+                        types: './dist/dts/types/index.d.ts',
+                        default: './dist/dts/types/index.d.ts'
+                    },
+                    './constants': {
+                        types: './dist/dts/constants.d.ts',
+                        import: './dist/esm/constants.js',
+                        require: './dist/cjs/constants.js'
+                    },
+                }
+            }),
+        ],
+      },
+      module: {
+          destination: 'src/modules', // optional, default: "src/modules"
+          defaultTemplate: 'my.template1', // selected by default, must match with the keys of `templates` object
+          force: false, // `true` if you want to override the existing module
+          templates: {
+              'express-mongoose-zod': {
+                  createFolder: true,
+                  destination: 'src/app/modules',
+                  files: expressMongooseZodTemplate // pre-built module : function that receives moduleName as argument and creates pre-defined files and contents
+              },
+              'my.template1': {
+                  createFolder: true, // if `false` does not create folder with the module name from cli
+                  destination: 'src/app', // optional, will prioritize inputs from cli
+                  // Use dynamic moduleName in filenames and contents
+                  files: (moduleName) => [
+                      { name: `${moduleName}.controllers.ts`, content: `// controllers for ${moduleName}` },
+                      { name: `${moduleName}.services.ts`, content: `// services for ${moduleName}` }
+                  ]
+              },
+              'my_template2': {
+                  destination: 'src/features', // optional, will prioritize inputs from cli
+                  // Use static file list with contents
+                  files: [
+                      { name: 'index.ts', content: '// content' },
+                      { name: 'dummy.js', content: '// dummy' }
+                  ]
+              },
+          },
+          // Optional hooks to inspect or execute something at the beginning or after the module generation
+          hooks: {
+              onGenerate(name) {
+                  console.log('➡️  Generating:', name);
+              },
+              onComplete(name) {
+                  console.log('✅ Complete:', name);
+              }
+          }
+      }
+  });
+  ```
+
+</details>
 
 ---
 
