@@ -28,7 +28,7 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
 - [🔧 How to Use in Your Project](#-how-to-use-in-your-project)
 - [🧱 nhb-module — Module Generator](#-nhb-module--module-generator)
   - [⚙️ Setup in package.json](#️-setup-in-packagejson)
-  - [🛠️ What It Does](#-what-it-does)
+  - [🛠️ What It Does](#️-what-it-does)
   - [📦 Pre-built Template](#-pre-built-template)
   - [📁 Custom Template Support](#-custom-template-support)
     - [🧠 Why dynamic files?](#-why-dynamic-files)
@@ -41,57 +41,57 @@ A **developer-first toolkit** to automate common dev tasks in JavaScript/TypeScr
   - [🛑 Cancel or Abort](#-cancel-or-abort)
 - [🏗️ nhb-build — Customizable Build Runner with Progress Visualization](#️-nhb-build--customizable-build-runner-with-progress-visualization)
   - [✨ Features](#-features)
-  - [⚙️ Configuration](#-configuration)
+  - [⚙️ Configuration](#️-configuration)
     - [🏗️ Options](#️-options)
   - [📦 Usage](#-usage)
   - [✅ Example Output](#-example-output)
   - [🔧 Post‑Build Hooks](#-postbuild-hooks)
 - [📝 nhb-commit — Commit Version Updates with Semver & Custom Message](#-nhb-commit--commit-version-updates-with-semver--custom-message)
-  - [⚙️ Setup in package.json](#️-setup-in-packagejson)
+  - [⚙️ Setup in package.json](#️-setup-in-packagejson-1)
   - [🚦 What It Does](#-what-it-does)
   - [✨ Commit Format](#-commit-format)
   - [🧩 Supported Types Predefined Choices](#-supported-types-predefined-choices)
   - [💬 Prompt Flow](#-prompt-flow)
   - [🧪 Semver Validations](#-semver-validations)
   - [🔧 Behavior Summary](#-behavior-summary)
-  - [Configuration](#configuration)
+  - [⚙️ Configuration](#️-configuration-1)
     - [📌 Available Options](#-available-options)
   - [✨ Formatter Integration Prettier](#-formatter-integration-prettier)
   - [📁 Optional Formatter Config](#-optional-formatter-config)
   - [📦 Combined Flow](#-combined-flow)
-  - [🛑 Cancel or Abort](#-cancel-or-abort)
+  - [🛑 Cancel or Abort](#-cancel-or-abort-1)
 - [🐕 nhb-husky - Setup Husky with Lint-Staged](#-nhb-husky---setup-husky-with-lint-staged)
-  - [📦 What It Does](#-what-it-does)
+  - [📦 What It Does](#-what-it-does-1)
 - [🎨 nhb-format — Code Formatter Prettier Runner](#-nhb-format--code-formatter-prettier-runner)
-  - [⚙️ Setup in package.json](#️-setup-in-packagejson)
-  - [📦 What It Does](#-what-it-does)
+  - [⚙️ Setup in package.json](#️-setup-in-packagejson-2)
+  - [📦 What It Does](#-what-it-does-2)
   - [🛠️ Example Config](#️-example-config)
   - [🔄 Automatic Integration with nhb-commit](#-automatic-integration-with-nhb-commit)
-  - [⚠️ Requirements](#-requirements)
-  - [📁 Output Example](#-output-example)
+  - [⚠️ Requirements](#️-requirements)
+  - [📁 Output Example](#-output-example-1)
 - [✅ nhb-lint — ESLint Linter Runner](#-nhb-lint--eslint-linter-runner)
-  - [⚙️ Setup in package.json](#️-setup-in-packagejson)
-  - [✨ Features](#-features)
-  - [🛠️ Example Config](#️-example-config)
-  - [📦 Output Example](#-output-example)
+  - [⚙️ Setup in package.json](#️-setup-in-packagejson-3)
+  - [✨ Features](#-features-1)
+  - [🛠️ Example Config](#️-example-config-1)
+  - [📦 Output Example](#-output-example-2)
 - [🔧 nhb-fix — ESLint Auto‑Fix Runner](#-nhb-fix--eslint-autofix-runner)
-  - [⚙️ Setup in package.json](#️-setup-in-packagejson)
-  - [✨ Features](#-features)
-  - [📦 Output Example](#-output-example)
-  - [🧭 Configuration](#-configuration)
+  - [⚙️ Setup in package.json](#️-setup-in-packagejson-4)
+  - [✨ Features](#-features-2)
+  - [📦 Output Example](#-output-example-3)
+  - [⚙️ Configuration](#️-configuration-2)
   - [💡 Pro Tips](#-pro-tips)
 - [📊 nhb-count — Export Counter CLI](#-nhb-count--export-counter-cli)
-  - [🔧 Usage](#-usage)
-  - [Configuration](#configuration)
+  - [🔧 Usage](#-usage-1)
+  - [⚙️ Configuration](#️-configuration-3)
   - [🧭 Interactive CLI Prompts](#-interactive-cli-prompts)
-  - [Exactly What Happens](#exactly-what-happens)
-  - [Output Example](#output-example)
+  - [✅ Exactly What Happens](#-exactly-what-happens)
+  - [✅ Output Example](#-output-example-4)
   - [📌 What It Detects](#-what-it-detects)
   - [✅ Example](#-example)
   - [🗑 nhb-delete – Interactive File & Folder Remover](#-nhb-delete--interactive-file--folder-remover)
-    - [🚀 Usage](#-usage)
-    - [✨ Features](#-features)
-    - [📌 Example](#-example)
+    - [🚀 Usage](#-usage-2)
+    - [✨ Features](#-features-3)
+    - [📌 Example](#-example-1)
 - [📄 License](#-license)
 
 <!-- /TOC -->
@@ -857,7 +857,7 @@ This is required because the script **automatically commits and pushes** version
 
 ---
 
-### Configuration
+### ⚙️ Configuration
 
 In `nhb.scripts.config.mjs`:
 
@@ -1172,7 +1172,7 @@ pnpm nhb-fix
 
 ---
 
-### 🧭 Configuration
+### ⚙️ Configuration
 
 `nhb-fix` use the `fix` section in `nhb.scripts.config.mjs`:
 
@@ -1236,7 +1236,7 @@ pnpm nhb-count
 
 ---
 
-### Configuration
+### ⚙️ Configuration
 
 In `nhb.scripts.config.mjs`:
 
@@ -1264,7 +1264,7 @@ When executed, the script will prompt you:
    - Press Enter to use default path: [shows configured defaultPath]
 ```
 
-### Exactly What Happens
+### ✅ Exactly What Happens
 
 1. If you **enter a file path**:
    - Must be `.js`, `.ts`, or `.mjs`
@@ -1278,7 +1278,7 @@ When executed, the script will prompt you:
 3. If you **press Enter**:
    - Uses `defaultPath` from config (defaults to `.`)
 
-### Output Example
+### ✅ Output Example
 
 ```bash
 📦 Export Summary for "src/utils/math.ts":
