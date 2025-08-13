@@ -127,7 +127,7 @@ yarn add -D nhb-scripts
 
   </summary>
 
-  All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. The default configuration and other available (noted if not default) options include:
+  All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. Available configuration options include:
 
   ```js
   // @ts-check
@@ -152,10 +152,11 @@ yarn add -D nhb-scripts
       build: {
         distFolder: 'dist', // optional, default: "dist"
         deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
+        showOutputs: true, // display output file list, default is `false`
         commands: [ // default is [{cmd: 'tsc'}]
-          // Not default
+            // Not default
             { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
-          // Not default
+            // Not default
             {
                 cmd: 'tsc',
                 args: ['-p', 'tsconfig.esm.json'],
@@ -163,9 +164,9 @@ yarn add -D nhb-scripts
             }
         ],
         after: [
-          // Not default
+            // Not default
             async () => await fixJsExtensions('dist/esm'),
-          // Not default
+            // Not default
             async () => await fixTypeExports({
                 distPath: 'dist/dts',
                 packageJsonPath: 'package.json',
@@ -234,17 +235,17 @@ yarn add -D nhb-scripts
 
 ## 🧰 Included CLI Scripts
 
-| Script       | Description                                                                 |
-| ------------ | --------------------------------------------------------------------------- |
-| [nhb-module](#-nhb-module--module-generator) | Scaffold module (folder with files) (e.g., Express + Mongoose + Zod by default) with templates.  |
-| [nhb-build](#️-nhb-build--customizable-build-runner-with-progress-visualization) |  Customizable Build Runner with Progress Visualization.  |
-| [nhb-commit](#-nhb-commit--commit-version-updates-with-semver--custom-message) | Generate a conventional commit message interactively with validation.       |
-| [nhb-husky](#-nhb-husky---setup-husky-with-lint-staged) | Setup `husky` with `lint-staged` with `prettier` pre-commit hook.       |
-| [nhb-format](#-nhb-format--code-formatter-prettier-runner) | Format code with `prettier`.       |
-| [nhb-lint](#-nhb-lint--eslint-linter-runner) | Lint code with `eslint`.                         |
-| [nhb-fix](#-nhb-fix--eslint-autofix-runner) | Fix linting errors in code with `eslint`.       |
-| [nhb-count](#-nhb-count--export-counter-cli) | Count export declarations (default, named, aliased) in JS/TS files/folders. |
-| [nhb-delete](#-nhb-delete--interactive-file--folder-remover) | Interactive File(s)/Folder(s) Remover. |
+| Script                                                                            | Description                                                                                     |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [nhb-module](#-nhb-module--module-generator)                                      | Scaffold module (folder with files) (e.g., Express + Mongoose + Zod by default) with templates. |
+| [nhb-build](#️-nhb-build--customizable-build-runner-with-progress-visualization) | Customizable Build Runner with Progress Visualization.                                          |
+| [nhb-commit](#-nhb-commit--commit-version-updates-with-semver--custom-message)    | Generate a conventional commit message interactively with validation.                           |
+| [nhb-husky](#-nhb-husky---setup-husky-with-lint-staged)                           | Setup `husky` with `lint-staged` with `prettier` pre-commit hook.                               |
+| [nhb-format](#-nhb-format--code-formatter-prettier-runner)                        | Format code with `prettier`.                                                                    |
+| [nhb-lint](#-nhb-lint--eslint-linter-runner)                                      | Lint code with `eslint`.                                                                        |
+| [nhb-fix](#-nhb-fix--eslint-autofix-runner)                                       | Fix linting errors in code with `eslint`.                                                       |
+| [nhb-count](#-nhb-count--export-counter-cli)                                      | Count export declarations (default, named, aliased) in JS/TS files/folders.                     |
+| [nhb-delete](#-nhb-delete--interactive-file--folder-remover)                      | Interactive File(s)/Folder(s) Remover.                                                          |
 
 > More Scripts Coming Soon...
 
@@ -356,8 +357,8 @@ pnpm nhb-module
 
 ### 📦 Pre-built Template
 
-| Name                   | Description                                                            |
-| ---------------------- | ---------------------------------------------------------------------- |
+| Name                   | Description                                                                                                             |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `express-mongoose-zod` | Basic Express route + Mongoose model + Zod schema generator (built-in : imported function `expressMongooseZodTemplate`) |
 
 ---
@@ -442,13 +443,13 @@ You can provide either of the following:
 
 You can also generate modules non-interactively using CLI flags to streamline automation or scripting:
 
-| Flag             | Alias | Description                                        |
-| ---------------- | ----- | -------------------------------------------------- |
-| `--name`         | `-n`  | Name of the module                                 |
-| `--template`     | `-t`  | Template to use                                    |
-| `--destination`  | `-d`  | Directory to generate module into                  |
-| `--force`        | `-f`  | Overwrite existing module if already present       |
-| `--create-folder`| `-cf` | Create folder for module (default: `true`)         |
+| Flag              | Alias | Description                                  |
+| ----------------- | ----- | -------------------------------------------- |
+| `--name`          | `-n`  | Name of the module                           |
+| `--template`      | `-t`  | Template to use                              |
+| `--destination`   | `-d`  | Directory to generate module into            |
+| `--force`         | `-f`  | Overwrite existing module if already present |
+| `--create-folder` | `-cf` | Create folder for module (default: `true`)   |
 
 Example:
 
@@ -564,6 +565,7 @@ A configurable build runner with progress estimator that can execute your build 
 - ✅ Always cleans your specified dist folder (using `rimraf`) before each build to avoid conflicts. You can configure this behavior.
 - ✅ Run post‑build hooks (`after`) as an array of async functions (e.g., `fixJsExtensions('dist/esm')`).
 - ✅ Rich output: shows file sizes, count, and total build time.
+- ✅ Optionally shows output file list. Set `showOutputs: true` in the config to display the list of output files.
 
 ---
 
@@ -580,6 +582,7 @@ export default defineScriptConfig({
   build: {
     distFolder: 'output', // optional, default: "dist"
     deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
+    showOutputs: true, // display output file list, default is `false`
     commands: [
       { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
       { cmd: 'tsc', args: ['-p', 'tsconfig.esm.json'], options: { stdio: 'inherit' } }
@@ -612,11 +615,13 @@ export default defineScriptConfig({
 
 #### 🏗️ **Options**
 
-| Field        | Type                   | Default   | Description                                                 |
-| ------------ | ---------------------- | --------- | ----------------------------------------------------------- |
-| `distFolder` | `string`               | `dist`    | Output folder used for size reporting and cleanup.          |
-| `commands`   | `Array<BuildCommand>`  | see below | Array of build commands.                                    |
-| `after`      | `Array<Promise<void>>` | `[]`      | Post‑build hooks to run sequentially after commands finish. |
+| Field         | Type                   | Default   | Description                                                   |
+| ------------- | ---------------------- | --------- | ------------------------------------------------------------- |
+| `distFolder`  | `string`               | `dist`    | Output folder used for size reporting and cleanup.            |
+| `deleteDist`  | `boolean`              | `true`    | Whether to delete the dist (output) folder before each build. |
+| `showOutputs` | `boolean`              | `false`   | Whether to display the list of output files.                  |
+| `commands`    | `Array<BuildCommand>`  | see below | Array of build commands.                                      |
+| `after`       | `Array<Promise<void>>` | `[]`      | Post‑build hooks to run sequentially after commands finish.   |
 
 **`BuildCommand` shape:**
 
@@ -795,25 +800,25 @@ refactor(db): improve mongoose connection handling
 
 > Default type: **`update`**
 
-| Type       |     Description                   |
-| ---------- | --------------------------------- |
-| `update`   | 🔧  General update (default)      |
-| `feat`     | ✨  New feature                   |
-| `fix`      | 🐛  Bug fix                       |
+| Type       | Description                          |
+| ---------- | ------------------------------------ |
+| `update`   | 🔧  General update (default)        |
+| `feat`     | ✨  New feature                      |
+| `fix`      | 🐛  Bug fix                         |
 | `chore`    | 🛠️  Maintenance task (e.g., deps) |
-| `refactor` | 🧼  Internal logic change         |
-| `test`     | 🧪  Adding/fixing tests           |
-| `docs`     | 📚  Documentation-only change     |
-| `style`    | 💅  Code formatting, styling etc. |
-| `perf`     | ⚡  Performance improvement       |
-| `ci`       | 🚀  CI-related changes            |
-| `build`    | 🧱  Build system changes          |
-| `revert`   | 🔁  Revert a previous commit      |
-| `release`  | 🔖  Version bump or release       |
-| `deps`     | 📦  Dependency updates            |
-| `cleanup`  | 🧹  Minor cleanup tasks           |
-| `merge`    | 🧭  Merge-related commits         |
-| `Custom`   | ✍️  Manually enter your own       |
+| `refactor` | 🧼  Internal logic change           |
+| `test`     | 🧪  Adding/fixing tests             |
+| `docs`     | 📚  Documentation-only change       |
+| `style`    | 💅  Code formatting, styling etc.   |
+| `perf`     | ⚡  Performance improvement          |
+| `ci`       | 🚀  CI-related changes              |
+| `build`    | 🧱  Build system changes            |
+| `revert`   | 🔁  Revert a previous commit        |
+| `release`  | 🔖  Version bump or release         |
+| `deps`     | 📦  Dependency updates              |
+| `cleanup`  | 🧹  Minor cleanup tasks             |
+| `merge`    | 🧭  Merge-related commits           |
+| `Custom`   | ✍️  Manually enter your own        |
 
 ---
 
