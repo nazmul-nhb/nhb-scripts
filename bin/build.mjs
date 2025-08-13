@@ -15,8 +15,9 @@ import { loadUserConfig } from '../lib/config-loader.mjs';
 import { estimator } from '../lib/estimator.mjs';
 
 /**
- * @typedef {import('execa').Result} Result
- * @typedef {import('../types/index.d.ts').BuildCommand} BuildCommand
+ * @typedef {import('execa').Result} Result;
+ *
+ * @import { BuildCommand } from '../types/index.d.ts';
  */
 
 /**
@@ -46,6 +47,7 @@ const getFileIcon = (filePath) => {
 		commands: cmds = [],
 		deleteDist = true,
 		distFolder = 'dist',
+		showOutputs = false,
 	} = (await loadUserConfig()).build ?? {};
 
 	/** @type {BuildCommand[]} */
@@ -91,12 +93,14 @@ const getFileIcon = (filePath) => {
 			];
 		});
 
-		const lines = rows
-			.map(([left, right]) => `${chalk.cyan('•')} ${left.padEnd(80)}${right}`)
-			.join('\n');
+		if (showOutputs) {
+			const lines = rows
+				.map(([left, right]) => `${chalk.cyan('•')} ${left.padEnd(80)}${right}`)
+				.join('\n');
 
-		// Log Transformed Files
-		note(lines, chalk.green('✓ Transformed Files'));
+			// Log Transformed Files
+			note(lines, chalk.green('✓ Transformed Files'));
+		}
 
 		// Log Total Size and Build Time
 		const totalSizeInKB = roundNumber(totalSize);

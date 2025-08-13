@@ -162,6 +162,8 @@ export interface BuildConfig {
 	distFolder?: string;
 	/** Whether to delete the `dist` (or custom) folder before each build. Defaults to `true`. */
 	deleteDist?: boolean;
+	/** Whether to display output file list. Default is `false`. */
+	showOutputs?: boolean;
 	/** The sequence of commands to run for building. */
 	commands?: BuildCommand[];
 	/** Hooks to run after the build completes. */
