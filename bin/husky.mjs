@@ -32,10 +32,7 @@ async function initHusky() {
 	const cwd = process.cwd();
 
 	const huskyPath = path.join(cwd, '.husky/pre-commit');
-	const huskyContent = `#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-if [ -f "pnpm-lock.yaml" ]; then
+	const huskyContent = `if [ -f "pnpm-lock.yaml" ]; then
   pnpm exec lint-staged
 elif [ -f "yarn.lock" ]; then
   yarn lint-staged
