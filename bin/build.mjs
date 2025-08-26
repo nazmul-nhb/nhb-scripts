@@ -40,7 +40,7 @@ const getFileIcon = (filePath) => {
 
 (async () => {
 	intro(chalk.yellowBright.bold('📦 NHB Build'));
-	addPipeOnLeft();
+	console.info(addPipeOnLeft());
 
 	const {
 		after = [],
