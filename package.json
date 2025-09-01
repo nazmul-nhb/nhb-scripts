@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.8.58",
+  "version": "1.8.59",
   "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/index.d.ts",
   "main": "index.mjs",
@@ -72,7 +72,7 @@
     "execa": "^9.6.0",
     "globby": "^14.1.0",
     "minimist": "^1.2.8",
-    "nhb-toolbox": "^4.14.13",
+    "nhb-toolbox": "^4.20.16",
     "progress-estimator": "^0.3.1",
     "rimraf": "^6.0.1",
     "semver": "^7.7.2",
