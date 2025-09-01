@@ -18,8 +18,6 @@ import {
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { generateModule } from '../lib/module-generator.mjs';
 
-/** @typedef {import('../types/index.d.ts').ModuleConfig} ModuleConfig */
-
 const argv = minimist(process.argv.slice(2), {
 	string: ['template', 'name', 'destination'],
 	boolean: ['force', 'create-folder'],
