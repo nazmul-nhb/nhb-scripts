@@ -14,7 +14,7 @@ export default defineScriptConfig({
 		ignorePath: '.prettierignore',
 	},
 	commit: {
-		runFormatter: true,
+		runFormatter: false,
 	},
 	count: {
 		defaultPath: 'lib',
