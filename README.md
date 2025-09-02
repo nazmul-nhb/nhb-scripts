@@ -733,7 +733,7 @@ A simple, interactive CLI to:
 
 - Safely bump the package version (`package.json`)
 - Add a **conventional typed Git commit message** (with optional scope)
-- Automatically commit and push
+- Automatically commit and push (will ask for permission to push to the remote repository)
 
 This ensures your version bumps and commit messages are semver-valid, consistent, and expressive.
 
@@ -775,6 +775,12 @@ pnpm nhb-commit
    ```bash
    git add .
    git commit -m "<type>(<scope>): <message>"
+   ```
+
+7. Ask for push permission (defaults to `Yes`).
+8. Runs:
+
+   ```bash
    git push
    ```
 
@@ -827,14 +833,16 @@ refactor(db): improve mongoose connection handling
 ```bash
 ? Current version: 1.3.4
 ? Enter new version (or press Enter to keep): 1.4.0
-? Select commit type: Custom
-? Enter custom commit type: infra
+? Select commit type: Predefined type or a custom one
+? Enter custom commit type: update/fix etc. or infra (whatever custom type you want)
 ? Enter commit scope (optional): devops
 ? Enter commit message (required): configure docker build
 
 ✔ Commit message → infra(devops): configure docker build
 ✔ Version updated to 1.4.0
-✔ Committed and pushed!
+✔ Committed successfully 
+? Ask for push permission (defaults to 'Yes')!
+✔ Pushed successfully!
 ```
 
 ---
