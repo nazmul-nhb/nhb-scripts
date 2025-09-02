@@ -64,7 +64,7 @@ export async function commitAndPush(message, version) {
 		const shouldPush = normalizeBooleanResult(
 			await confirm({
 				message: chalk.yellow(`❔ Push to remote repository?`),
-				initialValue: false,
+				initialValue: true,
 			})
 		);
 
