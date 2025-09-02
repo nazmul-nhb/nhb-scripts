@@ -8,7 +8,9 @@ import chalk from 'chalk';
 import { execa } from 'execa';
 import semver from 'semver';
 
+import { confirm } from '@clack/prompts';
 import {
+	addPipeOnLeft,
 	mimicClack,
 	normalizeBooleanResult,
 	normalizeStringResult,
@@ -17,7 +19,6 @@ import {
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { parsePackageJson, writeToPackageJson } from '../lib/package-json-utils.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
-import { confirm } from '@clack/prompts';
 
 /**
  * * Updates version in package.json
@@ -41,7 +42,8 @@ async function updateVersion(newVersion) {
 export async function commitAndPush(message, version) {
 	const s = spinner();
 
-	s.start(chalk.blue('📤 Committing & pushing changes'));
+	s.start(chalk.blue('📤 Changes are committing'));
+	console.info(addPipeOnLeft());
 
 	try {
 		await execa('git', ['add', '.']);
@@ -55,14 +57,14 @@ export async function commitAndPush(message, version) {
 				.map((line) => chalk.cyan('• ') + line?.trim())
 				.join('\n');
 
-			note(commitLines, chalk.magenta('✓ Commit Summary'));
+			note(commitLines, chalk.magenta('📤 Commit Summary'));
 		}
 
 		s.stop(chalk.green('✅ Changes are committed successfully!'));
 
 		const shouldPush = normalizeBooleanResult(
 			await confirm({
-				message: chalk.yellow(`Push to remote repository?`),
+				message: chalk.yellow(`❔ Push to remote repository?`),
 				initialValue: false,
 			})
 		);
@@ -79,10 +81,14 @@ export async function commitAndPush(message, version) {
 					.map((line) => chalk.cyan('• ') + line?.trim())
 					.join('\n');
 
-				note(lines, chalk.magenta('✓ Git Summary'));
+				note(lines, chalk.magenta('📌 Push Summary'));
 			}
 
 			outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
+		} else {
+			outro(
+				chalk.green(`🚀 Version ${version} committed with message: "${message}"`)
+			);
 		}
 	} catch (err) {
 		s.stop(chalk.red('🛑 Commit or push failed!'));
