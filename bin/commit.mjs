@@ -10,12 +10,14 @@ import semver from 'semver';
 
 import {
 	mimicClack,
+	normalizeBooleanResult,
 	normalizeStringResult,
 	validateStringInput,
 } from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { parsePackageJson, writeToPackageJson } from '../lib/package-json-utils.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
+import { confirm } from '@clack/prompts';
 
 /**
  * * Updates version in package.json
@@ -56,25 +58,32 @@ export async function commitAndPush(message, version) {
 			note(commitLines, chalk.magenta('✓ Commit Summary'));
 		}
 
-		const { stdout, stderr } = await execa('git', ['push', '--verbose']);
+		s.stop(chalk.green('✅ Changes are committed successfully!'));
 
-		const pushOut = (stdout + '\n' + stderr)?.trim();
-
-		if (pushOut) {
-			const lines = pushOut
-				?.split('\n')
-				.filter(Boolean)
-				.map((line) => chalk.cyan('• ') + line?.trim())
-				.join('\n');
-
-			note(lines, chalk.magenta('✓ Git Summary'));
-		}
-
-		s.stop(
-			chalk.green('✅ Changes are committed and pushed to the remote repository!')
+		const shouldPush = normalizeBooleanResult(
+			await confirm({
+				message: chalk.yellow(`Push to remote repository?`),
+				initialValue: false,
+			})
 		);
 
-		outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
+		if (shouldPush) {
+			const { stdout, stderr } = await execa('git', ['push', '--verbose']);
+
+			const pushOut = (stdout + '\n' + stderr)?.trim();
+
+			if (pushOut) {
+				const lines = pushOut
+					?.split('\n')
+					.filter(Boolean)
+					.map((line) => chalk.cyan('• ') + line?.trim())
+					.join('\n');
+
+				note(lines, chalk.magenta('✓ Git Summary'));
+			}
+
+			outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
+		}
 	} catch (err) {
 		s.stop(chalk.red('🛑 Commit or push failed!'));
 		console.error(chalk.red(err));
