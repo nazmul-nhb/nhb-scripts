@@ -43,7 +43,6 @@ export async function commitAndPush(message, version) {
 	const s = spinner();
 
 	s.start(chalk.blue('📤 Changes are committing'));
-	console.info(addPipeOnLeft());
 
 	try {
 		await execa('git', ['add', '.']);
@@ -70,6 +69,10 @@ export async function commitAndPush(message, version) {
 		);
 
 		if (shouldPush) {
+			const s2 = spinner();
+
+			s2.start(chalk.blue('📌 Pushing to remote repository'));
+
 			const { stdout, stderr } = await execa('git', ['push', '--verbose']);
 
 			const pushOut = (stdout + '\n' + stderr)?.trim();
@@ -83,6 +86,8 @@ export async function commitAndPush(message, version) {
 
 				note(lines, chalk.magenta('📌 Push Summary'));
 			}
+
+			s2.stop(chalk.green('✅ Changes are pushed successfully!'));
 
 			outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
 		} else {
