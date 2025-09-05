@@ -385,7 +385,15 @@ module: {
             files: (moduleName) => [
                 { name: `${moduleName}.controllers.ts`, content: `// controllers for ${moduleName}` },
                 { name: `${moduleName}.services.ts`, content: `// services for ${moduleName}` }
-            ]
+            ],
+            // Runs before this specific module generation (Optional)
+            onGenerate(name) {
+                Stylog.ansi16('yellow').bold.log(`${name} Started!`);
+            },
+            // Runs after this specific module generation (Optional)
+            onComplete(name) {
+                Stylog.ansi16('green').bold.log(`${name} Completed!`);
+            },
         },
         'my_template2': {
             destination: 'src/features', // optional, will prioritize inputs from cli
@@ -396,7 +404,7 @@ module: {
             ]
         },
     },
-    // Optional hooks to inspect or execute something at the beginning or after the module generation
+    // Optional hooks to inspect or execute something at the beginning or after the module generation (runs for all templates)
     hooks: {
         onGenerate(name) {
             console.log('➡️  Generating:', name);
