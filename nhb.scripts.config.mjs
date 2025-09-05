@@ -1,5 +1,6 @@
 // @ts-check
 
+import { Stylog } from 'nhb-toolbox/stylog';
 import {
 	defineScriptConfig,
 	expressMongooseZodTemplate,
@@ -66,6 +67,9 @@ export default defineScriptConfig({
 						content: `// services for ${moduleName}`,
 					},
 				],
+				onComplete(name) {
+					Stylog.ansi16('green').bold.log(`${name} Completed!`);
+				},
 			},
 			my_template2: {
 				destination: 'src/features', // optional, will prioritize inputs from cli

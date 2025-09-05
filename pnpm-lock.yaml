@@ -24,8 +24,8 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8
       nhb-toolbox:
-        specifier: ^4.20.16
-        version: 4.20.16
+        specifier: ^4.20.20
+        version: 4.20.20
       progress-estimator:
         specifier: ^0.3.1
         version: 0.3.1
@@ -43,17 +43,17 @@ importers:
         version: 5.9.2
     devDependencies:
       '@types/node':
-        specifier: ^24.3.0
-        version: 24.3.0
+        specifier: ^24.3.1
+        version: 24.3.1
       '@types/semver':
-        specifier: ^7.7.0
-        version: 7.7.0
+        specifier: ^7.7.1
+        version: 7.7.1
       husky:
         specifier: ^9.1.7
         version: 9.1.7
       lint-staged:
-        specifier: ^16.1.5
-        version: 16.1.5
+        specifier: ^16.1.6
+        version: 16.1.6
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -101,11 +101,11 @@ packages:
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
 
-  '@types/node@24.3.0':
-    resolution: {integrity: sha512-aPTXCrfwnDLj4VvXrm+UUCQjNEvJgNA8s5F1cvwQU+3KNltTOkBm1j30uNLyqqPNe7gE3KFzImYoZEfLhp4Yow==}
+  '@types/node@24.3.1':
+    resolution: {integrity: sha512-3vXmQDXy+woz+gnrTvuvNrPzekOi+Ds0ReMxw0LzBiK3a+1k0kQn9f2NWk+lgD4rJehFUmYy2gMhJ2ZI+7YP9g==}
 
-  '@types/semver@7.7.0':
-    resolution: {integrity: sha512-k107IF4+Xr7UHjwDc7Cfd6PRQfbdkiRabXGRjo07b4WyPahFBZCZ1sE+BNxYIJPPg73UkfOsVOLwqVc/6ETrIA==}
+  '@types/semver@7.7.1':
+    resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
   ansi-escapes@3.2.0:
     resolution: {integrity: sha512-cBhpre4ma+U0T1oM5fXg7Dy1Jw7zzwv7lt/GoCpr+hDQJoYnKVPLL4dCvSEFMmQurOQvSrwT7SL/DAlhBI97RQ==}
@@ -203,8 +203,8 @@ packages:
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
-  emoji-regex@10.4.0:
-    resolution: {integrity: sha512-EC+0oUMY1Rqm4O6LLrgjtYDvcVYTy7chDnM4Q7030tP4Kwj3u/pR6gP9ygnp2CJMK5Gq+9Q2oqmrFJAz01DXjw==}
+  emoji-regex@10.5.0:
+    resolution: {integrity: sha512-lb49vf1Xzfx080OKA0o6l8DQQpV+6Vg95zyCJX9VB/BqKYlhG7N4wgROUUHRA+ZPUefLnteQOad7z1kT2bV7bg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -246,8 +246,8 @@ packages:
     resolution: {integrity: sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==}
     engines: {node: '>=14'}
 
-  get-east-asian-width@1.3.0:
-    resolution: {integrity: sha512-vpeMIQKxczTD/0s2CdEWHcb0eeJe6TFjxb+J5xgX7hScxqrGuyjmv4c1D4A/gelKfyox0gJJwIHF+fLjeaM8kQ==}
+  get-east-asian-width@1.3.1:
+    resolution: {integrity: sha512-R1QfovbPsKmosqTnPoRFiJ7CF9MLRgb53ChvMZm+r4p76/+8yKDy17qLL2PKInORy2RkZZekuK0efYgmzTkXyQ==}
     engines: {node: '>=18'}
 
   get-stream@9.0.1:
@@ -303,8 +303,8 @@ packages:
     resolution: {integrity: sha512-O4L094N2/dZ7xqVdrXhh9r1KODPJpFms8B5sGdJLPy664AgvXsreZUyCQQNItZRDlYug4xStLjNp/sz3HvBowQ==}
     engines: {node: '>=12'}
 
-  is-fullwidth-code-point@5.0.0:
-    resolution: {integrity: sha512-OVa3u9kkBbw7b8Xw5F9P+D/T9X+Z4+JruYVNapTjPYZYUznQ5YfWeFkOj606XYYW8yugTfC8Pj0hYqvi4ryAhA==}
+  is-fullwidth-code-point@5.1.0:
+    resolution: {integrity: sha512-5XHYaSyiqADb4RnZ1Bdad6cPp8Toise4TzEjcOYDHZkTCbKgiUl7WTUCpNWHuxmDt91wnsZBc9xinNzopv3JMQ==}
     engines: {node: '>=18'}
 
   is-glob@4.0.3:
@@ -338,13 +338,13 @@ packages:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
 
-  lint-staged@16.1.5:
-    resolution: {integrity: sha512-uAeQQwByI6dfV7wpt/gVqg+jAPaSp8WwOA8kKC/dv1qw14oGpnpAisY65ibGHUGDUv0rYaZ8CAJZ/1U8hUvC2A==}
+  lint-staged@16.1.6:
+    resolution: {integrity: sha512-U4kuulU3CKIytlkLlaHcGgKscNfJPNTiDF2avIUGFCv7K95/DCYQ7Ra62ydeRWmgQGg9zJYw2dzdbztwJlqrow==}
     engines: {node: '>=20.17'}
     hasBin: true
 
-  listr2@9.0.2:
-    resolution: {integrity: sha512-VVd7cS6W+vLJu2wmq4QmfVj14Iep7cz4r/OWNk36Aq5ZOY7G8/BfCrQFexcwB1OIxB3yERiePfE/REBjEFulag==}
+  listr2@9.0.3:
+    resolution: {integrity: sha512-0aeh5HHHgmq1KRdMMDHfhMWQmIT/m7nRDTlxlFqni2Sp0had9baqsjJRvDGdlvgd6NmPE0nPloOipiQJGFtTHQ==}
     engines: {node: '>=20.0.0'}
 
   log-update@2.3.0:
@@ -355,8 +355,8 @@ packages:
     resolution: {integrity: sha512-9ie8ItPR6tjY5uYJh8K/Zrv/RMZ5VOlOWvtZdEHYSTFKZfIBPQa9tOAEeAWhd+AnIneLJ22w5fjOYtoutpWq5w==}
     engines: {node: '>=18'}
 
-  lru-cache@11.1.0:
-    resolution: {integrity: sha512-QIXZUBJUx+2zHUdQujWejBkcD9+cs94tLn0+YL8UrCh+D5sCXZ4c7LaEH48pNwRY3MLDgqUFyhlCyjJPf1WP0A==}
+  lru-cache@11.2.1:
+    resolution: {integrity: sha512-r8LA6i4LP4EeWOhqBaZZjDWwehd1xUJPCJd9Sv300H0ZmcUER4+JPh7bqqZeqs1o5pgtgvXm+d9UGrB5zZGDiQ==}
     engines: {node: 20 || >=22}
 
   merge2@1.4.1:
@@ -389,12 +389,12 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  nano-spawn@1.0.2:
-    resolution: {integrity: sha512-21t+ozMQDAL/UGgQVBbZ/xXvNO10++ZPuTmKRO8k9V3AClVRht49ahtDjfY8l1q6nSHOrE5ASfthzH3ol6R/hg==}
+  nano-spawn@1.0.3:
+    resolution: {integrity: sha512-jtpsQDetTnvS2Ts1fiRdci5rx0VYws5jGyC+4IYOTnIQ/wwdf6JdomlHBwqC3bJYOvaKu0C2GSZ1A60anrYpaA==}
     engines: {node: '>=20.17'}
 
-  nhb-toolbox@4.20.16:
-    resolution: {integrity: sha512-IifI/ddRkdMMQb+7Mbcs/teDsVQHTgzCj9tYqD3r5q4Hw2cep7IoFI7beLWKENWVjZUHexzH5ebrmXxsWJGxvg==}
+  nhb-toolbox@4.20.20:
+    resolution: {integrity: sha512-FqRmkkf+qfH9lxX9Obf/QE6Sfki70/MyTUk0gEdePdWxPjVAXDQs21dmaTwVuRPJdIW/DmvVHdy7G/9ZX8mLIw==}
 
   npm-run-path@6.0.0:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
@@ -652,11 +652,11 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
-  '@types/node@24.3.0':
+  '@types/node@24.3.1':
     dependencies:
       undici-types: 7.10.0
 
-  '@types/semver@7.7.0': {}
+  '@types/semver@7.7.1': {}
 
   ansi-escapes@3.2.0: {}
 
@@ -735,7 +735,7 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
-  emoji-regex@10.4.0: {}
+  emoji-regex@10.5.0: {}
 
   emoji-regex@8.0.0: {}
 
@@ -787,7 +787,7 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
-  get-east-asian-width@1.3.0: {}
+  get-east-asian-width@1.3.1: {}
 
   get-stream@9.0.1:
     dependencies:
@@ -834,9 +834,9 @@ snapshots:
 
   is-fullwidth-code-point@4.0.0: {}
 
-  is-fullwidth-code-point@5.0.0:
+  is-fullwidth-code-point@5.1.0:
     dependencies:
-      get-east-asian-width: 1.3.0
+      get-east-asian-width: 1.3.1
 
   is-glob@4.0.3:
     dependencies:
@@ -858,22 +858,22 @@ snapshots:
 
   lilconfig@3.1.3: {}
 
-  lint-staged@16.1.5:
+  lint-staged@16.1.6:
     dependencies:
       chalk: 5.6.0
       commander: 14.0.0
       debug: 4.4.1
       lilconfig: 3.1.3
-      listr2: 9.0.2
+      listr2: 9.0.3
       micromatch: 4.0.8
-      nano-spawn: 1.0.2
+      nano-spawn: 1.0.3
       pidtree: 0.6.0
       string-argv: 0.3.2
       yaml: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  listr2@9.0.2:
+  listr2@9.0.3:
     dependencies:
       cli-truncate: 4.0.0
       colorette: 2.0.20
@@ -896,7 +896,7 @@ snapshots:
       strip-ansi: 7.1.0
       wrap-ansi: 9.0.0
 
-  lru-cache@11.1.0: {}
+  lru-cache@11.2.1: {}
 
   merge2@1.4.1: {}
 
@@ -919,9 +919,9 @@ snapshots:
 
   ms@2.1.3: {}
 
-  nano-spawn@1.0.2: {}
+  nano-spawn@1.0.3: {}
 
-  nhb-toolbox@4.20.16: {}
+  nhb-toolbox@4.20.20: {}
 
   npm-run-path@6.0.0:
     dependencies:
@@ -946,7 +946,7 @@ snapshots:
 
   path-scurry@2.0.0:
     dependencies:
-      lru-cache: 11.1.0
+      lru-cache: 11.2.1
       minipass: 7.1.2
 
   path-type@6.0.0: {}
@@ -1019,7 +1019,7 @@ snapshots:
   slice-ansi@7.1.0:
     dependencies:
       ansi-styles: 6.2.1
-      is-fullwidth-code-point: 5.0.0
+      is-fullwidth-code-point: 5.1.0
 
   string-argv@0.3.2: {}
 
@@ -1042,8 +1042,8 @@ snapshots:
 
   string-width@7.2.0:
     dependencies:
-      emoji-regex: 10.4.0
-      get-east-asian-width: 1.3.0
+      emoji-regex: 10.5.0
+      get-east-asian-width: 1.3.1
       strip-ansi: 7.1.0
 
   strip-ansi@4.0.0:

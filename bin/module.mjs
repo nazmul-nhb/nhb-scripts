@@ -183,6 +183,9 @@ async function createModule() {
 		config.force = /** @type {boolean} */ argv.force || false;
 	}
 
+	// ! Run Template `onGenerate` Hook
+	tpl?.onGenerate?.(moduleName);
+	// ? Run Module `onGenerate` Hook
 	config.hooks?.onGenerate?.(moduleName);
 
 	if (template) {
@@ -191,6 +194,9 @@ async function createModule() {
 
 	await generateModule(moduleName, config);
 
+	// ! Run Template `onComplete` Hook
+	tpl?.onComplete?.(moduleName);
+	// ? Run Module `onComplete` Hook
 	config.hooks?.onComplete?.(moduleName);
 }
 

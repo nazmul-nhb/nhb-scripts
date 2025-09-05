@@ -46,7 +46,7 @@ export type FileGenerator = (
 ) => FileEntry[];
 
 /** * Custom template definition for module scaffolding. */
-export interface CustomTemplate {
+export interface CustomTemplate extends ModuleHooks {
 	/**
 	 * Optional path where the module should be generated.
 	 *
@@ -92,7 +92,7 @@ export interface ModuleConfig {
 	createFolder?: boolean;
 	/**  Record of custom template definitions */
 	templates: Record<string, CustomTemplate>;
-	/** Optional lifecycle hook functions */
+	/** Optional lifecycle hook functions that run before and after module generation */
 	hooks?: ModuleHooks;
 	/** Forcefully create a module even if it already exists */
 	force?: boolean;
@@ -134,7 +134,7 @@ export interface FormatConfig {
 
 /** User configuration for `nhb-commit` script. */
 export interface CommitConfig {
-	/** Run Prettier formatter before committing */
+	/** Run Prettier formatter before committing. Default is `false`. */
 	runFormatter?: boolean;
 }
 
