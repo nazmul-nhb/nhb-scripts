@@ -1,5 +1,6 @@
 import type { Options as ExecaOptions } from 'execa';
 import type { AsyncFunction, VoidFunction } from 'nhb-toolbox/types';
+import type { PackageJson } from 'type-fest';
 
 /**
  * A single file definition to be generated as part of a module.
@@ -136,9 +137,9 @@ export interface FormatConfig {
 export interface CommitConfig {
 	/** Run Prettier formatter before committing. Default is `false`. */
 	runFormatter?: boolean;
-	/** Pre-hook to run before commit and push. */
+	/** Pre-hook to run before committing. */
 	runBefore?: () => void;
-	/** Post-hook to run after commit and push. */
+	/** Post-hook to run after committing. */
 	runAfter?: () => void;
 }
 
@@ -344,3 +345,23 @@ export declare function updateCollection(moduleName: string): void;
  * @remarks Intended to be used with the `onComplete` hook of the `nhb-module` script.
  */
 export declare function updateRoutes(moduleName: string, useAlias?: boolean): void;
+
+/**
+ * * Parse `package.json` and read its content.
+ * @returns Content from `package.json`.
+ */
+export declare function parsePackageJson(): PackageJson;
+
+/**
+ * * Rewrite the `package.json`.
+ * @param pkg Content for `package.json`.
+ * @remarks The process overwrites all properties. For updating existing `package.json` first parse existing one and reassign value(s) for specific key(s).
+ *
+ * @example
+ * const pkg = parsePackageJson();
+ *
+ * pkg.name = 'my-project';
+ *
+ * await writeToPackageJson(pkg);
+ */
+export declare function writeToPackageJson(pkg: PackageJson): Promise<void>;

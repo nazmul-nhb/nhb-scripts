@@ -16,12 +16,12 @@ export default defineScriptConfig({
 	},
 	commit: {
 		runFormatter: false,
-		runBefore: () => {
-			console.log('Pre-hook is called...');
-		},
-		runAfter: () => {
-			console.log('Post-hook is called...');
-		},
+		// runBefore: () => {
+		// 	console.log('Pre-hook is called...');
+		// },
+		// runAfter: () => {
+		// 	console.log('Post-hook is called...');
+		// },
 	},
 	count: {
 		defaultPath: 'lib',
