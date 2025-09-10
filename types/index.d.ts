@@ -136,6 +136,10 @@ export interface FormatConfig {
 export interface CommitConfig {
 	/** Run Prettier formatter before committing. Default is `false`. */
 	runFormatter?: boolean;
+	/** Pre-hook to run before commit and push. */
+	runBefore?: () => void;
+	/** Post-hook to run after commit and push. */
+	runAfter?: () => void;
 }
 
 /** User configuration for `nhb-count` script.*/

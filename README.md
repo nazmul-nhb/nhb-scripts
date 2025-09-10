@@ -884,7 +884,13 @@ In `nhb.scripts.config.mjs`:
 
 ```js
 commit: {
-    runFormatter: false // set true to run Prettier before committing
+    runFormatter: false, // set true to run Prettier before committing
+    runBefore: () => {
+      console.log('Pre-hook is called...')
+    },
+    runAfter: () => {
+      console.log('Post-hook is called...')
+    },
 }
 ```
 
@@ -892,9 +898,11 @@ commit: {
 
 #### 📌 Available Options
 
-| Option         | Type    | Default | Description                                                  |
-| -------------- | ------- | ------- | ------------------------------------------------------------ |
-| `runFormatter` | boolean | `false` | Whether to **automatically run Prettier** before committing. |
+| Option         | Type     | Default     | Description                                                  |
+| -------------- | -------- | ----------- | ------------------------------------------------------------ |
+| `runFormatter` | boolean  | `false`     | Whether to **automatically run Prettier** before committing. |
+| `runBefore`    | Function | `undefined` | Whether to **automatically run pre-hook** before committing. |
+| `runAfter`     | Function | `undefined` | Whether to **automatically run post-hook** after committing. |
 
 ---
 

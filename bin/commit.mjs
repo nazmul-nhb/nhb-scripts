@@ -10,7 +10,6 @@ import semver from 'semver';
 
 import { confirm } from '@clack/prompts';
 import {
-	addPipeOnLeft,
 	mimicClack,
 	normalizeBooleanResult,
 	normalizeStringResult,
@@ -219,11 +218,15 @@ async function finalPush() {
 		await updateVersion(version);
 	}
 
+	config?.runBefore?.();
+
 	if (config.runFormatter) {
 		await runFormatter();
 	}
 
 	await commitAndPush(formattedMessage, version);
+
+	config?.runAfter?.();
 }
 
 finalPush().catch((err) => {
