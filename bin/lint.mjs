@@ -36,11 +36,9 @@ import { checkEslintDeps, ensureEslintConfig } from '../lib/lint-helpers.mjs';
 		const s = spinner();
 		s.start(chalk.magenta(`Linting Your Code in ${folders.join(', ')}`));
 
-		const { stdout, stderr } = await execa(
-			'eslint',
-			[...folders, '--config', configFile],
-			{ reject: false }
-		);
+		const { stdout, stderr } = await execa('eslint', [...folders, '--config', configFile], {
+			reject: false,
+		});
 
 		const lintOut = (stdout + '\n' + stderr)?.trim();
 

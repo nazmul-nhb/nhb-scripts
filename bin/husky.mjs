@@ -70,9 +70,7 @@ function isHuskyInstalled() {
 		const pkg = parsePackageJson();
 
 		return Boolean(
-			(pkg.dependencies &&
-				pkg.dependencies.husky &&
-				pkg.dependencies?.['lint-staged']) ||
+			(pkg.dependencies && pkg.dependencies.husky && pkg.dependencies?.['lint-staged']) ||
 				(pkg.devDependencies &&
 					pkg.devDependencies.husky &&
 					pkg.devDependencies?.['lint-staged'])

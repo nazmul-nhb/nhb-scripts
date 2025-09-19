@@ -190,9 +190,7 @@ async function browseDir(dir, rootDir = dir, parentDir = null) {
 		if (contents.length === 0) {
 			const confirmEmpty = normalizeBooleanResult(
 				await confirm({
-					message: chalk.red(
-						`🗑 "${path.basename(basePath)}" is empty. Delete it?`
-					),
+					message: chalk.red(`🗑 "${path.basename(basePath)}" is empty. Delete it?`),
 					initialValue: true,
 				})
 			);

@@ -86,11 +86,7 @@ async function countExports(filePath) {
 				tsModule.isTypeAliasDeclaration(node) ||
 				tsModule.isVariableStatement(node)
 			) {
-				if (
-					node.modifiers?.some(
-						(m) => m.kind === tsModule.SyntaxKind.ExportKeyword
-					)
-				) {
+				if (node.modifiers?.some((m) => m.kind === tsModule.SyntaxKind.ExportKeyword)) {
 					if (
 						node.modifiers.some(
 							(m) => m.kind === tsModule.SyntaxKind.DefaultKeyword

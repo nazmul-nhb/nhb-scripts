@@ -90,9 +90,7 @@ export async function commitAndPush(message, version) {
 
 			outro(chalk.green(`🚀 Version ${version} pushed with message: "${message}"`));
 		} else {
-			outro(
-				chalk.green(`🚀 Version ${version} committed with message: "${message}"`)
-			);
+			outro(chalk.green(`🚀 Version ${version} committed with message: "${message}"`));
 		}
 	} catch (err) {
 		s.stop(chalk.red('🛑 Commit or push failed!'));
@@ -143,9 +141,7 @@ async function finalPush() {
 		}
 
 		if (!isValidVersion(version, oldVersion)) {
-			mimicClack(
-				chalk.red('🛑 Invalid or older version. Use valid semver like 1.2.3')
-			);
+			mimicClack(chalk.red('🛑 Invalid or older version. Use valid semver like 1.2.3'));
 			continue;
 		}
 

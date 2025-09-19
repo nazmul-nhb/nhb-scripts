@@ -136,8 +136,7 @@ async function createModule() {
 		);
 	}
 
-	const moduleName =
-		/** @type {string} */ (argv.name) || (await getModuleNameFromPrompt());
+	const moduleName = /** @type {string} */ (argv.name) || (await getModuleNameFromPrompt());
 
 	if (!moduleName) {
 		showCancelMessage('🛑 Module name is required!');
@@ -149,13 +148,10 @@ async function createModule() {
 
 	const dest =
 		template ?
-			config.templates?.[template]?.destination ||
-			config?.destination ||
-			'src/modules'
+			config.templates?.[template]?.destination || config?.destination || 'src/modules'
 		:	'src/modules';
 
-	const destination =
-		/** @type {string} */ (argv.destination) || (await getSourcePath(dest));
+	const destination = /** @type {string} */ (argv.destination) || (await getSourcePath(dest));
 	config.destination = destination;
 
 	const tpl = config.templates?.[template ?? ''];
@@ -169,9 +165,7 @@ async function createModule() {
 	config.createFolder = shouldCreateFolder;
 
 	const modulePath =
-		shouldCreateFolder ?
-			path.resolve(destination, moduleName)
-		:	path.resolve(destination);
+		shouldCreateFolder ? path.resolve(destination, moduleName) : path.resolve(destination);
 
 	if (existsSync(modulePath) && !argv.force && !config.force) {
 		const shouldOverwrite = await askOverwrite(modulePath);
