@@ -675,10 +675,10 @@ pnpm nhb-build
 
 ### ✅ Example Output
 
-```bash
+```md
 📦 Build Your Application
 ─────────────────────────────────────────────
-Building...
+Building Your Application...
 
 ✓ Transformed Files:
 🟨 dist/esm/index.js                              3.20 kB
