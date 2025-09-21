@@ -900,12 +900,14 @@ In `nhb.scripts.config.mjs`:
 commit: {
     runFormatter: false, // Set `true` to run Prettier before committing
     /** Wrap the prefix with custom symbols or any string, e.g. "*" makes the prefix looks like "*type(scope):* your commit message". Default is empty string. */
-    wrapPrefixWith?: string;
+    wrapPrefixWith: "`";
     /** Whether to prepend the corresponding emoji before the commit type prefix (applied only for the default ones). Default is `false`. */
     emojiBeforePrefix: true, // Omit `emojiBeforePrefix` to use default `false`.
+    /** Pre-hook to run before commit and after version change. */
     runBefore: () => {
       console.log('Pre-hook is called...')
     },
+    /** Post-hook to run after commit and/or push. */
     runAfter: () => {
       console.log('Post-hook is called...')
     },
