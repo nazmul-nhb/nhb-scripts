@@ -24,8 +24,8 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8
       nhb-toolbox:
-        specifier: ^4.20.40
-        version: 4.20.40
+        specifier: ^4.20.44
+        version: 4.20.44
       progress-estimator:
         specifier: ^0.3.1
         version: 0.3.1
@@ -389,8 +389,8 @@ packages:
     resolution: {integrity: sha512-jtpsQDetTnvS2Ts1fiRdci5rx0VYws5jGyC+4IYOTnIQ/wwdf6JdomlHBwqC3bJYOvaKu0C2GSZ1A60anrYpaA==}
     engines: {node: '>=20.17'}
 
-  nhb-toolbox@4.20.40:
-    resolution: {integrity: sha512-5IhpitsezWvaXn2H7sF9XiZ/NId1Q4wfgrqs3E0GxRwkCnPzaET+nyE+ZIfdca+FQTSaQX6M7m0cckG+jnnKcQ==}
+  nhb-toolbox@4.20.44:
+    resolution: {integrity: sha512-oPlSrw9P0Dx07//OlxeH7zJfUR7fnb83c2d6Ymcyckm0Ov/V748QSwFwGzc3ik8p0RbP0pLwTdko+b1Rcm43Qw==}
 
   npm-run-path@6.0.0:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
@@ -919,7 +919,7 @@ snapshots:
 
   nano-spawn@1.0.3: {}
 
-  nhb-toolbox@4.20.40: {}
+  nhb-toolbox@4.20.44: {}
 
   npm-run-path@6.0.0:
     dependencies:
