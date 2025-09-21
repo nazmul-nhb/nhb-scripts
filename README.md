@@ -144,13 +144,17 @@ yarn add -D nhb-scripts
       fix: { folders: ['src'], patterns: ['**/*.ts'] }, // Optional, these are defaults
       commit: {
           /** Run Prettier formatter before committing. Default is `false`. */
-          runFormatter?: boolean;
+          runFormatter: true,
           /** Pre-hook to run before commit and after version change. */
-          runBefore?: () => void;
+          runBefore: () => {
+            // Your logic here
+          },
           /** Post-hook to run after commit and/or push. */
-          runAfter?: () => void;
+          runAfter: () => {
+            // Your logic here
+          },
           /** Wrap the prefix with custom symbols or any string, e.g. `"*"` makes the prefix looks like `"*type(scope):* your commit message"`. Default is empty string. */
-          wrapPrefixWith?: string;
+          wrapPrefixWith: "`";
       },
       count: {
           defaultPath: '.', // default path to scan

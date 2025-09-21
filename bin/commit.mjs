@@ -119,8 +119,9 @@ async function runCommitPushFlow() {
 	const {
 		runBefore,
 		runAfter,
-		runFormatter: shouldFormat,
-		wrapPrefixWith = '',
+		emojiBeforePrefix = false,
+		runFormatter: shouldFormat = false,
+		wrapPrefixWith: wrapPrefixWith = '',
 	} = (await loadUserConfig()).commit ?? {};
 
 	mimicClack(`Current version: ${chalk.yellow(oldVersion)}`);
@@ -181,7 +182,11 @@ async function runCommitPushFlow() {
 		})
 	);
 
-	let finalType = typeResult;
+	let finalType =
+		(emojiBeforePrefix && typeResult !== '__custom__' ?
+			`${typeChoices.find((type) => type.value === typeResult)?.label?.charAt(0) ?? ''} `
+		:	'') + typeResult;
+
 	if (typeResult === '__custom__') {
 		const customType = normalizeStringResult(
 			await text({

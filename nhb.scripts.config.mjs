@@ -17,6 +17,7 @@ export default defineScriptConfig({
 	commit: {
 		runFormatter: false,
 		wrapPrefixWith: '`',
+		emojiBeforePrefix: true,
 		// runBefore: () => {
 		// 	console.log('Pre-hook is called...');
 		// },

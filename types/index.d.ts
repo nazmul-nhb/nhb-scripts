@@ -143,6 +143,8 @@ export interface CommitConfig {
 	runAfter?: () => void;
 	/** Wrap the prefix with custom symbols or any string, e.g. `"*"` makes the prefix looks like `"*type(scope):* your commit message"`. Default is empty string. */
 	wrapPrefixWith?: string;
+	/** Whether to prepend the corresponding emoji before the commit type prefix (applied only for the default ones). Default is `false`. */
+	emojiBeforePrefix?: boolean;
 }
 
 /** User configuration for `nhb-count` script.*/
