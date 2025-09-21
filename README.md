@@ -916,11 +916,13 @@ commit: {
 
 #### 📌 Available Options
 
-| Option         | Type     | Default     | Description                                                  |
-| -------------- | -------- | ----------- | ------------------------------------------------------------ |
-| `runFormatter` | boolean  | `false`     | Whether to **automatically run Prettier** before committing. |
-| `runBefore`    | Function | `undefined` | Whether to **automatically run pre-hook** before committing. |
-| `runAfter`     | Function | `undefined` | Whether to **automatically run post-hook** after committing. |
+| Option              | Type     | Default     | Description                                                                   |
+| ------------------- | -------- | ----------- | ----------------------------------------------------------------------------- |
+| `runFormatter`      | boolean  | `false`     | Whether to **automatically run Prettier** before committing.                  |
+| `runBefore`         | Function | `undefined` | Whether to **automatically run pre-hook** before committing.                  |
+| `runAfter`          | Function | `undefined` | Whether to **automatically run post-hook** after committing.                  |
+| `wrapPrefixWith`    | string   | `""`        | **Wrap** *the prefix with custom symbols or any string.*                      |
+| `emojiBeforePrefix` | boolean  | `false`     | Whether to **prepend the corresponding emoji before the commit type prefix**. |
 
 ---
 
