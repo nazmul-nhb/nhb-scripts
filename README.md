@@ -155,6 +155,9 @@ yarn add -D nhb-scripts
           },
           /** Wrap the prefix with custom symbols or any string, e.g. `"*"` makes the prefix looks like `"*type(scope):* your commit message"`. Default is empty string. */
           wrapPrefixWith: "`";
+          /** Whether to prepend the corresponding emoji before the commit type prefix (applied only for the default ones). Default is `false`. */
+          emojiBeforePrefix: true, // Omit `emojiBeforePrefix` to use default `false`.
+
       },
       count: {
           defaultPath: '.', // default path to scan
@@ -895,9 +898,11 @@ In `nhb.scripts.config.mjs`:
 
 ```js
 commit: {
-    runFormatter: false, // set true to run Prettier before committing
+    runFormatter: false, // Set `true` to run Prettier before committing
     /** Wrap the prefix with custom symbols or any string, e.g. "*" makes the prefix looks like "*type(scope):* your commit message". Default is empty string. */
     wrapPrefixWith?: string;
+    /** Whether to prepend the corresponding emoji before the commit type prefix (applied only for the default ones). Default is `false`. */
+    emojiBeforePrefix: true, // Omit `emojiBeforePrefix` to use default `false`.
     runBefore: () => {
       console.log('Pre-hook is called...')
     },

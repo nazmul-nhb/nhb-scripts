@@ -135,7 +135,7 @@ export interface FormatConfig {
 
 /** User configuration for `nhb-commit` script. */
 export interface CommitConfig {
-	/** Run Prettier formatter before committing. Default is `false`. */
+	/** Whether to run Prettier formatter before committing. Default is `false`. */
 	runFormatter?: boolean;
 	/** Pre-hook to run before commit and after version change. */
 	runBefore?: () => void;

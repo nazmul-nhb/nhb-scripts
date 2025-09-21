@@ -184,7 +184,7 @@ async function runCommitPushFlow() {
 
 	let finalType =
 		(emojiBeforePrefix && typeResult !== '__custom__' ?
-			`${typeChoices.find((type) => type.value === typeResult)?.label?.split(' ')?.[0] ?? ''} `
+			`${typeChoices.find((type) => type.value === typeResult)?.label?.split(/\s+/)?.[0] ?? ''} `
 		:	'') + typeResult;
 
 	if (typeResult === '__custom__') {
