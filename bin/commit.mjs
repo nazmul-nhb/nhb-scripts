@@ -207,8 +207,8 @@ async function runCommitPushFlow() {
 
 	const formattedMessage =
 		scopeResult ?
-			`**${finalType}(${scopeResult})**: ${messageResult}`
-		:	`**${finalType}**: ${messageResult}`;
+			`**${finalType}(${scopeResult}):** ${messageResult}`
+		:	`**${finalType}:** ${messageResult}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);
