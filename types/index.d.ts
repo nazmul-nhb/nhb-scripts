@@ -137,10 +137,12 @@ export interface FormatConfig {
 export interface CommitConfig {
 	/** Run Prettier formatter before committing. Default is `false`. */
 	runFormatter?: boolean;
-	/** Pre-hook to run before committing. */
+	/** Pre-hook to run before commit and after version change. */
 	runBefore?: () => void;
-	/** Post-hook to run after committing. */
+	/** Post-hook to run after commit and/or push. */
 	runAfter?: () => void;
+	/** Wrap the prefix with custom symbols or any string, e.g. `"*"` makes the prefix looks like `"*type(scope):* your commit message"`. Default is empty string. */
+	wrapPrefixWith?: string;
 }
 
 /** User configuration for `nhb-count` script.*/

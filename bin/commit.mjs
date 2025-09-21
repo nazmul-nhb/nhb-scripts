@@ -116,7 +116,12 @@ async function runCommitPushFlow() {
 
 	const oldVersion = pkg.version || '0.0.0';
 
-	const config = (await loadUserConfig()).commit ?? {};
+	const {
+		runBefore,
+		runAfter,
+		runFormatter: shouldFormat,
+		wrapPrefixWith = '',
+	} = (await loadUserConfig()).commit ?? {};
 
 	mimicClack(`Current version: ${chalk.yellow(oldVersion)}`);
 
@@ -207,22 +212,22 @@ async function runCommitPushFlow() {
 
 	const formattedMessage =
 		scopeResult ?
-			`\`${finalType}(${scopeResult}):\` ${messageResult}`
-		:	`\`${finalType}:\` ${messageResult}`;
+			`${wrapPrefixWith}${finalType}(${scopeResult}):${wrapPrefixWith} ${messageResult}`
+		:	`${wrapPrefixWith}${finalType}:${wrapPrefixWith} ${messageResult}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);
 	}
 
-	config?.runBefore?.();
+	runBefore?.();
 
-	if (config.runFormatter) {
+	if (shouldFormat) {
 		await runFormatter();
 	}
 
 	await commitAndPush(formattedMessage, version);
 
-	config?.runAfter?.();
+	runAfter?.();
 }
 
 runCommitPushFlow().catch((err) => {
