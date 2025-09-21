@@ -143,7 +143,14 @@ yarn add -D nhb-scripts
       lint: { folders: ['src'], patterns: ['**/*.ts'] }, // Optional, these are defaults
       fix: { folders: ['src'], patterns: ['**/*.ts'] }, // Optional, these are defaults
       commit: {
-          runFormatter: false, // do not run formatter,  use `true` to format before committing 
+          /** Run Prettier formatter before committing. Default is `false`. */
+          runFormatter?: boolean;
+          /** Pre-hook to run before commit and after version change. */
+          runBefore?: () => void;
+          /** Post-hook to run after commit and/or push. */
+          runAfter?: () => void;
+          /** Wrap the prefix with custom symbols or any string, e.g. `"*"` makes the prefix looks like `"*type(scope):* your commit message"`. Default is empty string. */
+          wrapPrefixWith?: string;
       },
       count: {
           defaultPath: '.', // default path to scan
@@ -885,6 +892,8 @@ In `nhb.scripts.config.mjs`:
 ```js
 commit: {
     runFormatter: false, // set true to run Prettier before committing
+    /** Wrap the prefix with custom symbols or any string, e.g. "*" makes the prefix looks like "*type(scope):* your commit message". Default is empty string. */
+    wrapPrefixWith?: string;
     runBefore: () => {
       console.log('Pre-hook is called...')
     },
