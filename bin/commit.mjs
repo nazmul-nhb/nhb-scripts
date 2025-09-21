@@ -108,8 +108,8 @@ function isValidVersion(newVersion, currentVersion) {
 	return semver.valid(newVersion) && semver.gte(newVersion, currentVersion);
 }
 
-/** Prompt flow */
-async function finalPush() {
+/** Run the final prompt flow */
+async function runCommitPushFlow() {
 	intro(chalk.cyan('🚀 Commit & Push'));
 
 	const pkg = parsePackageJson();
@@ -207,8 +207,8 @@ async function finalPush() {
 
 	const formattedMessage =
 		scopeResult ?
-			`${finalType}(${scopeResult}): ${messageResult}`
-		:	`${finalType}: ${messageResult}`;
+			`**${finalType}(${scopeResult})**: ${messageResult}`
+		:	`**${finalType}**: ${messageResult}`;
 
 	if (version !== oldVersion) {
 		await updateVersion(version);
@@ -225,7 +225,7 @@ async function finalPush() {
 	config?.runAfter?.();
 }
 
-finalPush().catch((err) => {
+runCommitPushFlow().catch((err) => {
 	console.error(chalk.red('🛑 Unexpected Error:'), err);
 	process.exit(0);
 });
