@@ -1,4 +1,6 @@
-export const STANDARD_ESLINT_CONFIG = `import jsConfig from '@eslint/js';
+export const STANDARD_ESLINT_CONFIG = `// @ts-check
+
+import jsConfig from '@eslint/js';
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import prettierConfig from 'eslint-config-prettier';
@@ -33,7 +35,6 @@ export default [
 	...tseslint.configs.recommended,
 	{
 		plugins: {
-			'@typescript-eslint': tsEslintPlugin,
 			prettier,
 		},
 		rules: {

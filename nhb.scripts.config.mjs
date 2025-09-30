@@ -8,6 +8,7 @@ import {
 	fixTypeExports,
 } from './index.mjs';
 
+/** */
 export default defineScriptConfig({
 	format: {
 		args: ['--write'],
