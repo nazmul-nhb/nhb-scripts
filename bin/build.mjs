@@ -15,8 +15,6 @@ import { loadUserConfig } from '../lib/config-loader.mjs';
 import { estimator } from '../lib/estimator.mjs';
 
 /**
- * @typedef {import('execa').Result} Result;
- *
  * @import { BuildCommand } from '../types/index.d.ts';
  */
 

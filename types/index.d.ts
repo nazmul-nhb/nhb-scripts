@@ -1,5 +1,6 @@
 import type { Options as ExecaOptions } from 'execa';
 import type { AsyncFunction, VoidFunction } from 'nhb-toolbox/types';
+import type { ProgressEstimator } from 'progress-estimator';
 import type { PackageJson } from 'type-fest';
 
 /**
@@ -369,3 +370,60 @@ export declare function parsePackageJson(): PackageJson;
  * await writeToPackageJson(pkg);
  */
 export declare function writeToPackageJson(pkg: PackageJson): Promise<void>;
+
+/**
+ * * Add a left pipe character to a message
+ * @param message Message to format
+ * @returns Formatted message with left pipe
+ */
+export declare function addPipeOnLeft(message?: string): string;
+
+/**
+ * * Mimic clack left vertical line before a message
+ * @param message message to print in clack style.
+ * @param suffix If true, adds a pipe in new line. Defaults to `false`.
+ */
+export declare function mimicClack(message: string, suffix?: boolean): void;
+
+/** - Detect current project's package manager from scanning current working directory. If nothing is detected, returns `npm`. */
+export declare function detectPackageManager(): 'pnpm' | 'yarn' | 'bun' | 'npm';
+
+/**
+ * * An instance of the progress-estimator used to log progress for long-running tasks.
+ *
+ * Uses a `.estimator` directory in the project root to store timing metadata, which helps in providing more accurate estimates in subsequent runs.
+ */
+export declare const estimator: ProgressEstimator;
+
+/**
+ * * Install dependencies with the detected (by {@link detectPackageManager}) package manager
+ * @param deps Array of dependencies to install.
+ * @param devDeps Array of dev dependencies to install.
+ */
+export declare function installDeps(deps?: string[], devDeps?: string[]): Promise<void>;
+
+/**
+ * * Generate a module with given name and config.
+ * @param moduleName Name of the module, usually in lowercase.
+ * @param config User configuration for to generate module.
+ */
+export declare function generateModule(moduleName: string, config: ModuleConfig): Promise<void>;
+
+/**
+ * * Runs a shell command safely using {@link execa} with options.
+ *
+ * @remarks This does not provide full {@link execa} API.
+ *
+ * @param cmd The command to execute (e.g. `'pnpm'` or `'git'`).
+ * @param args The command arguments (e.g. `['run', 'build']`).
+ * @param options Optional settings for cwd, env, silent mode, etc.
+ * @returns Result of a subprocess successful execution..
+ *
+ * @example
+ * await runExeca('pnpm', ['run', 'build'], { cwd: './packages/core' });
+ */
+export declare function runExeca(
+	cmd: string,
+	args?: string,
+	options?: ExecaOptions
+): Promise<Result>;
