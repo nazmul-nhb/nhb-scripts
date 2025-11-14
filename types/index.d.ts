@@ -421,9 +421,12 @@ export declare function generateModule(moduleName: string, config: ModuleConfig)
  *
  * @example
  * await runExeca('pnpm', ['run', 'build'], { cwd: './packages/core' });
+ *
+ * @example
+ * const { stdout } = await runExeca('git', ['status', '--short']);
  */
 export declare function runExeca(
 	cmd: string,
-	args?: string,
+	args?: string[],
 	options?: ExecaOptions
 ): Promise<Result>;
