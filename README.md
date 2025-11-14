@@ -167,6 +167,7 @@ yarn add -D nhb-scripts
         distFolder: 'dist', // optional, default: "dist"
         deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
         showOutputs: true, // display output file list, default is `false`
+        waitingMessage: ' 📦 Building Your Server...', // Message to display while build process is running
         commands: [ // default is [{cmd: 'tsc'}]
             // Not default
             { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
@@ -605,6 +606,7 @@ export default defineScriptConfig({
     distFolder: 'output', // optional, default: "dist"
     deleteDist: true, // delete dist folder before each build, set `false` to keep dist folder intact
     showOutputs: true, // display output file list, default is `false`
+    waitingMessage: ' 📦 Building Your Server...', // Message to display while build process is running
     commands: [
       { cmd: 'tsc', args: ['-p', 'tsconfig.cjs.json'] },
       { cmd: 'tsc', args: ['-p', 'tsconfig.esm.json'], options: { stdio: 'inherit' } }
@@ -637,13 +639,14 @@ export default defineScriptConfig({
 
 #### 🏗️ **Options**
 
-| Field         | Type                   | Default   | Description                                                   |
-| ------------- | ---------------------- | --------- | ------------------------------------------------------------- |
-| `distFolder`  | `string`               | `dist`    | Output folder used for size reporting and cleanup.            |
-| `deleteDist`  | `boolean`              | `true`    | Whether to delete the dist (output) folder before each build. |
-| `showOutputs` | `boolean`              | `false`   | Whether to display the list of output files.                  |
-| `commands`    | `Array<BuildCommand>`  | see below | Array of build commands.                                      |
-| `after`       | `Array<Promise<void>>` | `[]`      | Post‑build hooks to run sequentially after commands finish.   |
+| Field            | Type                   | Default                               | Description                                     |
+| ---------------- | ---------------------- | ------------------------------------- | ----------------------------------------------- |
+| `distFolder`     | `string`               | `dist`                                | Output folder used for size reporting.          |
+| `deleteDist`     | `boolean`              | `true`                                | Whether to delete old output before each build. |
+| `showOutputs`    | `boolean`              | `false`                               | Whether to display the list of output files.    |
+| `waitingMessage` | `string`               | `' 📦 Building Your Application...'` | Message to display while building.              |
+| `commands`       | `Array<BuildCommand>`  | see below                             | Array of build commands.                        |
+| `after`          | `Array<Promise<void>>` | `[]`                                  | Hooks to run sequentially after build.          |
 
 **`BuildCommand` shape:**
 

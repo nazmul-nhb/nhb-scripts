@@ -174,6 +174,8 @@ export interface BuildConfig {
 	deleteDist?: boolean;
 	/** Whether to display output file list. Default is `false`. */
 	showOutputs?: boolean;
+	/** Message to display while build process is running. Default is `' 📦 Building Your Application...'` */
+	waitingMessage?: string;
 	/** The sequence of commands to run for building. */
 	commands?: BuildCommand[];
 	/** Hooks to run after the build completes. */

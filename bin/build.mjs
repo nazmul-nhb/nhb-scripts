@@ -45,6 +45,7 @@ const getFileIcon = (filePath) => {
 		commands: cmds = [],
 		deleteDist = true,
 		distFolder = 'dist',
+		waitingMessage = ' 📦 Building Your Application...',
 		showOutputs = false,
 	} = (await loadUserConfig()).build ?? {};
 
@@ -67,7 +68,7 @@ const getFileIcon = (filePath) => {
 					await execa(cmd, args, { cwd: process.cwd(), ...options });
 				}
 			})(),
-			chalk.yellowBright(' 📦 Building Your Application...')
+			chalk.yellowBright(waitingMessage)
 		);
 
 		// Gather Transformed Files
