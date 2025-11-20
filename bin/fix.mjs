@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import { execa } from 'execa';
 import { globby } from 'globby';
 import { roundNumber } from 'nhb-toolbox';
-import process from 'process';
+import process from 'node:process';
 
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { checkEslintDeps, ensureEslintConfig } from '../lib/lint-helpers.mjs';

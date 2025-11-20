@@ -6,10 +6,9 @@
 import { intro, outro } from '@clack/prompts';
 import chalk from 'chalk';
 import { execa } from 'execa';
-
-import { existsSync } from 'fs';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { existsSync } from 'node:fs';
+import { writeFile } from 'node:fs/promises';
+import path from 'node:path';
 import { mimicClack } from '../lib/clack-utils.mjs';
 import { installDeps } from '../lib/install-deps.mjs';
 import { parsePackageJson } from '../lib/package-json-utils.mjs';

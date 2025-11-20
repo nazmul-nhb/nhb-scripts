@@ -5,8 +5,8 @@
 
 import { intro, outro, text } from '@clack/prompts';
 import chalk from 'chalk';
-import fs from 'fs/promises';
-import { extname, join, resolve } from 'path';
+import fs from 'node:fs/promises';
+import { extname, join, resolve } from 'node:path';
 import tsModule from 'typescript';
 import { addPipeOnLeft, normalizeStringResult } from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';

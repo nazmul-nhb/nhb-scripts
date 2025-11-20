@@ -5,10 +5,10 @@
 
 import { confirm, intro, select, text } from '@clack/prompts';
 import chalk from 'chalk';
-import { existsSync } from 'fs';
+import { existsSync } from 'node:fs';
 import minimist from 'minimist';
 import { convertStringCase, isNotEmptyObject, isValidArray } from 'nhb-toolbox';
-import path from 'path';
+import path from 'node:path';
 import {
 	normalizeBooleanResult,
 	normalizeStringResult,

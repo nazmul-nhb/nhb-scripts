@@ -374,18 +374,18 @@ export declare function parsePackageJson(): PackageJson;
 export declare function writeToPackageJson(pkg: PackageJson): Promise<void>;
 
 /**
- * * Add a left pipe character to a message
- * @param message Message to format
- * @returns Formatted message with left pipe
- */
-export declare function addPipeOnLeft(message?: string): string;
-
-/**
  * * Mimic clack left vertical line before a message
  * @param message message to print in clack style.
  * @param suffix If true, adds a pipe in new line. Defaults to `false`.
  */
 export declare function mimicClack(message: string, suffix?: boolean): void;
+
+/**
+ * * Add a left pipe character to a message
+ * @param message Message to format
+ * @returns Formatted message with left pipe
+ */
+export declare function addPipeOnLeft(message?: string): string;
 
 /** - Detect current project's package manager from scanning current working directory. If nothing is detected, returns `npm`. */
 export declare function detectPackageManager(): 'pnpm' | 'yarn' | 'bun' | 'npm';

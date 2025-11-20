@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import { execa } from 'execa';
 import { globby } from 'globby';
 import { isValidArray, roundNumber } from 'nhb-toolbox';
-import { extname } from 'path';
+import { extname } from 'node:path';
 import { rimraf } from 'rimraf';
 import { addPipeOnLeft, mimicClack } from '../lib/clack-utils.mjs';
 import { loadUserConfig } from '../lib/config-loader.mjs';
