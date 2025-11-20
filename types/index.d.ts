@@ -374,6 +374,33 @@ export declare function parsePackageJson(): PackageJson;
 export declare function writeToPackageJson(pkg: PackageJson): Promise<void>;
 
 /**
+ * * Show cancel message with outro and graceful exit
+ * @param message Optional message to display
+ */
+export declare function showCancelMessage(message?: string): void;
+
+/**
+ * * Normalize clack result to string
+ * @param result Raw string result from `clack` prompt
+ * @returns Normalized string
+ */
+export declare function normalizeStringResult(result: string | symbol): string;
+
+/**
+ * * Normalize clack result to boolean
+ * @param result Raw boolean result from `clack` prompt
+ * @returns  Normalized boolean
+ */
+export declare function normalizeBooleanResult(result: boolean | symbol): boolean;
+
+/**
+ * * Validate string input using clack
+ * @param input input to validate
+ * @param errorMessage optional error message to return if validation fails
+ */
+export function validateStringInput(input: string, errorMessage?: string): string | undefined;
+
+/**
  * * Mimic clack left vertical line before a message
  * @param message message to print in clack style.
  * @param suffix If true, adds a pipe in new line. Defaults to `false`.

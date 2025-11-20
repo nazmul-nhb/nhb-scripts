@@ -1,6 +1,6 @@
 {
   "name": "nhb-scripts",
-  "version": "1.8.86",
+  "version": "1.8.88",
   "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
   "types": "types/index.d.ts",
   "main": "index.mjs",
@@ -71,11 +71,11 @@
     "@clack/prompts": "^0.11.0",
     "chalk": "5.6.2",
     "execa": "^9.6.0",
-    "globby": "^15.0.0",
+    "globby": "^16.0.0",
     "minimist": "^1.2.8",
-    "nhb-toolbox": "^4.26.51",
+    "nhb-toolbox": "^4.26.69",
     "progress-estimator": "^0.3.1",
-    "rimraf": "^6.1.0",
+    "rimraf": "^6.1.2",
     "semver": "^7.7.3",
     "type-fest": "^5.2.0",
     "typescript": "^5.9.3"
@@ -84,7 +84,7 @@
     "@types/node": "^24.10.1",
     "@types/semver": "^7.7.1",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.6",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.6.2"
   },
   "engines": {
