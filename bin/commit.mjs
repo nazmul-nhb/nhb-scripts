@@ -67,7 +67,7 @@ export async function commitAndPush(message, version) {
 		const { stdout: commitOut } = await execa('git', ['commit', '-m', message]);
 
 		if (commitOut?.trim()) {
-			console.log(bar);
+			log.message('\n');
 			console.log('📤 ' + chalk.bold.blue.underline('Commit Summary'));
 			formatStdOut(commitOut);
 		}
@@ -91,7 +91,7 @@ export async function commitAndPush(message, version) {
 			const pushOut = (stdout + '\n' + stderr)?.trim();
 
 			if (pushOut) {
-				console.log(bar);
+				log.message('\n');
 				console.log('📌 ' + chalk.bold.red.underline('Push Summary'));
 				formatStdOut(pushOut);
 			}
