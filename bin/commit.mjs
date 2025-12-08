@@ -140,9 +140,7 @@ async function runCommitPushFlow() {
 		version = (input || '').trim();
 		if (!version) {
 			version = oldVersion;
-			mimicClack(
-				chalk.cyanBright(`🔄️ Using previous version: ${chalk.yellow(version)}`)
-			);
+			mimicClack(chalk.cyanBright(`🔄️ Using previous version: ${chalk.yellow(version)}`));
 			break;
 		}
 

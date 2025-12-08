@@ -70,9 +70,9 @@ function isHuskyInstalled() {
 
 		return Boolean(
 			(pkg.dependencies && pkg.dependencies.husky && pkg.dependencies?.['lint-staged']) ||
-				(pkg.devDependencies &&
-					pkg.devDependencies.husky &&
-					pkg.devDependencies?.['lint-staged'])
+			(pkg.devDependencies &&
+				pkg.devDependencies.husky &&
+				pkg.devDependencies?.['lint-staged'])
 		);
 	} catch {
 		return false;

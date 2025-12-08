@@ -4,3 +4,4 @@ coverage
 .estimator
 __*__
 *.md
+*.json
