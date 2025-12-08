@@ -70,7 +70,7 @@ export async function commitAndPush(message, version) {
 			// .map((line) => chalk.cyan('• ') + line?.trim());
 			// .join('\n');
 
-			log.message(chalk.bold.underline('📤 Commit Summary'));
+			log.step(chalk.bold.underline('📤 Commit Summary'));
 			formatMessage(commitOut);
 			// commitLines.forEach((line) => mimicClack(line));
 
@@ -100,7 +100,7 @@ export async function commitAndPush(message, version) {
 				// .map((line) => chalk.cyan('• ') + line?.trim());
 				// .join('\n');
 
-				log.message(chalk.bold.underline('📌 Push Summary'));
+				log.step(chalk.bold.underline('📌 Push Summary'));
 				formatMessage(pushOut);
 				// lines.forEach((line) => mimicClack(line));
 
