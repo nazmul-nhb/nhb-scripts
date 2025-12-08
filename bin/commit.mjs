@@ -67,16 +67,9 @@ export async function commitAndPush(message, version) {
 		const { stdout: commitOut } = await execa('git', ['commit', '-m', message]);
 
 		if (commitOut?.trim()) {
-			// const commitLines = commitOut.split('\n').filter(Boolean);
-			// .map((line) => chalk.cyan('• ') + line?.trim());
-			// .join('\n');
-
-			log.message('\n');
-			console.log('📤 ' + chalk.bold.underline('Commit Summary'));
+			log.message();
+			console.log('📤 ' + chalk.bold.blue.underline('Commit Summary'));
 			formatMessage(commitOut);
-			// commitLines.forEach((line) => mimicClack(line));
-
-			// note(commitLines, chalk.magenta('📤 Commit Summary'));
 		}
 
 		s.stop(chalk.green('✅ Changes are committed successfully!'));
@@ -98,15 +91,9 @@ export async function commitAndPush(message, version) {
 			const pushOut = (stdout + '\n' + stderr)?.trim();
 
 			if (pushOut) {
-				// const lines = pushOut.split('\n').filter(Boolean);
-				// .map((line) => chalk.cyan('• ') + line?.trim());
-				// .join('\n');
-				log.message('\n');
-				console.log('📌 ' + chalk.bold.underline('Push Summary'));
+				log.message();
+				console.log('📌 ' + chalk.bold.red.underline('Push Summary'));
 				formatMessage(pushOut);
-				// lines.forEach((line) => mimicClack(line));
-
-				// note(lines, chalk.magenta('📌 Push Summary'));
 			}
 
 			s2.stop(chalk.green('✅ Changes are pushed successfully!'));
