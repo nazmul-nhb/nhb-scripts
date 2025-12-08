@@ -39,10 +39,13 @@ async function updateVersion(newVersion) {
  * @param {string} msgs
  */
 function formatMessage(msgs) {
-	const messages = msgs.split('\n').filter(Boolean);
+	const messages = msgs
+		.split('\n')
+		.filter(Boolean)
+		.map((msg) => msg.trim());
 
-	const diamond = chalk.green('\n◇   • ');
-	const bar = chalk.gray('\n│');
+	const diamond = chalk.green('\n|   • ');
+	const bar = chalk.green('\n│');
 
 	console.log(bar + diamond + messages.join(diamond) + bar);
 }
@@ -66,6 +69,8 @@ export async function commitAndPush(message, version) {
 			// const commitLines = commitOut.split('\n').filter(Boolean);
 			// .map((line) => chalk.cyan('• ') + line?.trim());
 			// .join('\n');
+
+			mimicClack(chalk.bold.underline('📤 Commit Summary'));
 			formatMessage(commitOut);
 			// commitLines.forEach((line) => mimicClack(line));
 
@@ -94,6 +99,8 @@ export async function commitAndPush(message, version) {
 				// const lines = pushOut.split('\n').filter(Boolean);
 				// .map((line) => chalk.cyan('• ') + line?.trim());
 				// .join('\n');
+
+				mimicClack(chalk.bold.underline('📌 Push Summary'));
 				formatMessage(pushOut);
 				// lines.forEach((line) => mimicClack(line));
 
