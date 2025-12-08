@@ -26,11 +26,13 @@ import { runFormatter } from '../lib/prettier-formatter.mjs';
 async function updateVersion(newVersion) {
 	const pkg = parsePackageJson();
 
-	pkg.version = newVersion;
+	if (pkg.version !== newVersion) {
+		pkg.version = newVersion;
 
-	await writeToPackageJson(pkg);
+		await writeToPackageJson(pkg);
 
-	mimicClack(chalk.green(`✓ Version updated to ${chalk.yellowBright(newVersion)}`));
+		mimicClack(chalk.green(`✓ Version updated to ${chalk.yellowBright(newVersion)}`));
+	}
 }
 
 const bar = chalk.gray('│');
