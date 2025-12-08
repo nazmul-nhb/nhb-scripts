@@ -9,6 +9,7 @@ import { execa } from 'execa';
 import semver from 'semver';
 
 import { confirm } from '@clack/prompts';
+import { isValidArray } from 'nhb-toolbox';
 import {
 	mimicClack,
 	normalizeBooleanResult,
@@ -18,7 +19,6 @@ import {
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { parsePackageJson, writeToPackageJson } from '../lib/package-json-utils.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
-import { isValidArray } from 'nhb-toolbox';
 
 /**
  * * Updates version in package.json
@@ -47,22 +47,17 @@ export async function commitAndPush(message, version) {
 	try {
 		await execa('git', ['add', '.']);
 
-		// const { stdout: commitOut } =
-		await execa('git', ['commit', '-m', message], {
-			stdout: 'inherit',
-			stderr: 'inherit',
-			stdin: 'inherit',
-		});
+		const { stdout: commitOut } = await execa('git', ['commit', '-m', message]);
 
-		// if (commitOut.trim()) {
-		// 	const commitLines = commitOut
-		// 		.split('\n')
-		// 		.filter(Boolean)
-		// 		.map((line) => chalk.cyan('• ') + line?.trim())
-		// 		.join('\n');
+		if (commitOut?.trim()) {
+			const commitLines = commitOut
+				.split('\n')
+				.filter(Boolean)
+				.map((line) => chalk.cyan('• ') + line?.trim())
+				.join('\n');
 
-		// 	note(commitLines, chalk.magenta('📤 Commit Summary'));
-		// }
+			note(commitLines, chalk.magenta('📤 Commit Summary'));
+		}
 
 		s.stop(chalk.green('✅ Changes are committed successfully!'));
 
@@ -78,24 +73,23 @@ export async function commitAndPush(message, version) {
 
 			s2.start(chalk.blue('📌 Pushing to remote repository'));
 
-			// const { stdout, stderr } =
-			await execa('git', ['push', '--verbose'], {
+			const { stdout, stderr } = await execa('git', ['push', '--verbose'], {
 				stdout: 'inherit',
 				stderr: 'inherit',
 				stdin: 'inherit',
 			});
 
-			// const pushOut = (stdout + '\n' + stderr)?.trim();
+			const pushOut = (stdout + '\n' + stderr)?.trim();
 
-			// if (pushOut) {
-			// 	const lines = pushOut
-			// 		?.split('\n')
-			// 		.filter(Boolean)
-			// 		.map((line) => chalk.cyan('• ') + line?.trim())
-			// 		.join('\n');
+			if (pushOut) {
+				pushOut
+					.split('\n')
+					.filter(Boolean)
+					.forEach((line) => mimicClack(chalk.cyan('• ') + line.trim()));
+				// .join('\n');
 
-			// 	note(lines, chalk.magenta('📌 Push Summary'));
-			// }
+				// note(lines, chalk.magenta('📌 Push Summary'));
+			}
 
 			s2.stop(chalk.green('✅ Changes are pushed successfully!'));
 
