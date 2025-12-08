@@ -3,7 +3,7 @@
 
 // @ts-check
 
-import { intro, note, outro, select, spinner, text } from '@clack/prompts';
+import { intro, log, outro, select, spinner, text } from '@clack/prompts';
 import chalk from 'chalk';
 import { execa } from 'execa';
 import semver from 'semver';
@@ -44,7 +44,7 @@ function formatMessage(msgs) {
 		.filter(Boolean)
 		.map((msg) => msg.trim());
 
-	const diamond = chalk.green('\n│   • ');
+	const diamond = chalk.green('\n│  • ');
 	const bar = chalk.green('\n│');
 
 	console.log(bar + diamond + messages.join(diamond) + bar);
@@ -70,7 +70,7 @@ export async function commitAndPush(message, version) {
 			// .map((line) => chalk.cyan('• ') + line?.trim());
 			// .join('\n');
 
-			mimicClack(chalk.bold.underline('📤 Commit Summary'), true);
+			log.message(chalk.bold.underline('📤 Commit Summary'));
 			formatMessage(commitOut);
 			// commitLines.forEach((line) => mimicClack(line));
 
@@ -100,7 +100,7 @@ export async function commitAndPush(message, version) {
 				// .map((line) => chalk.cyan('• ') + line?.trim());
 				// .join('\n');
 
-				mimicClack(chalk.bold.underline('📌 Push Summary'));
+				log.message(chalk.bold.underline('📌 Push Summary'));
 				formatMessage(pushOut);
 				// lines.forEach((line) => mimicClack(line));
 
