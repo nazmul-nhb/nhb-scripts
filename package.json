@@ -1,97 +1,97 @@
 {
-	"name": "nhb-scripts",
-	"version": "1.8.88",
-	"description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
-	"types": "types/index.d.ts",
-	"main": "index.mjs",
-	"type": "module",
-	"sideEffects": false,
-	"bin": {
-		"nhb-init": "bin/init.mjs",
-		"nhb-commit": "bin/commit.mjs",
-		"nhb-module": "bin/module.mjs",
-		"nhb-count": "bin/count.mjs",
-		"nhb-format": "bin/format.mjs",
-		"nhb-lint": "bin/lint.mjs",
-		"nhb-fix": "bin/fix.mjs",
-		"nhb-build": "bin/build.mjs",
-		"nhb-husky": "bin/husky.mjs",
-		"nhb-delete": "bin/delete.mjs"
-	},
-	"scripts": {
-		"nhb-init": "node bin/init.mjs",
-		"module": "node bin/module.mjs",
-		"commit": "node bin/commit.mjs",
-		"count": "node bin/count.mjs",
-		"format": "node bin/format.mjs",
-		"nhb-husky": "node bin/husky.mjs",
-		"delete": "node bin/delete.mjs",
-		"prepare": "husky"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"files": [
-		"index.mjs",
-		"bin",
-		"lib",
-		"types",
-		"templates",
-		"README.md",
-		"LICENSE",
-		"package.json"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/nazmul-nhb/nhb-scripts.git"
-	},
-	"keywords": [
-		"scripts",
-		"nhb",
-		"cli",
-		"commit",
-		"module",
-		"count",
-		"format",
-		"lint",
-		"fix",
-		"build",
-		"es",
-		"nodejs",
-		"node",
-		"ecma-script",
-		"javascript",
-		"typescript"
-	],
-	"author": {
-		"name": "Nazmul Hassan",
-		"email": "nazmulnhb@gmail.com",
-		"url": "https://nazmul-nhb.dev"
-	},
-	"license": "MIT",
-	"dependencies": {
-		"@clack/prompts": "^0.11.0",
-		"chalk": "5.6.2",
-		"execa": "^9.6.1",
-		"globby": "^16.0.0",
-		"minimist": "^1.2.8",
-		"nhb-toolbox": "^4.28.21",
-		"progress-estimator": "^0.3.1",
-		"rimraf": "^6.1.2",
-		"semver": "^7.7.3",
-		"type-fest": "^5.3.1",
-		"typescript": "^5.9.3"
-	},
-	"devDependencies": {
-		"@types/node": "^24.10.1",
-		"@types/semver": "^7.7.1",
-		"husky": "^9.1.7",
-		"lint-staged": "^16.2.7",
-		"prettier": "^3.7.4"
-	},
-	"engines": {
-		"node": ">=22"
-	},
-	"browser": false,
-	"packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
+  "name": "nhb-scripts",
+  "version": "1.9.0",
+  "description": "A collection of Node.js scripts to use in TypeScript & JavaScript projects",
+  "types": "types/index.d.ts",
+  "main": "index.mjs",
+  "type": "module",
+  "sideEffects": false,
+  "bin": {
+    "nhb-init": "bin/init.mjs",
+    "nhb-commit": "bin/commit.mjs",
+    "nhb-module": "bin/module.mjs",
+    "nhb-count": "bin/count.mjs",
+    "nhb-format": "bin/format.mjs",
+    "nhb-lint": "bin/lint.mjs",
+    "nhb-fix": "bin/fix.mjs",
+    "nhb-build": "bin/build.mjs",
+    "nhb-husky": "bin/husky.mjs",
+    "nhb-delete": "bin/delete.mjs"
+  },
+  "scripts": {
+    "nhb-init": "node bin/init.mjs",
+    "module": "node bin/module.mjs",
+    "commit": "node bin/commit.mjs",
+    "count": "node bin/count.mjs",
+    "format": "node bin/format.mjs",
+    "nhb-husky": "node bin/husky.mjs",
+    "delete": "node bin/delete.mjs",
+    "prepare": "husky"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "index.mjs",
+    "bin",
+    "lib",
+    "types",
+    "templates",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nazmul-nhb/nhb-scripts.git"
+  },
+  "keywords": [
+    "scripts",
+    "nhb",
+    "cli",
+    "commit",
+    "module",
+    "count",
+    "format",
+    "lint",
+    "fix",
+    "build",
+    "es",
+    "nodejs",
+    "node",
+    "ecma-script",
+    "javascript",
+    "typescript"
+  ],
+  "author": {
+    "name": "Nazmul Hassan",
+    "email": "nazmulnhb@gmail.com",
+    "url": "https://nazmul-nhb.dev"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "chalk": "5.6.2",
+    "execa": "^9.6.1",
+    "globby": "^16.0.0",
+    "minimist": "^1.2.8",
+    "nhb-toolbox": "^4.28.21",
+    "progress-estimator": "^0.3.1",
+    "rimraf": "^6.1.2",
+    "semver": "^7.7.3",
+    "type-fest": "^5.3.1",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/semver": "^7.7.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "browser": false,
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }
