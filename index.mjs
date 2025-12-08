@@ -30,3 +30,5 @@ export {
 	normalizeBooleanResult,
 	normalizeStringResult,
 } from './lib/clack-utils.mjs';
+
+const a = `<div class='' ></div>`;

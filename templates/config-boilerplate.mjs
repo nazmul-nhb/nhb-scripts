@@ -1,6 +1,4 @@
-// @ts-check
-
-export const configBoilerplate = `// @ts-check
+export const CONFIG_BOILERPLATE = /* javascript */ `// @ts-check
 
 import { defineScriptConfig, expressMongooseZodTemplate } from 'nhb-scripts';
 

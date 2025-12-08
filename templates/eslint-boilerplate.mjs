@@ -1,4 +1,4 @@
-export const STANDARD_ESLINT_CONFIG = `// @ts-check
+export const STANDARD_ESLINT_CONFIG = /* javascript */ `// @ts-check
 
 import jsConfig from '@eslint/js';
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin';

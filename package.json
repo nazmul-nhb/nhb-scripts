@@ -70,14 +70,14 @@
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "chalk": "5.6.2",
-    "execa": "^9.6.0",
+    "execa": "^9.6.1",
     "globby": "^16.0.0",
     "minimist": "^1.2.8",
-    "nhb-toolbox": "^4.26.69",
+    "nhb-toolbox": "^4.28.21",
     "progress-estimator": "^0.3.1",
     "rimraf": "^6.1.2",
     "semver": "^7.7.3",
-    "type-fest": "^5.2.0",
+    "type-fest": "^5.3.1",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
@@ -85,11 +85,11 @@
     "@types/semver": "^7.7.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "prettier": "^3.6.2"
+    "prettier": "^3.7.4"
   },
   "engines": {
     "node": ">=22"
   },
   "browser": false,
-  "packageManager": "pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c"
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }

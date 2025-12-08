@@ -2,7 +2,9 @@
 
 import { capitalizeString, pluralizer } from 'nhb-toolbox';
 
-/** @type {import('../types/index.d.ts').expressMongooseZodTemplate} */
+/** @import { expressMongooseZodTemplate } from'../types/index.d.ts' */
+
+/** @type { expressMongooseZodTemplate } */
 export function expressMongooseZodTemplate(moduleName, useAlias = false) {
 	const capModule = capitalizeString(moduleName);
 	const pluralModule = pluralizer.toPlural(moduleName);
@@ -13,7 +15,7 @@ export function expressMongooseZodTemplate(moduleName, useAlias = false) {
 
 	return [
 		{
-			name: `${moduleName}.routes.ts`,
+			name: /* typescript */ `${moduleName}.routes.ts`,
 			content: `import validateRequest from '${baseAlias}/middlewares/validateRequest';
 import { ${moduleName}Controllers } from '${moduleAlias}/${moduleName}.controllers';
 import { ${moduleName}Validations } from '${moduleAlias}/${moduleName}.validation';
@@ -44,7 +46,7 @@ export const ${moduleName}Routes = router;
 		},
 		{
 			name: `${moduleName}.controllers.ts`,
-			content: `import { ${moduleName}Services } from '${moduleAlias}/${moduleName}.services';
+			content: /* typescript */ `import { ${moduleName}Services } from '${moduleAlias}/${moduleName}.services';
 import catchAsync from '${baseAlias}/utilities/catchAsync';
 import sendResponse from '${baseAlias}/utilities/sendResponse';
 
@@ -89,7 +91,7 @@ export const ${moduleName}Controllers = {
 		},
 		{
 			name: `${moduleName}.services.ts`,
-			content: `import { ErrorWithStatus } from '${baseAlias}/classes/ErrorWithStatus';
+			content: /* typescript */ `import { ErrorWithStatus } from '${baseAlias}/classes/ErrorWithStatus';
 import { QueryBuilder } from '${baseAlias}/classes/QueryBuilder';
 import { ${capModule} } from '${moduleAlias}/${moduleName}.model';
 import type { I${capModule} } from '${moduleAlias}/${moduleName}.types';
@@ -158,7 +160,7 @@ export const ${moduleName}Services = {
 		},
 		{
 			name: `${moduleName}.model.ts`,
-			content: `import { ErrorWithStatus } from '${baseAlias}/classes/ErrorWithStatus';
+			content: /* typescript */ `import { ErrorWithStatus } from '${baseAlias}/classes/ErrorWithStatus';
 import type { I${capModule}Doc, I${capModule}Model } from '${moduleAlias}/${moduleName}.types';
 import { Schema, model } from 'mongoose';
 import { STATUS_CODES } from 'nhb-toolbox/constants';
@@ -205,7 +207,7 @@ export const ${capModule} = model<I${capModule}Doc, I${capModule}Model>('${plura
 		},
 		{
 			name: `${moduleName}.validation.ts`,
-			content: `import { z } from 'zod';
+			content: /* typescript */ `import { z } from 'zod';
 
 const creationSchema = z
     .object({})
@@ -218,7 +220,7 @@ export const ${moduleName}Validations = { creationSchema, updateSchema };
 		},
 		{
 			name: `${moduleName}.types.ts`,
-			content: `import type { Document, Model, Types } from 'mongoose';
+			content: /* typescript */ `import type { Document, Model, Types } from 'mongoose';
 
 export interface I${capModule} {
     // Define I${capModule} interface
