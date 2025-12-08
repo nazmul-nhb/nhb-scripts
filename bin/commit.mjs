@@ -35,20 +35,20 @@ async function updateVersion(newVersion) {
 }
 
 /**
- * * Format commit and push `stderr` and `stdout`
- * @param {string} msgs
+ * * Format commit and push `stderr` and `stdout` from `execa`
+ * @param {string} out Output to format.
  */
-function formatMessage(msgs) {
-	const messages = msgs
+function formatStdOut(out) {
+	const msgs = out
 		.split('\n')
 		.filter(Boolean)
 		.map((msg) => msg.trim());
 
 	const bar = chalk.gray('│');
 
-	const bullet = (needBar = true) => chalk.green(`${needBar ? `\n ${bar}` : ''}  • `);
+	const bullet = (needBar = true) => chalk.green(`${needBar ? `\n${bar}` : ''}  • `);
 
-	console.log(bar + bullet(false) + messages.join(bullet()) + '\n' + bar);
+	console.log(bar + bullet(false) + msgs.join(bullet()) + '\n' + bar);
 }
 
 /**
@@ -69,7 +69,7 @@ export async function commitAndPush(message, version) {
 		if (commitOut?.trim()) {
 			log.message('\n');
 			console.log('📤 ' + chalk.bold.blue.underline('Commit Summary'));
-			formatMessage(commitOut);
+			formatStdOut(commitOut);
 		}
 
 		s.stop(chalk.green('✅ Changes are committed successfully!'));
@@ -93,7 +93,7 @@ export async function commitAndPush(message, version) {
 			if (pushOut) {
 				log.message('\n');
 				console.log('📌 ' + chalk.bold.red.underline('Push Summary'));
-				formatMessage(pushOut);
+				formatStdOut(pushOut);
 			}
 
 			s2.stop(chalk.green('✅ Changes are pushed successfully!'));
