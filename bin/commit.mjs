@@ -46,9 +46,9 @@ function formatMessage(msgs) {
 
 	const bar = chalk.gray('│');
 
-	const bullet = chalk.green(`\n${bar}  • `);
+	const bullet = (needBar = true) => chalk.green(`${needBar ? `\n ${bar}` : ''}  • `);
 
-	console.log(bullet + messages.join(bullet) + '\n' + bar);
+	console.log(bar + bullet(false) + messages.join(bullet()) + '\n' + bar);
 }
 
 /**
