@@ -34,6 +34,8 @@ async function updateVersion(newVersion) {
 	mimicClack(chalk.green(`✓ Version updated to ${chalk.yellowBright(newVersion)}`));
 }
 
+const bar = chalk.gray('│');
+
 /**
  * * Format commit and push `stderr` and `stdout` from `execa`
  * @param {string} out Output to format.
@@ -42,9 +44,7 @@ function formatStdOut(out) {
 	const msgs = out
 		.split('\n')
 		.filter(Boolean)
-		.map((msg) => msg.trim());
-
-	const bar = chalk.gray('│');
+		.map((msg) => chalk.gray(msg.trim()));
 
 	const bullet = (needBar = true) => chalk.green(`${needBar ? `\n${bar}` : ''}  • `);
 
@@ -67,7 +67,7 @@ export async function commitAndPush(message, version) {
 		const { stdout: commitOut } = await execa('git', ['commit', '-m', message]);
 
 		if (commitOut?.trim()) {
-			log.message('\n');
+			console.log(bar);
 			console.log('📤 ' + chalk.bold.blue.underline('Commit Summary'));
 			formatStdOut(commitOut);
 		}
@@ -91,7 +91,7 @@ export async function commitAndPush(message, version) {
 			const pushOut = (stdout + '\n' + stderr)?.trim();
 
 			if (pushOut) {
-				log.message('\n');
+				console.log(bar);
 				console.log('📌 ' + chalk.bold.red.underline('Push Summary'));
 				formatStdOut(pushOut);
 			}

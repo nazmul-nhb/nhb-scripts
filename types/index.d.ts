@@ -157,7 +157,7 @@ export interface CommitConfig {
 	emojiBeforePrefix?: boolean;
 	/** Options for extending commit types */
 	commitTypes?: {
-		/** Whether tp override the default commit types. Defaults to `false` */
+		/** Whether to override the default commit types. Defaults to `false` */
 		overrideDefaults?: boolean;
 		/** Array of custom commit types with emoji and type names */
 		custom: Array<CommitType>;

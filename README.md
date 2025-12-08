@@ -120,14 +120,16 @@ yarn add -D nhb-scripts
 
 ---
 
-<details>
-  <summary>
-
 ## ⚙️ Unified Configuration System
 
-  </summary>
+> Initialize configuration file by running the `nhb-init` command
 
+<details>
   All scripts use a single configuration file `nhb.scripts.config.mjs` that is automatically created if not present. Available configuration options include:
+
+  <summary>
+   <b>Details</b>
+  </summary>
 
   ```js
   // @ts-check
@@ -157,7 +159,16 @@ yarn add -D nhb-scripts
           wrapPrefixWith: "`";
           /** Whether to prepend the corresponding emoji before the commit type prefix (applied only for the default ones). Default is `false`. */
           emojiBeforePrefix: true, // Omit `emojiBeforePrefix` to use default `false`.
-
+          /** Options for extending commit types */
+          commitTypes: {
+            /** Whether to override the default commit types. Defaults to `false` */
+            overrideDefaults?: false,
+            /** Array of custom commit types with emoji and type names */
+            custom: [
+              { emoji: '🏃‍♂️‍➡️', type: 'run' },
+              // more custom types
+            ]
+          },
       },
       count: {
           defaultPath: '.', // default path to scan
@@ -252,6 +263,7 @@ yarn add -D nhb-scripts
 
 | Script                                                                            | Description                                                                                     |
 | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `nhb-init`                                                                        | Initialize the config file.           |
 | [nhb-module](#-nhb-module--module-generator)                                      | Scaffold module (folder with files) (e.g., Express + Mongoose + Zod by default) with templates. |
 | [nhb-build](#️-nhb-build--customizable-build-runner-with-progress-visualization) | Customizable Build Runner with Progress Visualization.                                          |
 | [nhb-commit](#-nhb-commit--commit-version-updates-with-semver--custom-message)    | Generate a conventional commit message interactively with validation.                           |
@@ -261,10 +273,6 @@ yarn add -D nhb-scripts
 | [nhb-fix](#-nhb-fix--eslint-autofix-runner)                                       | Fix linting errors in code with `eslint`.                                                       |
 | [nhb-count](#-nhb-count--export-counter-cli)                                      | Count export declarations (default, named, aliased) in JS/TS files/folders.                     |
 | [nhb-delete](#-nhb-delete--interactive-file--folder-remover)                      | Interactive File(s)/Folder(s) Remover.                                                          |
-
-> More Scripts Coming Soon...
-
-<!-- > ✅ All scripts are available via **`pnpm/npm/yarn` scripts** or as **binaries** (if installed globally). -->
 
 > Most of the examples here are shown using `pnpm` as package manager, you can use other package managers like `npm` or `yarn` or others.
 
@@ -834,14 +842,14 @@ refactor(db): improve mongoose connection handling
 | Type       | Description                          |
 | ---------- | ------------------------------------ |
 | `update`   | 🔧  General update (default)        |
-| `feat`     | ✨  New feature                      |
+| `feat`     | ✨  New feature                     |
 | `fix`      | 🐛  Bug fix                         |
-| `chore`    | 🛠️  Maintenance task (e.g., deps) |
+| `chore`    | 🛠️  Maintenance task (e.g., deps)   |
 | `refactor` | 🧼  Internal logic change           |
 | `test`     | 🧪  Adding/fixing tests             |
 | `docs`     | 📚  Documentation-only change       |
 | `style`    | 💅  Code formatting, styling etc.   |
-| `perf`     | ⚡  Performance improvement          |
+| `perf`     | ⚡  Performance improvement         |
 | `ci`       | 🚀  CI-related changes              |
 | `build`    | 🧱  Build system changes            |
 | `revert`   | 🔁  Revert a previous commit        |
@@ -849,7 +857,7 @@ refactor(db): improve mongoose connection handling
 | `deps`     | 📦  Dependency updates              |
 | `cleanup`  | 🧹  Minor cleanup tasks             |
 | `merge`    | 🧭  Merge-related commits           |
-| `Custom`   | ✍️  Manually enter your own        |
+| `Custom`   | ✍️  Manually enter your own         |
 
 ---
 
@@ -893,6 +901,8 @@ This is required because the script **automatically commits and pushes** version
 | `message` prompt | Required. Validates non-empty                                           |
 | `git` operations | Adds all changes, commits, pushes with composed message                 |
 
+> You can also override or extend the default types + emojis from the configuration option `commitTypes`.
+
 ---
 
 ### ⚙️ Configuration
@@ -914,6 +924,16 @@ commit: {
     runAfter: () => {
       console.log('Post-hook is called...')
     },
+    /** Options for extending commit types */
+    commitTypes: {
+      /** Whether to override the default commit types. Defaults to `false` */
+      overrideDefaults?: false,
+      /** Array of custom commit types with emoji and type names */
+      custom: [
+        { emoji: '🏃‍♂️‍➡️', type: 'run' },
+        // more custom types
+      ]
+    }
 }
 ```
 
