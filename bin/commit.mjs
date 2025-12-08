@@ -53,10 +53,12 @@ export async function commitAndPush(message, version) {
 			const commitLines = commitOut
 				.split('\n')
 				.filter(Boolean)
-				.map((line) => chalk.cyan('• ') + line?.trim())
-				.join('\n');
+				.map((line) => chalk.cyan('• ') + line?.trim());
+			// .join('\n');
 
-			note(commitLines, chalk.magenta('📤 Commit Summary'));
+			commitLines.forEach((line) => mimicClack(line, true));
+
+			// note(commitLines, chalk.magenta('📤 Commit Summary'));
 		}
 
 		s.stop(chalk.green('✅ Changes are committed successfully!'));
@@ -82,11 +84,12 @@ export async function commitAndPush(message, version) {
 			const pushOut = (stdout + '\n' + stderr)?.trim();
 
 			if (pushOut) {
-				pushOut
+				const lines = pushOut
 					.split('\n')
 					.filter(Boolean)
-					.forEach((line) => mimicClack(chalk.cyan('• ') + line.trim()));
-				// .join('\n');
+					.map((line) => chalk.cyan('• ') + line?.trim());
+
+				lines.forEach((line) => mimicClack(line, true));
 
 				// note(lines, chalk.magenta('📌 Push Summary'));
 			}
