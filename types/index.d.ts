@@ -135,11 +135,11 @@ export interface FormatConfig {
 	ignorePath?: string;
 }
 
-/** Interface for custom commit type */
+/** Interface for custom commit type. */
 export type CommitType = {
-	/** Emoji for custom commit type */
+	/** Emoji for custom commit type. */
 	emoji: SpecialCharacter;
-	/** Custom commit type name */
+	/** Custom commit type name. */
 	type: string;
 };
 
@@ -155,11 +155,15 @@ export interface CommitConfig {
 	wrapPrefixWith?: string;
 	/** Whether to prepend the corresponding emoji before the commit type prefix (applied only for the default ones). Default is `false`. */
 	emojiBeforePrefix?: boolean;
-	/** Options for extending commit types */
+	/** Options for extending commit types. */
 	commitTypes?: {
-		/** Whether to override the default commit types. Defaults to `false` */
+		/**
+		 * - Whether to override the default commit types.
+		 * - Overrides works only when `custom` array has length.
+		 * - Defaults to `false`.
+		 */
 		overrideDefaults?: boolean;
-		/** Array of custom commit types with emoji and type names */
+		/** Array of custom commit types with emoji and type names. */
 		custom: Array<CommitType>;
 	};
 }
