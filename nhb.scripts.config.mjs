@@ -17,7 +17,7 @@ export default defineScriptConfig({
 	},
 	commit: {
 		runFormatter: false,
-		// commitTypes: { overrideDefaults: true, custom: [{ emoji: '$', type: 'hello' }] },
+		commitTypes: { custom: [{ emoji: '$', type: 'hello' }] },
 		wrapPrefixWith: '`',
 		emojiBeforePrefix: true, // Omit `emojiBeforePrefix` to use default `false`.
 		// runBefore: () => {

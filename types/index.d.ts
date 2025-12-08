@@ -160,7 +160,7 @@ export interface CommitConfig {
 		/** Whether tp override the default commit types. Defaults to `false` */
 		overrideDefaults?: boolean;
 		/** Array of custom commit types with emoji and type names */
-		custom: ValidArray<CommitType>;
+		custom: Array<CommitType>;
 	};
 }
 

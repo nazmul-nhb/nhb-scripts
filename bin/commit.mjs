@@ -47,17 +47,22 @@ export async function commitAndPush(message, version) {
 	try {
 		await execa('git', ['add', '.']);
 
-		const { stdout: commitOut } = await execa('git', ['commit', '-m', message]);
+		// const { stdout: commitOut } =
+		await execa('git', ['commit', '-m', message], {
+			stdout: 'inherit',
+			stderr: 'inherit',
+			stdin: 'inherit',
+		});
 
-		if (commitOut.trim()) {
-			const commitLines = commitOut
-				.split('\n')
-				.filter(Boolean)
-				.map((line) => chalk.cyan('• ') + line?.trim())
-				.join('\n');
+		// if (commitOut.trim()) {
+		// 	const commitLines = commitOut
+		// 		.split('\n')
+		// 		.filter(Boolean)
+		// 		.map((line) => chalk.cyan('• ') + line?.trim())
+		// 		.join('\n');
 
-			note(commitLines, chalk.magenta('📤 Commit Summary'));
-		}
+		// 	note(commitLines, chalk.magenta('📤 Commit Summary'));
+		// }
 
 		s.stop(chalk.green('✅ Changes are committed successfully!'));
 
@@ -73,19 +78,24 @@ export async function commitAndPush(message, version) {
 
 			s2.start(chalk.blue('📌 Pushing to remote repository'));
 
-			const { stdout, stderr } = await execa('git', ['push', '--verbose']);
+			// const { stdout, stderr } =
+			await execa('git', ['push', '--verbose'], {
+				stdout: 'inherit',
+				stderr: 'inherit',
+				stdin: 'inherit',
+			});
 
-			const pushOut = (stdout + '\n' + stderr)?.trim();
+			// const pushOut = (stdout + '\n' + stderr)?.trim();
 
-			if (pushOut) {
-				const lines = pushOut
-					?.split('\n')
-					.filter(Boolean)
-					.map((line) => chalk.cyan('• ') + line?.trim())
-					.join('\n');
+			// if (pushOut) {
+			// 	const lines = pushOut
+			// 		?.split('\n')
+			// 		.filter(Boolean)
+			// 		.map((line) => chalk.cyan('• ') + line?.trim())
+			// 		.join('\n');
 
-				note(lines, chalk.magenta('📌 Push Summary'));
-			}
+			// 	note(lines, chalk.magenta('📌 Push Summary'));
+			// }
 
 			s2.stop(chalk.green('✅ Changes are pushed successfully!'));
 
@@ -178,10 +188,11 @@ async function runCommitPushFlow() {
 	/** @type {import('@clack/prompts').Option<string>} */
 	const CUSTOM_CHOICE = { value: '__custom__', label: '✍  Custom...' };
 
-	const { custom, overrideDefaults = false } = commitTypes || {};
+	const { custom = [], overrideDefaults = false } = commitTypes || {};
 
 	/** @type {Readonly<import('../types/index.d.ts').CommitType[]>} */
-	const COMBINED = overrideDefaults && isValidArray(custom) ? custom : DEFAULT_CHOICES;
+	const COMBINED =
+		overrideDefaults && isValidArray(custom) ? custom : [...DEFAULT_CHOICES, ...custom];
 
 	/** @type {import('@clack/prompts').Option<string>[]} */
 	const typeChoices = COMBINED.map(({ emoji, type }, idx) => {
@@ -195,7 +206,7 @@ async function runCommitPushFlow() {
 	const typeResult = normalizeStringResult(
 		await select({
 			message: chalk.cyan('Select commit type:'),
-			options: typeChoices,
+			options: [...typeChoices, CUSTOM_CHOICE],
 		})
 	);
 
