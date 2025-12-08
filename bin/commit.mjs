@@ -7,7 +7,6 @@ import { intro, log, outro, select, spinner, text } from '@clack/prompts';
 import chalk from 'chalk';
 import { execa } from 'execa';
 import semver from 'semver';
-
 import { confirm } from '@clack/prompts';
 import { isValidArray } from 'nhb-toolbox';
 import {
@@ -184,9 +183,6 @@ async function runCommitPushFlow() {
 		{ emoji: '🧭', type: 'merge' },
 	]);
 
-	/** @type {import('@clack/prompts').Option<string>} */
-	const CUSTOM_CHOICE = { value: '__custom__', label: '✍  Custom...' };
-
 	const { custom = [], overrideDefaults = false } = commitTypes || {};
 
 	/** @type {Readonly<import('../types/index.d.ts').CommitType[]>} */
@@ -205,7 +201,7 @@ async function runCommitPushFlow() {
 	const typeResult = normalizeStringResult(
 		await select({
 			message: chalk.cyan('Select commit type:'),
-			options: [...typeChoices, CUSTOM_CHOICE],
+			options: [...typeChoices, { value: '__custom__', label: '✍  Custom...' }],
 		})
 	);
 
