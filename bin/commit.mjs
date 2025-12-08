@@ -53,12 +53,12 @@ export async function commitAndPush(message, version) {
 			const commitLines = commitOut
 				.split('\n')
 				.filter(Boolean)
-				.map((line) => chalk.cyan('• ') + line?.trim())
-				.join('\n');
+				.map((line) => chalk.cyan('• ') + line?.trim());
+			// .join('\n');
 
-			// commitLines.forEach((line) => mimicClack(line, true));
-			//
-			note(commitLines, chalk.magenta('📤 Commit Summary'));
+			commitLines.forEach((line) => mimicClack(line, true));
+
+			// note(commitLines, chalk.magenta('📤 Commit Summary'));
 		}
 
 		s.stop(chalk.green('✅ Changes are committed successfully!'));
@@ -75,11 +75,7 @@ export async function commitAndPush(message, version) {
 
 			s2.start(chalk.blue('📌 Pushing to remote repository'));
 
-			const { stdout, stderr } = await execa('git', ['push', '--verbose'], {
-				stdout: 'inherit',
-				stderr: 'inherit',
-				stdin: 'inherit',
-			});
+			const { stdout, stderr } = await execa('git', ['push', '--verbose']);
 
 			const pushOut = (stdout + '\n' + stderr)?.trim();
 
@@ -87,12 +83,12 @@ export async function commitAndPush(message, version) {
 				const lines = pushOut
 					.split('\n')
 					.filter(Boolean)
-					.map((line) => chalk.cyan('• ') + line?.trim())
-					.join('\n');
+					.map((line) => chalk.cyan('• ') + line?.trim());
+				// .join('\n');
 
-				// lines.forEach((line) => mimicClack(line, true));
+				lines.forEach((line) => mimicClack(line, true));
 
-				note(lines, chalk.magenta('📌 Push Summary'));
+				// note(lines, chalk.magenta('📌 Push Summary'));
 			}
 
 			s2.stop(chalk.green('✅ Changes are pushed successfully!'));
