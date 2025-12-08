@@ -35,6 +35,19 @@ async function updateVersion(newVersion) {
 }
 
 /**
+ *
+ * @param {string} msgs
+ */
+function formatMessage(msgs) {
+	const messages = msgs.split('\n').filter(Boolean);
+
+	const diamond = chalk.green('◇  • '),
+		bar = chalk.gray('│\n');
+
+	console.log(bar + diamond + messages.join(diamond) + bar);
+}
+
+/**
  * * Git commit and push with message
  * @param {string} message Commit message
  * @param {string} version Version string
@@ -50,11 +63,11 @@ export async function commitAndPush(message, version) {
 		const { stdout: commitOut } = await execa('git', ['commit', '-m', message]);
 
 		if (commitOut?.trim()) {
-			const commitLines = commitOut.split('\n').filter(Boolean);
+			// const commitLines = commitOut.split('\n').filter(Boolean);
 			// .map((line) => chalk.cyan('• ') + line?.trim());
 			// .join('\n');
-
-			commitLines.forEach((line) => mimicClack(line));
+			formatMessage(commitOut);
+			// commitLines.forEach((line) => mimicClack(line));
 
 			// note(commitLines, chalk.magenta('📤 Commit Summary'));
 		}
@@ -78,11 +91,11 @@ export async function commitAndPush(message, version) {
 			const pushOut = (stdout + '\n' + stderr)?.trim();
 
 			if (pushOut) {
-				const lines = pushOut.split('\n').filter(Boolean);
+				// const lines = pushOut.split('\n').filter(Boolean);
 				// .map((line) => chalk.cyan('• ') + line?.trim());
 				// .join('\n');
-
-				lines.forEach((line) => mimicClack(line));
+				formatMessage(pushOut);
+				// lines.forEach((line) => mimicClack(line));
 
 				// note(lines, chalk.magenta('📌 Push Summary'));
 			}
