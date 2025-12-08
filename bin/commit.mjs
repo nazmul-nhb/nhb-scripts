@@ -18,6 +18,7 @@ import {
 import { loadUserConfig } from '../lib/config-loader.mjs';
 import { parsePackageJson, writeToPackageJson } from '../lib/package-json-utils.mjs';
 import { runFormatter } from '../lib/prettier-formatter.mjs';
+import { isValidArray } from 'nhb-toolbox';
 
 /**
  * * Updates version in package.json
@@ -122,6 +123,7 @@ async function runCommitPushFlow() {
 		emojiBeforePrefix = false,
 		runFormatter: shouldFormat = false,
 		wrapPrefixWith: wrapPrefixWith = '',
+		commitTypes,
 	} = (await loadUserConfig()).commit ?? {};
 
 	mimicClack(`Current version: ${chalk.yellow(oldVersion)}`);
@@ -153,25 +155,42 @@ async function runCommitPushFlow() {
 		break;
 	}
 
-	const typeChoices = [
-		{ value: 'update', label: '🔧 update (default)' },
-		{ value: 'feat', label: '✨ feat' },
-		{ value: 'fix', label: '🐛 fix' },
-		{ value: 'chore', label: '🛠️  chore' },
-		{ value: 'refactor', label: '🧼 refactor' },
-		{ value: 'test', label: '🧪 test' },
-		{ value: 'docs', label: '📚 docs' },
-		{ value: 'style', label: '💅 style' },
-		{ value: 'perf', label: '⚡ perf' },
-		{ value: 'revert', label: '🔁 revert' },
-		{ value: 'build', label: '🧱 build' },
-		{ value: 'ci', label: '🚀 ci' },
-		{ value: 'release', label: '🔖 release' },
-		{ value: 'deps', label: '📦 deps' },
-		{ value: 'cleanup', label: '🧹 cleanup' },
-		{ value: 'merge', label: '🧭 merge' },
-		{ value: '__custom__', label: '✍  Custom...' },
-	];
+	/** @type {Readonly<import('../types/index.d.ts').CommitType[]>} */
+	const DEFAULT_CHOICES = Object.freeze([
+		{ emoji: '🔧', type: 'update' },
+		{ emoji: '✨', type: 'feat' },
+		{ emoji: '🐛', type: 'fix' },
+		{ emoji: '🛠️ ', type: 'chore' },
+		{ emoji: '🧼', type: 'refactor' },
+		{ emoji: '🧪', type: 'test' },
+		{ emoji: '📚', type: 'docs' },
+		{ emoji: '💅', type: 'style' },
+		{ emoji: '⚡', type: 'perf' },
+		{ emoji: '🔁', type: 'revert' },
+		{ emoji: '🧱', type: 'build' },
+		{ emoji: '🚀', type: 'ci' },
+		{ emoji: '🔖', type: 'release' },
+		{ emoji: '📦', type: 'deps' },
+		{ emoji: '🧹', type: 'cleanup' },
+		{ emoji: '🧭', type: 'merge' },
+	]);
+
+	/** @type {import('@clack/prompts').Option<string>} */
+	const CUSTOM_CHOICE = { value: '__custom__', label: '✍  Custom...' };
+
+	const { custom, overrideDefaults = false } = commitTypes || {};
+
+	/** @type {Readonly<import('../types/index.d.ts').CommitType[]>} */
+	const COMBINED = overrideDefaults && isValidArray(custom) ? custom : DEFAULT_CHOICES;
+
+	/** @type {import('@clack/prompts').Option<string>[]} */
+	const typeChoices = COMBINED.map(({ emoji, type }, idx) => {
+		return {
+			value: emojiBeforePrefix ? `${emoji.trim()} ${type}` : type,
+			label: `${emoji} ${type}`,
+			hint: idx === 0 ? 'default' : undefined,
+		};
+	});
 
 	const typeResult = normalizeStringResult(
 		await select({
@@ -180,10 +199,7 @@ async function runCommitPushFlow() {
 		})
 	);
 
-	let finalType =
-		(emojiBeforePrefix && typeResult !== '__custom__' ?
-			`${typeChoices.find((type) => type.value === typeResult)?.label?.split(/\s+/)?.[0] ?? ''} `
-		:	'') + typeResult;
+	let finalType = typeChoices.find((type) => type.value === typeResult)?.value;
 
 	if (typeResult === '__custom__') {
 		const customType = normalizeStringResult(

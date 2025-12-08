@@ -1,5 +1,6 @@
 import type { Options as ExecaOptions } from 'execa';
-import type { AsyncFunction, VoidFunction } from 'nhb-toolbox/types';
+import type { SpecialCharacter } from 'nhb-toolbox/string/types';
+import type { AsyncFunction, ValidArray, VoidFunction } from 'nhb-toolbox/types';
 import type { ProgressEstimator } from 'progress-estimator';
 import type { PackageJson } from 'type-fest';
 
@@ -134,6 +135,14 @@ export interface FormatConfig {
 	ignorePath?: string;
 }
 
+/** Interface for custom commit type */
+export type CommitType = {
+	/** Emoji for custom commit type */
+	emoji: SpecialCharacter;
+	/** Custom commit type name */
+	type: string;
+};
+
 /** User configuration for `nhb-commit` script. */
 export interface CommitConfig {
 	/** Whether to run Prettier formatter before committing. Default is `false`. */
@@ -146,6 +155,13 @@ export interface CommitConfig {
 	wrapPrefixWith?: string;
 	/** Whether to prepend the corresponding emoji before the commit type prefix (applied only for the default ones). Default is `false`. */
 	emojiBeforePrefix?: boolean;
+	/** Options for extending commit types */
+	commitTypes?: {
+		/** Whether tp override the default commit types. Defaults to `false` */
+		overrideDefaults?: boolean;
+		/** Array of custom commit types with emoji and type names */
+		custom: ValidArray<CommitType>;
+	};
 }
 
 /** User configuration for `nhb-count` script.*/

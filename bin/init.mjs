@@ -5,4 +5,4 @@
 
 import { initConfigFile } from '../lib/config-loader.mjs';
 
-initConfigFile();
+initConfigFile(true);
