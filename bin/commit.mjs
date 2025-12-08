@@ -44,7 +44,7 @@ function formatMessage(msgs) {
 		.filter(Boolean)
 		.map((msg) => msg.trim());
 
-	const diamond = chalk.green('\n|   • ');
+	const diamond = chalk.green('\n│   • ');
 	const bar = chalk.green('\n│');
 
 	console.log(bar + diamond + messages.join(diamond) + bar);
@@ -70,7 +70,7 @@ export async function commitAndPush(message, version) {
 			// .map((line) => chalk.cyan('• ') + line?.trim());
 			// .join('\n');
 
-			mimicClack(chalk.bold.underline('📤 Commit Summary'));
+			mimicClack(chalk.bold.underline('📤 Commit Summary'), true);
 			formatMessage(commitOut);
 			// commitLines.forEach((line) => mimicClack(line));
 
