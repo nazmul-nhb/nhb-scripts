@@ -71,8 +71,8 @@ export async function commitAndPush(message, version) {
 			// .map((line) => chalk.cyan('• ') + line?.trim());
 			// .join('\n');
 
-			log.message('\n');
-			console.log(chalk.bold.underline('Commit Summary'));
+			// log.message('\n');
+			console.log('📤 ' + chalk.bold.underline('Commit Summary'));
 			formatMessage(commitOut);
 			// commitLines.forEach((line) => mimicClack(line));
 
@@ -101,8 +101,8 @@ export async function commitAndPush(message, version) {
 				// const lines = pushOut.split('\n').filter(Boolean);
 				// .map((line) => chalk.cyan('• ') + line?.trim());
 				// .join('\n');
-				log.message('\n');
-				console.log(chalk.bold.underline('Push Summary'));
+				// log.message('\n');
+				console.log('📌 ' + chalk.bold.underline('Push Summary'));
 				formatMessage(pushOut);
 				// lines.forEach((line) => mimicClack(line));
 
