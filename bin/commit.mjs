@@ -34,7 +34,7 @@ async function updateVersion(newVersion) {
 	mimicClack(chalk.green(`✓ Version updated to ${chalk.yellowBright(newVersion)}`));
 }
 
-const bar = chalk.green('│');
+const bar = chalk.gray('│');
 
 /**
  *
@@ -48,7 +48,7 @@ function formatMessage(msgs) {
 
 	const bullet = chalk.green('\n│  • ');
 
-	console.log(bar + bullet + messages.join(bullet) + +'\n' + bar);
+	console.log(bar + bullet + messages.join(bullet) + '\n' + bar);
 }
 
 /**
@@ -71,7 +71,8 @@ export async function commitAndPush(message, version) {
 			// .map((line) => chalk.cyan('• ') + line?.trim());
 			// .join('\n');
 
-			log.step('\n' + bar + chalk.bold.underline('📤 Commit Summary'));
+			log.message('\n' + bar);
+			log.step(chalk.bold.underline('📤 Commit Summary'));
 			formatMessage(commitOut);
 			// commitLines.forEach((line) => mimicClack(line));
 
@@ -100,8 +101,8 @@ export async function commitAndPush(message, version) {
 				// const lines = pushOut.split('\n').filter(Boolean);
 				// .map((line) => chalk.cyan('• ') + line?.trim());
 				// .join('\n');
-
-				log.step('\n' + bar + chalk.bold.underline('📌 Push Summary'));
+				log.message('\n' + bar);
+				log.step(chalk.bold.underline('📌 Push Summary'));
 				formatMessage(pushOut);
 				// lines.forEach((line) => mimicClack(line));
 
