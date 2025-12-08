@@ -41,8 +41,8 @@ async function updateVersion(newVersion) {
 function formatMessage(msgs) {
 	const messages = msgs.split('\n').filter(Boolean);
 
-	const diamond = chalk.green('◇  • '),
-		bar = chalk.gray('│\n');
+	const diamond = chalk.green('◇   • ');
+	const bar = chalk.gray('\n│\n');
 
 	console.log(bar + diamond + messages.join(diamond) + bar);
 }
