@@ -1,4 +1,4 @@
-import type { Options as ExecaOptions } from 'execa';
+import type { Options as ExecaOptions, ResultPromise } from 'execa';
 import type { SpecialCharacter } from 'nhb-toolbox/string/types';
 import type { AsyncFunction, ValidArray, VoidFunction } from 'nhb-toolbox/types';
 import type { ProgressEstimator } from 'progress-estimator';
@@ -474,8 +474,8 @@ export declare function generateModule(moduleName: string, config: ModuleConfig)
  * @example
  * const { stdout } = await runExeca('git', ['status', '--short']);
  */
-export declare function runExeca(
+export declare function runExeca<Options extends ExecaOptions = ExecaOptions>(
 	cmd: string,
 	args?: string[],
-	options?: ExecaOptions
-): Promise<Result>;
+	options?: Options
+): Promise<ResultPromise<Options>>;

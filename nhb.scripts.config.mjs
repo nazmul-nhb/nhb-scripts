@@ -20,6 +20,13 @@ export default defineScriptConfig({
 		// commitTypes: { custom: [{ emoji: '$', type: 'hello' }] },
 		wrapPrefixWith: '`',
 		emojiBeforePrefix: true, // Omit `emojiBeforePrefix` to use default `false`.
+		commitTypes: {
+			custom: [
+				{ emoji: '🔣', type: 'types' },
+				{ emoji: '💩', type: 'dump' },
+				{ emoji: '📝', type: 'draft' },
+			],
+		},
 		// runBefore: () => {
 		// 	console.log('Pre-hook is called...');
 		// },

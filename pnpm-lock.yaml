@@ -24,8 +24,8 @@ importers:
         specifier: ^1.2.8
         version: 1.2.8
       nhb-toolbox:
-        specifier: ^4.28.21
-        version: 4.28.21
+        specifier: ^4.28.40
+        version: 4.28.40
       progress-estimator:
         specifier: ^0.3.1
         version: 0.3.1
@@ -43,8 +43,8 @@ importers:
         version: 5.9.3
     devDependencies:
       '@types/node':
-        specifier: ^24.10.1
-        version: 24.10.1
+        specifier: ^25.0.2
+        version: 25.0.2
       '@types/semver':
         specifier: ^7.7.1
         version: 7.7.1
@@ -93,8 +93,8 @@ packages:
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
 
-  '@types/node@24.10.1':
-    resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
+  '@types/node@25.0.2':
+    resolution: {integrity: sha512-gWEkeiyYE4vqjON/+Obqcoeffmk0NF15WSBwSs7zwVA2bAbTaE0SJ7P0WNGoJn8uE7fiaV5a7dKYIJriEqOrmA==}
 
   '@types/semver@7.7.1':
     resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
@@ -332,8 +332,8 @@ packages:
     resolution: {integrity: sha512-tacvGzUY5o2D8CBh2rrwxyNojUsZNU2zjNTzKQrkgGJQTbGAfArVWXSKMBokBeeg6C7OLRGUEyoFlYbfeWQIqw==}
     engines: {node: '>=20.17'}
 
-  nhb-toolbox@4.28.21:
-    resolution: {integrity: sha512-coDfWS1yQ464Rf9v18p2VM8scgt0ZUinNR208EUW6uVJ8J+sEPKiA+fVHUIViM1pF6MzJKSyFndOXoI68EEU3A==}
+  nhb-toolbox@4.28.40:
+    resolution: {integrity: sha512-LIVcb4+AiTPL399vTp6S/C60deqOSbVTJ1iLGdC59W7c4lR4hcbuo//3+7N9WRTIqqIb7Pin+46u6hE1bcGVmA==}
 
   npm-run-path@6.0.0:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
@@ -564,7 +564,7 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
-  '@types/node@24.10.1':
+  '@types/node@25.0.2':
     dependencies:
       undici-types: 7.16.0
 
@@ -788,7 +788,7 @@ snapshots:
 
   nano-spawn@2.0.0: {}
 
-  nhb-toolbox@4.28.21: {}
+  nhb-toolbox@4.28.40: {}
 
   npm-run-path@6.0.0:
     dependencies:

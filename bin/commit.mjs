@@ -191,9 +191,12 @@ async function runCommitPushFlow() {
 
 	/** @type {import('@clack/prompts').Option<string>[]} */
 	const typeChoices = COMBINED.map(({ emoji, type }, idx) => {
+		const tEmoji = emoji.trim();
+		const tType = type.trim();
+
 		return {
-			value: emojiBeforePrefix ? `${emoji.trim()} ${type}` : type,
-			label: `${emoji} ${type}`,
+			value: emojiBeforePrefix ? `${tEmoji} ${tType}` : tType,
+			label: `${emoji} ${tType}`,
 			hint: idx === 0 ? 'default' : undefined,
 		};
 	});
