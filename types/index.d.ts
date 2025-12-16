@@ -478,4 +478,4 @@ export declare function runExeca<Options extends ExecaOptions = ExecaOptions>(
 	cmd: string,
 	args?: string[],
 	options?: Options
-): Promise<ResultPromise<Options>>;
+): ResultPromise<Options>;
